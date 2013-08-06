@@ -99,7 +99,11 @@ public class Calculations {
 				result = add(absolute(secondNumber), firstNumber);
 			else {
 				// TODO Both numbers are positive and first number is greater
-				
+				int sizeOfFirstNumber  = firstNumber.getValue().size();
+				int sizeOfSecondNumber = secondNumber.getValue().size();
+				for(int i=0; i<sizeOfSecondNumber; i++) {
+					
+				}
 			}
 		} else {
 			if(secondNumber.isNegative() && firstNumber.isNegative())
