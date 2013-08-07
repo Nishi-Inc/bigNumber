@@ -1,3 +1,14 @@
+/*
+ * ========================= DECLARATION ===============================
+ * NOTE: THIS IS NOT TO BE REMOVED IN ANY MODIFICATION & DISTRIBUTION
+ * OF THIS CLASS.
+ * 
+ * Author: Nishi Inc.
+ * Conceptualized by: Alok Shukla
+ * Made available for free by: Nishi Inc. 
+ * =====================================================================
+ */
+
 package org.bigNumber;
 
 import org.bigNumber.common.models.Big;
@@ -107,8 +118,8 @@ public final class Calculations {
 				// TODO Both numbers are positive and first number is greater
 				firstNumber.consolidate();
 				secondNumber.consolidate();
-				int sizeOfFirstNumber  = firstNumber.getValue().size();
-				int sizeOfSecondNumber = secondNumber.getValue().size();
+				int sizeOfFirstNumber  = firstNumber.size();
+				int sizeOfSecondNumber = secondNumber.size();
 				
 				if(firstNumber.isFraction() && secondNumber.isFraction()) {
 					StringBuilder zeroes	=	new StringBuilder();
