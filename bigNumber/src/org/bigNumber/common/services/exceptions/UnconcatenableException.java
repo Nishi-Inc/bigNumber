@@ -1,4 +1,4 @@
-package org.common.services.exceptions;
+package org.bigNumber.common.services.exceptions;
 
 public class UnconcatenableException extends Exception {
 	

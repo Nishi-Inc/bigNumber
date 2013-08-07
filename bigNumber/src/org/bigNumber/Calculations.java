@@ -1,7 +1,8 @@
 package org.bigNumber;
 
-import org.common.models.Big;
-import org.common.services.exceptions.IncompatibleCharacterException;
+import org.bigNumber.common.models.Big;
+import org.bigNumber.common.services.exceptions.IncompatibleCharacterException;
+import org.bigNumber.common.services.exceptions.UnconcatenableException;
 
 /**
  * This class provides methods for arithmetic calculations on big numbers
@@ -9,7 +10,12 @@ import org.common.services.exceptions.IncompatibleCharacterException;
  * @since August 6, 2013
  * @Producer Nishi Inc.
  */
-public class Calculations {
+public final class Calculations {
+	
+	/**
+	 * Private constructor to disallow objectification
+	 */
+	private Calculations() { }
 	
 	/**
 	 * @param numbers Big numbers
@@ -99,9 +105,37 @@ public class Calculations {
 				result = add(absolute(secondNumber), firstNumber);
 			else {
 				// TODO Both numbers are positive and first number is greater
+				firstNumber.consolidate();
+				secondNumber.consolidate();
 				int sizeOfFirstNumber  = firstNumber.getValue().size();
 				int sizeOfSecondNumber = secondNumber.getValue().size();
+				
+				if(firstNumber.isFraction() && secondNumber.isFraction()) {
+					StringBuilder zeroes	=	new StringBuilder();
+					for(int dif	=	firstNumber.locationOfDecimal() - secondNumber.locationOfDecimal(); dif > 0; dif--) {
+						try {
+							secondNumber.putAtFirst(0);
+						} catch (IncompatibleCharacterException e) {
+							e.printStackTrace();
+						} catch (UnconcatenableException e) {
+							e.showMsg();
+						}
+					}
+				} else if(firstNumber.isFraction() && !secondNumber.isFraction()) {
+					try {
+						for(int i=firstNumber.locationOfDecimal(); i<sizeOfFirstNumber; i++)
+							result.putAtFirst(firstNumber.getValue().get(i));
+					} catch (IncompatibleCharacterException | UnconcatenableException e) {
+						e.printStackTrace();
+					}
+				} else if(!firstNumber.isFraction() && secondNumber.isFraction()) {
+					
+				} else {
+					// TODO both are not fractional
+				}
+				
 				for(int i=0; i<sizeOfSecondNumber; i++) {
+					int carry = 0;
 					
 				}
 			}
@@ -112,6 +146,7 @@ public class Calculations {
 				result = add(absolute(firstNumber),secondNumber);
 			else
 				result = subtract(secondNumber, firstNumber);
+			result.convertToNegative();
 		}
 		return result;
 	}

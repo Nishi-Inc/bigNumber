@@ -1,9 +1,15 @@
 package org.bigNumber;
 
-import org.common.models.Big;
-import org.common.services.exceptions.UnconcatenableException;
+import org.bigNumber.common.models.Big;
+import org.bigNumber.common.services.exceptions.IncompatibleCharacterException;
+import org.bigNumber.common.services.exceptions.UnconcatenableException;
 
-public class Utilities {
+public final class Utilities {
+	
+	/**
+	 * Private constructor to disallow objectification
+	 */
+	private Utilities() {}
 	
 	/**
 	 * Works similar to Big.<i>reverse()</i>
@@ -73,6 +79,32 @@ public class Utilities {
 		for(int i=1; i<length; i++)
 			numbers[0].concat(numbers[i]);
 		return numbers[0];
+	}
+	
+	/**
+	 * Puts the given digit at the beginning of the given number
+	 * @param number A Big number
+	 * @param digit An int
+	 * @return A Big number containing given Big number appended to the given digit
+	 * @throws IncompatibleCharacterException
+	 * @throws UnconcatenableException
+	 */
+	public Big putAtFirst(Big number, int digit) throws IncompatibleCharacterException, UnconcatenableException {
+		number.putAtFirst(digit);
+		return number;
+	}
+	
+	/**
+	 * Puts the given character at the beginning of the given number
+	 * @param number A Big number
+	 * @param character A char
+	 * @return A Big number containing given Big number appended to the given character
+	 * @throws IncompatibleCharacterException
+	 * @throws UnconcatenableException
+	 */
+	public Big putAtFirst(Big number, char character) throws IncompatibleCharacterException, UnconcatenableException {
+		number.putAtFirst(character);
+		return number;
 	}
 
 }
