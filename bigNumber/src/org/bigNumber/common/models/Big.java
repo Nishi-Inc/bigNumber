@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.bigNumber.common.services.Constants;
 import org.bigNumber.common.services.exceptions.IncompatibleCharacterException;
-import org.bigNumber.common.services.exceptions.UnconcatenableException;
 
 /**
  * This class makes Big type number object
@@ -29,11 +28,19 @@ public final class Big implements Serializable, Comparable<Big> {
 	
 	private List<Character>		value;
 	private boolean				isNegative			=	false;
-	private boolean				isFraction			=	false;
+	private boolean				isFractional		=	false;
 	private Integer				locationOfDecimal;
 	private	Integer				size;
 	
+	/**
+	 * Constructs a Big type number with default value 0
+	 */
 	public Big(){
+		try {
+			this.setValue(0);
+		} catch (IncompatibleCharacterException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public Big(Big number) throws IncompatibleCharacterException {
@@ -56,7 +63,7 @@ public final class Big implements Serializable, Comparable<Big> {
 	 * @since August 8, 2013
 	 */
 	public void roundOff(Integer numberOfDigitsAfterDecimal) {
-		if(!this.isFraction())
+		if(!this.isFractional())
 			return;
 		int j = this.locationOfDecimal();
 		int i = j+1;
@@ -83,11 +90,11 @@ public final class Big implements Serializable, Comparable<Big> {
 	 * @param newDigit
 	 * @author Alok Shukla
 	 * @throws IncompatibleCharacterException 
-	 * @since August 8, 2013
+	 * @since v0.1.0
 	 */
 	public void modify(int index, int newDigit) throws IncompatibleCharacterException {
 		if(newDigit>9 || newDigit<0)
-			throw new IncompatibleCharacterException();
+			throw new IncompatibleCharacterException("From Big.modify(): newDIgit is incompatible.");
 		this.getValue().add(index, (char)(newDigit + '0'));
 		this.getValue().remove(index+1);
 	}
@@ -98,21 +105,21 @@ public final class Big implements Serializable, Comparable<Big> {
 	 * @param newDigit
 	 * @author Alok Shukla
 	 * @throws IncompatibleCharacterException 
-	 * @since August 8, 2013
+	 * @since v0.1.0
 	 */
 	public void modify(int index, char newDigit) throws IncompatibleCharacterException {
 		boolean flag = false;
 		if(newDigit == '.') {
-			if(!this.isFraction())
+			if(!this.isFractional())
 				flag = true;
 			else if(this.getValue().get(index) == '.')
 				return;
 			else
-				throw new IncompatibleCharacterException();
+				throw new IncompatibleCharacterException("From Big.modify(): newDIgit is incompatible.");
 		} else if(newDigit>'0' && newDigit<'9') {
 			flag = true;
 		} else
-			throw new IncompatibleCharacterException();
+			throw new IncompatibleCharacterException("From Big.modify(): newDIgit is incompatible.");
 		if(flag)
 			this.modify(index, newDigit-'0');
 	}
@@ -120,15 +127,15 @@ public final class Big implements Serializable, Comparable<Big> {
 	/**
 	 * It doesn't return an Integer.<br/> It discards the fractional part and keeps the whole number.
 	 * @author Alok Shukla
-	 * @since August 8, 2013
+	 * @since v0.1.0
 	 */
 	public void convertToInteger() {
-		if(!this.isFraction)
+		if(!this.isFractional())
 			return;
 		else {
 			for(int i=this.locationOfDecimal(); i<this.size(); i++)
 				this.getValue().remove(i);
-			this.setFraction(false);
+			this.setFractional(false);
 		}
 	}
 	
@@ -140,8 +147,8 @@ public final class Big implements Serializable, Comparable<Big> {
 	public void convertToNegative() {
 		try {
 			this.putAtFirst('-');
-		} catch (IncompatibleCharacterException | UnconcatenableException e) {
-			e.printStackTrace();
+		} catch (IncompatibleCharacterException e) {
+			e.showMsg();
 		}
 	}
 	
@@ -149,11 +156,10 @@ public final class Big implements Serializable, Comparable<Big> {
 	 * Puts the given digit at the beginning of the given number
 	 * @param digit An int
 	 * @throws IncompatibleCharacterException
-	 * @throws UnconcatenableException
 	 * @author Alok Shukla
 	 * @since August 8, 2013
 	 */
-	public void putAtFirst(int digit) throws IncompatibleCharacterException, UnconcatenableException {
+	public void putAtFirst(int digit) throws IncompatibleCharacterException {
 		Big result	=	new Big();
 		result.put(digit);
 		result.concat(this);
@@ -164,15 +170,14 @@ public final class Big implements Serializable, Comparable<Big> {
 	 * Puts the given character at the beginning of the given number
 	 * @param character A char
 	 * @throws IncompatibleCharacterException
-	 * @throws UnconcatenableException
 	 * @author Alok Shukla
 	 * @since August 8, 2013
 	 */
-	public void putAtFirst(char character) throws IncompatibleCharacterException, UnconcatenableException {
+	public void putAtFirst(char character) throws IncompatibleCharacterException{
 		if(character != '.' || character != '-')
-			throw new IncompatibleCharacterException();
-		if(character == '.' && this.isFraction())
-			throw new IncompatibleCharacterException();
+			throw new IncompatibleCharacterException("From Big.putAtFirst(): character is incompatible.");
+		if(character == '.' && this.isFractional())
+			throw new IncompatibleCharacterException("From Big.putAtFirst(): character is incompatible.");
 		if(character == '-' && this.isNegative())
 			return;
 		Big result	=	new Big();
@@ -197,15 +202,29 @@ public final class Big implements Serializable, Comparable<Big> {
 	
 	/**
 	 * Concats the provided number at the end of the calling number
-	 * @param number
-	 * @throws UnconcatenableException 
+	 * @param number A Big number
+	 * @throws IncompatibleCharacterException 
+	 * @author Alok Shukla
+	 * @since v0.1.0
+	 * @deprecated Replaced by public void append(Big number)
 	 */
-	public void concat(Big number) throws UnconcatenableException {
-		if(this.isFraction())
-			throw new UnconcatenableException("From Big.concat(): First number should not be a fraction.");
+	public void concat(Big number) throws IncompatibleCharacterException {
+		if(this.isFractional())
+			throw new IncompatibleCharacterException("From Big.concat(): First number should not be a fraction.");
 		if(number.isNegative())
-			throw new UnconcatenableException("From Big.concat(): Second number should not be negative.");
+			throw new IncompatibleCharacterException("From Big.concat(): Second number should not be negative.");
 		this.getValue().addAll(number.getValue());
+	}
+	
+	public String toString() {
+		StringBuilder result 	= new StringBuilder();
+		List<Character> value	= this.getValue();
+		if(value != null) {
+			int size = this.size();
+			for(int i=0; i<size; i++)
+				result.append(value.get(i));
+		}
+		return result.toString();
 	}
 	
 	/**
@@ -242,6 +261,35 @@ public final class Big implements Serializable, Comparable<Big> {
 		for(int i=0; i<number.length(); i++)
 			chars.add(number.charAt(i));
 		this.setValue(chars);
+	}
+	
+	/**
+	 * Appends the given number to the calling number
+	 * @param number
+	 * @throws IncompatibleCharacterException
+	 * @author Alok Shukla
+	 * @since v0.1.0
+	 */
+	public void append(Big number) throws IncompatibleCharacterException {
+		if(this.isFractional() && number.isFractional())
+			throw new IncompatibleCharacterException("From Big.concat(): A number cannot have two decimal points.");
+		if(number.isNegative())
+			throw new IncompatibleCharacterException("From Big.concat(): Second number should not be negative.");
+		this.getValue().addAll(number.getValue());
+	}
+	
+	/**
+	 * Appends the given positive number to the Big number
+	 * @param number
+	 * @throws IncompatibleCharacterException 
+	 */
+	public void append (int number) throws IncompatibleCharacterException {
+		if(number < 0)
+			throw new IncompatibleCharacterException("From Big.append(): number is incompatible.");
+		ArrayList<Character> num = new ArrayList<Character>();
+		for(; number>10; number /= 10)
+			num.add(0, (char)(number%10 +'0'));
+		this.getValue().addAll(num);
 	}
 	
 	/**
@@ -283,7 +331,7 @@ public final class Big implements Serializable, Comparable<Big> {
 		Big frc1	=	null;
 		Big frc2	=	null;
 
-		if(this.isFraction() && number.isFraction()) {
+		if(this.isFractional() && number.isFractional()) {
 			tmp1	=	new Big();
 			tmp2	=	new Big();
 			try {
@@ -300,7 +348,7 @@ public final class Big implements Serializable, Comparable<Big> {
 			} catch (IncompatibleCharacterException e) {
 				e.printStackTrace();
 			}
-		} else if(this.isFraction() && !number.isFraction()) {
+		} else if(this.isFractional() && !number.isFractional()) {
 			tmp1	=	new Big();
 			try {
 				tmp1.setValue(this.getValueTill(this.locationOfDecimal()-1));
@@ -310,7 +358,7 @@ public final class Big implements Serializable, Comparable<Big> {
 			} catch (IncompatibleCharacterException e) {
 				e.printStackTrace();
 			}
-		} else if(!this.isFraction() && number.isFraction()) {
+		} else if(!this.isFractional() && number.isFractional()) {
 			tmp2	=	new Big();
 			try {
 				tmp2.setValue(number.getValueTill(number.locationOfDecimal()-1));
@@ -392,13 +440,13 @@ public final class Big implements Serializable, Comparable<Big> {
 			if(digit == null)
 				break;
 			if(digit == '.') {
-				if(this.isFraction())
-					throw new IncompatibleCharacterException();
-				this.setFraction(true);
+				if(this.isFractional())
+					throw new IncompatibleCharacterException("From Big.setValue(): value is incompatible.");
+				this.setFractional(true);
 				this.setLocationOfDecimal(i);
 			}
 			if(digit > 9 || digit < 0 || digit != '-' || digit != '.')
-				throw new IncompatibleCharacterException();
+				throw new IncompatibleCharacterException("From Big.setValue(): value is incompatible.");
 		}
 		this.value = value;
 		//this.consolidate();
@@ -423,12 +471,12 @@ public final class Big implements Serializable, Comparable<Big> {
 	 * 
 	 * @return true if the number is a fraction else false
 	 */
-	public boolean isFraction() {
-		return isFraction;
+	public boolean isFractional() {
+		return isFractional;
 	}
 
-	private void setFraction(boolean isFraction) {
-		this.isFraction = isFraction;
+	private void setFractional(boolean isFraction) {
+		this.isFractional = isFraction;
 		if(!isFraction)
 			this.setLocationOfDecimal(-1);
 	}

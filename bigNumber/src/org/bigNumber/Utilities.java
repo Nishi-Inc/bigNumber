@@ -2,7 +2,6 @@ package org.bigNumber;
 
 import org.bigNumber.common.models.Big;
 import org.bigNumber.common.services.exceptions.IncompatibleCharacterException;
-import org.bigNumber.common.services.exceptions.UnconcatenableException;
 
 public final class Utilities {
 	
@@ -60,9 +59,12 @@ public final class Utilities {
 	 * @param firstNumber
 	 * @param secondNumber
 	 * @return A Big number having secondNumber concatenated to firstNumber
-	 * @throws UnconcatenableException 
+	 * @throws IncompatibleCharacterException
+	 * @author Alok Shukla
+	 * @since v0.1.0
+	 * @deprecated
 	 */
-	public Big concat(Big firstNumber, Big secondNumber) throws UnconcatenableException {
+	public Big concat(Big firstNumber, Big secondNumber) throws IncompatibleCharacterException {
 		firstNumber.concat(secondNumber);
 		return firstNumber;
 	}
@@ -72,9 +74,12 @@ public final class Utilities {
 	 * @param firstNumber
 	 * @param secondNumber
 	 * @return A Big number having secondNumber concatenated to firstNumber
-	 * @throws UnconcatenableException 
+	 * @throws IncompatibleCharacterException
+	 * @author Alok Shukla
+	 * @since v0.1.0
+	 * @deprecated
 	 */
-	public Big concat(Big... numbers) throws UnconcatenableException {
+	public Big concat(Big... numbers) throws IncompatibleCharacterException {
 		int length = numbers.length;
 		for(int i=1; i<length; i++)
 			numbers[0].concat(numbers[i]);
@@ -87,9 +92,8 @@ public final class Utilities {
 	 * @param digit An int
 	 * @return A Big number containing given Big number appended to the given digit
 	 * @throws IncompatibleCharacterException
-	 * @throws UnconcatenableException
 	 */
-	public Big putAtFirst(Big number, int digit) throws IncompatibleCharacterException, UnconcatenableException {
+	public Big putAtFirst(Big number, int digit) throws IncompatibleCharacterException {
 		number.putAtFirst(digit);
 		return number;
 	}
@@ -100,9 +104,8 @@ public final class Utilities {
 	 * @param character A char
 	 * @return A Big number containing given Big number appended to the given character
 	 * @throws IncompatibleCharacterException
-	 * @throws UnconcatenableException
 	 */
-	public Big putAtFirst(Big number, char character) throws IncompatibleCharacterException, UnconcatenableException {
+	public Big putAtFirst(Big number, char character) throws IncompatibleCharacterException{
 		number.putAtFirst(character);
 		return number;
 	}
