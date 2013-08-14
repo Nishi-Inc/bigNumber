@@ -3,13 +3,4 @@
 # Package Files #
 *.war
 *.ear
-resources.jar
-rt.jar
-jsse.jar
-jce.jar
-charsets.jar
-dnsns.jar
-localedata.jar
-sunjce_provider.jar
-sunmscapi.jar
-sunpkcs.jar
+*.jar
