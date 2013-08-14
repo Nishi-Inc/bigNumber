@@ -665,5 +665,39 @@ public final class Big implements Serializable, Comparable<Big> {
 	public void setZero(boolean isZero) {
 		this.isZero = isZero;
 	}
+	
+	/**
+	 * @author Alok Shukla
+	 * @since v1.0.0
+	 * @return A BigDecimal converting Big to BigDecimal
+	 */
+	public BigDecimal convertToBigDecimal() {
+		if(this.isFractional()) {
+			return this.getBigDecimal();
+		} else {
+			StringBuilder val = new StringBuilder();
+			for(int i=0; i<this.size(); i++) {
+				val.append(this.get(i));
+			}
+			return new BigDecimal(val.toString());
+		}
+	}
+	
+	/**
+	 * @author Alok Shukla
+	 * @since v1.0.0
+	 * @return A BigInteger chopping off the decimal part of the Big if present
+	 */
+	public BigInteger convertToBigInteger() {
+		if(!this.isFractional()) {
+			return this.getBigInteger();
+		} else {
+			StringBuilder val = new StringBuilder();
+			for(int i=0; this.get(i) != '.'; i++) {
+				val.append(this.get(i));
+			}
+			return new BigInteger(val.toString());
+		}
+	}
 
 }
