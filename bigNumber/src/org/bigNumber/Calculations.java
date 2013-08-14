@@ -11,6 +11,9 @@
 
 package org.bigNumber;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bigNumber.common.models.Big;
 import org.bigNumber.common.services.exceptions.IncompatibleCharacterException;
 
@@ -69,9 +72,14 @@ public final class Calculations {
 	 * @param numerator
 	 * @param denominator
 	 * @return A Big type variable containing remainder of arithmetic division of the provided numerator by the provided denominator
+	 * @throws IncompatibleCharacterException
+	 * @author Alok Shukla
+	 * @since v0.1.0
 	 */
-	public Big modulus(Big numerator, Big denominator) {
+	public Big modulus(Big numerator, Big denominator) throws IncompatibleCharacterException {
 		// TODO Write logic
+		if(numerator.isFractional() || denominator.isFractional())
+			throw new IncompatibleCharacterException("From Calculations.modulus(): Any of the numerator or denominator cannot be fractional.");
 		Big result	=	new Big();
 		return result;
 	}
@@ -81,8 +89,11 @@ public final class Calculations {
 	 * @param numerator
 	 * @param denominator
 	 * @return A Big type variable containing remainder of arithmetic division of the provided numerator by the provided denominator
+	 * @throws IncompatibleCharacterException
+	 * @author Alok Shukla
+	 * @since v0.1.0
 	 */
-	public Big mod(Big numerator, Big denominator) {
+	public Big mod(Big numerator, Big denominator) throws IncompatibleCharacterException {
 		return modulus(numerator, denominator);
 	}
 
@@ -130,7 +141,54 @@ public final class Calculations {
 			}
 		} else {
 			if(!firstNumber.isFractional() && !secondNumber.isFractional()) {
-				// TODO Both are whole numbers
+				// Both are positive whole numbers
+				int fSize = firstNumber.size();
+				int sSize = secondNumber.size();
+				int carry = 0;
+				int dig, i=1;
+				if(fSize >= sSize) {
+					for(; i<=sSize; i++) {
+						dig   = firstNumber.get(fSize-i) + secondNumber.get(sSize-i) -'0' -'0' + carry;
+						carry = dig/10;
+						dig   = dig%10;
+						try {
+							result.putAtFirst(dig);
+						} catch (IncompatibleCharacterException e) {
+							e.showMsg();
+						}
+					}
+					for(; i<=fSize; i++) {
+						dig   = firstNumber.get(fSize-i) -'0' + carry;
+						carry = dig/10;
+						dig   = dig%10;
+						try {
+							result.putAtFirst(dig);
+						} catch (IncompatibleCharacterException e) {
+							e.showMsg();
+						}
+					}
+				} else {
+					for(; i<=fSize; i++) {
+						dig   = firstNumber.get(fSize-i) + secondNumber.get(sSize-i) -'0' -'0' + carry;
+						carry = dig/10;
+						dig   = dig%10;
+						try {
+							result.putAtFirst(dig);
+						} catch (IncompatibleCharacterException e) {
+							e.showMsg();
+						}
+					}
+					for(; i<=sSize; i++) {
+						dig   = secondNumber.get(fSize-i) -'0' + carry;
+						carry = dig/10;
+						dig   = dig%10;
+						try {
+							result.putAtFirst(dig);
+						} catch (IncompatibleCharacterException e) {
+							e.showMsg();
+						}
+					}
+				}
 			} else if(firstNumber.isFractional() && !secondNumber.isFractional()) {
 				// firstNumber is fractional
 				for(int i=firstNumber.locationOfDecimal(); i<firstNumber.size(); i++){
@@ -177,12 +235,30 @@ public final class Calculations {
 				if(dADIFN < dADISN)
 					digitsAfterDecimal = dADISN;
 				try {
-					for(;(firstNumber.size() - firstNumber.locationOfDecimal()) <= digitsAfterDecimal ; firstNumber.concat(new Big()));
-					for(;(secondNumber.size() - secondNumber.locationOfDecimal()) <= digitsAfterDecimal ; secondNumber.concat(new Big()));
+					for(;(firstNumber.size() - firstNumber.locationOfDecimal()) <= digitsAfterDecimal ; firstNumber.append(0));
+					for(;(secondNumber.size() - secondNumber.locationOfDecimal()) <= digitsAfterDecimal ; secondNumber.append(0));
 				} catch (IncompatibleCharacterException e) {
 					e.showMsg();
 				}
 				
+				Big dummy              = new Big();
+				Big cFirstNumber       = new Big();
+				Big cSecondNumber      = new Big();
+				List<Character> first  = new ArrayList<Character>();
+				List<Character> second = new ArrayList<Character>();
+				first                  = firstNumber.getValueBetween(firstNumber.locationOfDecimal()+1, firstNumber.size()-1);
+				second                 = secondNumber.getValueBetween(secondNumber.locationOfDecimal()+1, secondNumber.size()-1);
+				cFirstNumber.getValue().addAll(first);
+				cSecondNumber.getValue().addAll(second);
+				dummy = addTwo(cFirstNumber, cSecondNumber);
+				try {
+					dummy.insert(1, '.');
+				} catch (IncompatibleCharacterException e) {
+					e.showMsg();
+				}
+				firstNumber.convertToInteger();
+				secondNumber.convertToInteger();
+				result                = addTwo(dummy, addTwo(firstNumber, secondNumber));
 			}
 		}
 		
@@ -289,7 +365,7 @@ public final class Calculations {
 		try {
 			result = new Big(number);
 		} catch (IncompatibleCharacterException e) {
-			e.printStackTrace();
+			e.showMsg();
 		}
 		result.getValue().remove(0);
 		return result;
