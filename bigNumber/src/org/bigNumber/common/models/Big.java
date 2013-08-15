@@ -37,6 +37,8 @@ public final class Big implements Serializable, Comparable<Big> {
 	private Integer				locationOfDecimal;
 	private	Integer				size;
 	
+	
+	//==================== Constructors ===========================
 	/**
 	 * Constructs a Big type number with default value 0
 	 * @author Alok Shukla
@@ -53,12 +55,36 @@ public final class Big implements Serializable, Comparable<Big> {
 	/**
 	 * 
 	 * @param number
-	 * @throws IncompatibleCharacterException
 	 * @author Alok Shukla
 	 * @since v0.1.0
 	 */
-	public Big(Big number) throws IncompatibleCharacterException {
-		this.setValue(number);
+	public Big(Big number) {
+		try {
+			this.setValue(number);
+		} catch (IncompatibleCharacterException e) {
+			e.showMsg();
+		}
+	}
+	
+	/**
+	 * @author Alok Shukla
+	 * @param number
+	 * @since v1.0.0
+	 */
+	public Big(BigDecimal number) {
+		// TODO Write logic
+		this.setBigDecimal(number);
+		this.setFractional(true);
+	}
+	
+	/**
+	 * @author Alok Shukla
+	 * @param number A BigInteger
+	 * @since v1.0.0
+	 */
+	public Big(BigInteger number) {
+		// TODO Write Logic
+		this.setFractional(false);
 	}
 	
 	/**
@@ -215,7 +241,7 @@ public final class Big implements Serializable, Comparable<Big> {
 	public void putAtFirst(int digit) throws IncompatibleCharacterException {
 		Big result	=	new Big();
 		result.put(digit);
-		result.concat(this);
+		result.append(this);
 		this.setValue(result);
 	}
 	

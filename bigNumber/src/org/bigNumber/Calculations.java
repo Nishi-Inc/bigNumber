@@ -362,11 +362,7 @@ public final class Calculations {
 		if(!number.isNegative())
 			return number;
 		Big result = null;
-		try {
-			result = new Big(number);
-		} catch (IncompatibleCharacterException e) {
-			e.showMsg();
-		}
+		result = new Big(number);
 		result.getValue().remove(0);
 		return result;
 	}
