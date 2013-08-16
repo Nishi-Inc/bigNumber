@@ -23,12 +23,12 @@ import org.bigNumber.common.services.exceptions.IncompatibleCharacterException;
  * @since v0.1.0
  * @Producer Nishi Inc.
  */
-public final class Calculations {
+public final class Calculate {
 
 	/**
 	 * Private constructor to disallow objectification
 	 */
-	private Calculations() { }
+	private Calculate() { }
 
 	/**
 	 * @param numbers Big numbers
@@ -79,7 +79,7 @@ public final class Calculations {
 	public Big modulus(Big numerator, Big denominator) throws IncompatibleCharacterException {
 		// TODO Write logic
 		if(numerator.isFractional() || denominator.isFractional())
-			throw new IncompatibleCharacterException("From Calculations.modulus(): Any of the numerator or denominator cannot be fractional.");
+			throw new IncompatibleCharacterException("From Calculate.modulus(): Any of the numerator or denominator cannot be fractional.");
 		Big result	=	new Big();
 		return result;
 	}
@@ -358,7 +358,7 @@ public final class Calculations {
 	 * @param number
 	 * @return A Big type variable containing absolute value of the given Big number
 	 */
-	public Big absolute(Big number) {
+	public static Big absolute(Big number) {
 		if(!number.isNegative())
 			return number;
 		Big result = null;
@@ -372,7 +372,7 @@ public final class Calculations {
 	 * @param number
 	 * @return A Big type variable containing absolute value of the given Big number
 	 */
-	public Big abs(Big number) {
+	public static Big abs(Big number) {
 		return absolute(number);
 	}
 

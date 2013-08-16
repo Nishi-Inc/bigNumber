@@ -11,6 +11,7 @@
 
 package org.bigNumber.common.models;
 
+import org.bigNumber.Calculate;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -354,6 +355,10 @@ public final class Big implements Serializable, Comparable<Big> {
 	
 	public void pow(int power) {
 		// TODO Write Logic
+		if(this.isFractional()) {
+			this.getBigDecimal().pow(power);
+			// TODO setValue of Big accordingly
+		}
 	}
 	
 	//==================================================================================
@@ -387,14 +392,38 @@ public final class Big implements Serializable, Comparable<Big> {
 	/**
 	 * Returns a plain String containing value of the Big Number
 	 * @author Alok Shukla
-	 * @since v0.1.0
+	 * @since v1.0.0
 	 */
 	public String toEngineeringString() {
 		if(this.isFractional()) {
 			return this.getBigDecimal().toEngineeringString();
 		}
 		// TODO Write logic in case of BigInteger
-		return this.getBigInteger().toString();
+		if(this.isZero()) {
+			return "0";
+		}
+		
+		StringBuilder result = new StringBuilder();
+		
+		if(this.isNegative()) {
+			result.append("-");
+		}
+		
+		int comparison = 0;
+		try {
+			comparison = Calculate.absolute(this).compareTo(new Big(1));
+		} catch (IncompatibleCharacterException e) {
+			e.printStackTrace();
+		}
+		
+		if(comparison == 0) {
+			return "1E0";
+		} else if(comparison == -1) {
+			// TODO number is smaller than 1
+		} else if(comparison == 1) {
+			// TODO number is greater than 1
+		}
+		return result.toString();
 	}
 	
 	/**

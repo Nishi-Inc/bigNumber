@@ -3,12 +3,12 @@ package org.bigNumber;
 import org.bigNumber.common.models.Big;
 import org.bigNumber.common.services.exceptions.IncompatibleCharacterException;
 
-public final class Utilities {
+public final class Utils {
 	
 	/**
 	 * Private constructor to disallow objectification
 	 */
-	private Utilities() {}
+	private Utils() {}
 	
 	/**
 	 * Works similar to Big.<i>reverse()</i>
