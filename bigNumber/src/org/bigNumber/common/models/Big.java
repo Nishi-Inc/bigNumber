@@ -395,13 +395,14 @@ public final class Big implements Serializable, Comparable<Big> {
 	 * @since v1.0.0
 	 */
 	public String toEngineeringString() {
+		if(this.isZero()) {
+			return "0";
+		}
+		
 		if(this.isFractional()) {
 			return this.getBigDecimal().toEngineeringString();
 		}
 		// TODO Write logic in case of BigInteger
-		if(this.isZero()) {
-			return "0";
-		}
 		
 		StringBuilder result = new StringBuilder();
 		
@@ -420,6 +421,12 @@ public final class Big implements Serializable, Comparable<Big> {
 			return "1E0";
 		} else if(comparison == -1) {
 			// TODO number is smaller than 1
+			int lod = this.locationOfDecimal();
+			for(int i=lod+1; i<this.size(); i++) {
+				if(this.charAt(i) == '0') {
+					// Write here
+				}
+			}
 		} else if(comparison == 1) {
 			// TODO number is greater than 1
 		}
