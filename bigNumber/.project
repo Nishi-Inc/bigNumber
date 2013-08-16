@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>org.bigNumber</name>
-	<comment></comment>
+	<name>bigNumber</name>
+	<comment>A library to unite BigInteger and BigDecimal into single datatype Big.</comment>
 	<projects>
 	</projects>
 	<buildSpec>
