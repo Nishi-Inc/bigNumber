@@ -11,7 +11,6 @@
 
 package org.bigNumber.common.models;
 
-import org.bigNumber.Calculate;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -363,10 +362,12 @@ public final class Big implements Serializable, Comparable<Big> {
 	}
 	
 	public void pow(int power) {
-		// TODO Write Logic
 		if(this.isFractional()) {
 			this.getBigDecimal().pow(power);
-			// TODO setValue of Big accordingly
+			this.syncFromDecimal();
+		} else {
+			this.getBigInteger().pow(power);
+			this.syncFromInteger();
 		}
 	}
 	
@@ -411,15 +412,31 @@ public final class Big implements Serializable, Comparable<Big> {
 		if(this.isFractional()) {
 			return this.getBigDecimal().toEngineeringString();
 		}
-		// TODO Write logic in case of BigInteger
+		// Logic in case of BigInteger
 		
 		StringBuilder result = new StringBuilder();
 		
+		int i=0;
 		if(this.isNegative()) {
 			result.append("-");
+			i = 1;
 		}
 		
-		int comparison = 0;
+		result.append(this.charAt(i));
+		if(i+1 < this.size()) {
+			result.append('.');
+			if(i+2 < this.size()) {
+				if(this.charAt(i+2) > '5' || ((this.charAt(i+1)-'0') %2 == 0 && this.charAt(i+2) == '5')) {
+					result.append(this.charAt(i+1) + 1);
+				}
+			} else {
+				result.append(this.charAt(i+1));
+			}
+		}
+		result.append('E');
+		result.append(this.size() - i - 1);
+		
+		/*int comparison = 0;
 		try {
 			comparison = Calculate.absolute(this).compareTo(new Big(1));
 		} catch (IncompatibleCharacterException e) {
@@ -429,16 +446,24 @@ public final class Big implements Serializable, Comparable<Big> {
 		if(comparison == 0) {
 			return "1E0";
 		} else if(comparison == -1) {
-			// TODO number is smaller than 1
-			int lod = this.locationOfDecimal();
-			for(int i=lod+1; i<this.size(); i++) {
-				if(this.charAt(i) == '0') {
-					// Write here
+			// number is smaller than 1
+			for(int i=this.locationOfDecimal()+1; i<this.size(); i++) {
+				if(this.charAt(i) != '0') {
+					result.append(this.charAt(i));
+					if(i+1 < this.size()) {
+						result.append('.');
+						result.append(this.charAt(i+1));
+					}
+					result.append('E');
+					result.append(-1*(i-this.locationOfDecimal()));
+					break;
 				}
 			}
 		} else if(comparison == 1) {
-			// TODO number is greater than 1
-		}
+			// number is greater than 1
+			
+		}*/
+		
 		return result.toString();
 	}
 	
@@ -629,7 +654,30 @@ public final class Big implements Serializable, Comparable<Big> {
 	
 	//========================== PRIVATE HELPER METHODS ================================
 	
+	private void syncFromValue() {
+		// TODO set all variables and values as per value in the value of the Big
+		// Variables to set size, isZero, isNegative, locationOfDecimal, isFractional, bigDecimal or bigInteger
+		List<Character> val = null;
+		val = this.getValue();
+		
+		this.setSize(val.size());
+		
+		if(val.get(0) == '-') {
+			this.setNegative(true);
+		} else {
+			this.setNegative(false);
+		}
+		
+		// Write here
+	}
 	
+	private void syncFromDecimal() {
+		// TODO set all variables and values as per value in the BigDecimal variable		
+	}
+	
+	private void syncFromInteger() {
+		// TODO set all variables and values as per value in the BigInteger variable
+	}
 	
 	//==================================================================================
 	

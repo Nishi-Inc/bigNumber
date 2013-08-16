@@ -17,7 +17,7 @@ public final class Utils {
 	 * @author Alok Shukla
 	 * @since v0.1.0 
 	 */
-	public Big reverse(Big number) {
+	public static Big reverse(Big number) {
 		number.reverse();
 		return number;
 	}
@@ -29,7 +29,7 @@ public final class Utils {
 	 * @author Alok Shukla
 	 * @since v0.1.0 
 	 */
-	public Big[] reverse(Big... numbers) {
+	public static Big[] reverse(Big... numbers) {
 		for(Big number : numbers) {
 			number.reverse();
 		}
@@ -43,7 +43,7 @@ public final class Utils {
 	 * @author Alok Shukla
 	 * @since v0.1.0
 	 */
-	public Big consolidate(Big number) {
+	public static Big consolidate(Big number) {
 		number.consolidate();
 		return number;
 	}
@@ -55,7 +55,7 @@ public final class Utils {
 	 * @author Alok Shukla
 	 * @since v0.1.0
 	 */
-	public Big[] consolidate(Big... numbers) {
+	public static Big[] consolidate(Big... numbers) {
 		for(Big number : numbers) {
 			number.consolidate();
 		}
@@ -72,7 +72,7 @@ public final class Utils {
 	 * @since v0.1.0
 	 * @deprecated
 	 */
-	public Big concat(Big firstNumber, Big secondNumber) throws IncompatibleCharacterException {
+	public static Big concat(Big firstNumber, Big secondNumber) throws IncompatibleCharacterException {
 		firstNumber.concat(secondNumber);
 		return firstNumber;
 	}
@@ -87,7 +87,7 @@ public final class Utils {
 	 * @since v0.1.0
 	 * @deprecated Replaced by Big.append()
 	 */
-	public Big concat(Big... numbers) throws IncompatibleCharacterException {
+	public static Big concat(Big... numbers) throws IncompatibleCharacterException {
 		int length = numbers.length;
 		for(int i=1; i<length; i++)
 			numbers[0].concat(numbers[i]);
@@ -103,7 +103,7 @@ public final class Utils {
 	 * @author Alok Shukla
 	 * @since v0.1.0
 	 */
-	public Big putAtFirst(Big number, int digit) throws IncompatibleCharacterException {
+	public static Big putAtFirst(Big number, int digit) throws IncompatibleCharacterException {
 		number.putAtFirst(digit);
 		return number;
 	}
@@ -117,7 +117,7 @@ public final class Utils {
 	 * @author Alok Shukla
 	 * @since v0.1.0
 	 */
-	public Big putAtFirst(Big number, char character) throws IncompatibleCharacterException{
+	public static Big putAtFirst(Big number, char character) throws IncompatibleCharacterException{
 		number.putAtFirst(character);
 		return number;
 	}

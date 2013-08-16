@@ -34,7 +34,7 @@ public final class Calculate {
 	 * @param numbers Big numbers
 	 * @return A Big number containing product of the numbers provided
 	 */
-	public Big multiply(Big... numbers) {
+	public static Big multiply(Big... numbers) {
 		int total  = numbers.length;
 		if(total < 1)
 			return null;
@@ -49,7 +49,7 @@ public final class Calculate {
 		return result;
 	}
 	
-	private Big multiplyTwo(Big firstNumber, Big secondNumber) {
+	private static Big multiplyTwo(Big firstNumber, Big secondNumber) {
 		// TODO Write logic for multiplying two numbers
 		Big result = new Big();
 		return result;
@@ -61,7 +61,7 @@ public final class Calculate {
 	 * @param denominator or divisor
 	 * @return A Big type variable containing result of arithmetic division of the provided numerator by the provided denominator
 	 */
-	public Big divide(Big numerator, Big denominator) {
+	public static Big divide(Big numerator, Big denominator) {
 		// TODO Write logic
 		Big result	=	new Big();
 		return result;
@@ -76,7 +76,7 @@ public final class Calculate {
 	 * @author Alok Shukla
 	 * @since v0.1.0
 	 */
-	public Big modulus(Big numerator, Big denominator) throws IncompatibleCharacterException {
+	public static Big modulus(Big numerator, Big denominator) throws IncompatibleCharacterException {
 		// TODO Write logic
 		if(numerator.isFractional() || denominator.isFractional())
 			throw new IncompatibleCharacterException("From Calculate.modulus(): Any of the numerator or denominator cannot be fractional.");
@@ -93,7 +93,7 @@ public final class Calculate {
 	 * @author Alok Shukla
 	 * @since v0.1.0
 	 */
-	public Big mod(Big numerator, Big denominator) throws IncompatibleCharacterException {
+	public static Big mod(Big numerator, Big denominator) throws IncompatibleCharacterException {
 		return modulus(numerator, denominator);
 	}
 
@@ -102,7 +102,7 @@ public final class Calculate {
 	 * @param numbers Big numbers
 	 * @return A Big type variable containing result of arithmetic addition of the provided numbers
 	 */
-	public Big add(Big... numbers) {
+	public static Big add(Big... numbers) {
 		int total  = numbers.length;
 		if(total < 1)
 			return null;
@@ -117,7 +117,7 @@ public final class Calculate {
 		return result;
 	}
 	
-	private Big addTwo(Big firstNumber, Big secondNumber) {
+	private static Big addTwo(Big firstNumber, Big secondNumber) {
 		Big result = new Big();
 		
 		if(firstNumber.isNegative() && secondNumber.isNegative()) {
@@ -270,7 +270,7 @@ public final class Calculate {
 	 * @param numbers Big numbers
 	 * @return A Big type variable containing result of arithmetic addition of the provided numbers
 	 */
-	public Big sum(Big... numbers) {
+	public static Big sum(Big... numbers) {
 		return add(numbers);
 	}
 
@@ -282,7 +282,7 @@ public final class Calculate {
 	 * @author Alok Shukla
 	 * @since v0.1.0
 	 */
-	public Big subtract(Big firstNumber, Big secondNumber) {
+	public static Big subtract(Big firstNumber, Big secondNumber) {
 		Big result	=	new Big();
 		int compare =	firstNumber.compareTo(secondNumber);
 		if(compare == 0) {
@@ -349,7 +349,7 @@ public final class Calculate {
 	 * @param secondNumber
 	 * @return A Big type variable containing firstNumber - secondNumber
 	 */
-	public Big sub(Big firstNumber, Big secondNumber) {
+	public static Big sub(Big firstNumber, Big secondNumber) {
 		return subtract(firstNumber, secondNumber);
 	}
 
