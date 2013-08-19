@@ -2,7 +2,6 @@ package org.bigNumber.common.models;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.bigNumber.common.services.exceptions.IncompatibleCharacterException;
 import org.junit.Test;
 import junit.framework.TestCase;
@@ -31,13 +30,31 @@ public class BigTest extends TestCase {
 	}*/
 	
 	@Test
-	public void roundOffTest() {
+	public void testGetValue() {
+		Big no = new Big();
+		try {
+			no.setValue("6343");
+		} catch (IncompatibleCharacterException e) {
+			e.printStackTrace();
+		}
+		List<Character> result        = no.getValue();
+		List<Character> correctResult = new ArrayList<Character>();
+		correctResult.add('6');
+		correctResult.add('3');
+		correctResult.add('4');
+		correctResult.add('3');
+		assertTrue(result == correctResult);
+	}
+	
+	@Test
+	public void testRoundOff() {
 		Big no = new Big();
 		try {
 			no.setValue("34.2896");
 		} catch (IncompatibleCharacterException e) {
 			e.printStackTrace();
 		}
+		no.roundOff(2);
 		List<Character> result        = no.getValue();
 		List<Character> correctResult = new ArrayList<Character>();
 		correctResult.add('3');

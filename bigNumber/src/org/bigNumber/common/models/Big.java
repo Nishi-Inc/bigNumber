@@ -297,15 +297,24 @@ public final class Big implements Serializable, Comparable<Big> {
 	public void setValue(String value) throws IncompatibleCharacterException {
 		value.replaceAll(" ", "");
 		int size = value.length();
+		boolean error = true;
 		this.setZero(true);
 		for(int i=0; i<size; i++) {
 			Character digit = value.charAt(i);
 			/*if(digit == null) {
 				break;
 			}*/
-			if(digit > '9' || digit < '0' || digit != '-' || digit != '.') {
+			if(digit <= '9' && digit >= '0') {
+				error = false;
+			} else if(digit == '-') {
+				error = false;
+			} else if(digit == '.') {
+				error = false;
+			}
+			if(error) {
 				throw new IncompatibleCharacterException("From Big.setValue(): value is incompatible.");
 			}
+			
 			if(digit == '.') {
 				if(this.isFractional())
 					throw new IncompatibleCharacterException("From Big.setValue(): value is incompatible.");
