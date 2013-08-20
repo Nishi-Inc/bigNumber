@@ -906,7 +906,7 @@ public final class Big implements Serializable, Comparable<Big> {
 	 * @since v0.1.0
 	 * @deprecated
 	 */
-	public <E extends Comparable<E>> void put(E number) throws IncompatibleCharacterException {
+	public <E extends Comparable<?>> void put(E number) throws IncompatibleCharacterException {
 		ArrayList<Character> numberList	=	new ArrayList<Character>();
 		String 				 num 		=	number.toString();
 		int					 size 		=	num.length();
@@ -916,7 +916,6 @@ public final class Big implements Serializable, Comparable<Big> {
 	}
 
 	/**
-	 * 
 	 * @return true if the number is negative else false
 	 * @author Alok Shukla
 	 * @since v0.1.0
