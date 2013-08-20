@@ -294,6 +294,7 @@ public final class Big implements Serializable, Comparable<Big> {
 	 * @throws IncompatibleCharacterException
 	 */
 	public void setValue(String value) throws IncompatibleCharacterException {
+		this.resetValue();
 		value.replaceAll(" ", "");
 		int size = value.length();
 		boolean error = true;
@@ -322,7 +323,7 @@ public final class Big implements Serializable, Comparable<Big> {
 			}
 			if(this.isZero() && (digit > '0' && digit <= '9'))
 				this.setZero(false);
-			this.value.add(digit);
+			this.getValue().add(digit);
 		}
 		
 		if(this.isFractional()) {
@@ -636,16 +637,18 @@ public final class Big implements Serializable, Comparable<Big> {
 		if((this.size()-i) < numberOfDigitsAfterDecimal)
 			return;
 		else {
-			j = j + numberOfDigitsAfterDecimal;
+			j += numberOfDigitsAfterDecimal;
 			i = j+1;
 			if((this.charAt(i) < '5') || (this.charAt(i) == '5' && this.charAt(j)%2 == 0))
 				return;
-			if(this.charAt(i) > '5') {
-				try {
-					this.modify(j, this.charAt(j) + 1);
-				} catch (NumberFormatException | IncompatibleCharacterException e) {
-					e.printStackTrace();
-				}
+			try {
+				this.modify(j, this.charAt(j) + 1 - '0');
+			} catch (NumberFormatException | IncompatibleCharacterException e) {
+				e.printStackTrace();
+			}
+			j++;
+			while(j<this.size()) {
+				this.getValue().remove(j);
 			}
 		}
 	}
@@ -677,6 +680,10 @@ public final class Big implements Serializable, Comparable<Big> {
 	
 	private void syncFromInteger() {
 		// TODO set all variables and values as per value in the BigInteger variable
+	}
+	
+	private void resetValue() {
+		this.value = null;
 	}
 	
 	//==================================================================================
@@ -962,8 +969,7 @@ public final class Big implements Serializable, Comparable<Big> {
 	 * @since v0.1.0
 	 */
 	public Integer size() {
-		if(size == null)
-			this.setSize(this.getValue().size());
+		this.setSize(this.getValue().size());
 		return size;
 	}
 

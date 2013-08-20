@@ -8,27 +8,6 @@ import junit.framework.TestCase;
 
 public class BigTest extends TestCase {
 	
-	/*private Big no1 = null;
-	private Big no2 = null;
-	
-	protected Big getNo1() {
-		if(no1 == null)
-			return new Big();
-		return no1;
-	}
-	
-	protected Big getNo2() {
-		if(no2 == null)
-			return new Big();
-		return no2;
-	}
-	
-	protected Big setNo1() {
-		if(no1 == null)
-			return new Big();
-		return no1;
-	}*/
-	
 	@Test
 	public void testGetValue() {
 		Big no = new Big();
@@ -43,26 +22,40 @@ public class BigTest extends TestCase {
 		correctResult.add('3');
 		correctResult.add('4');
 		correctResult.add('3');
-		assertTrue(result == correctResult);
+		assertTrue(isEqual(result, correctResult));
 	}
-	
+
 	@Test
 	public void testRoundOff() {
 		Big no = new Big();
 		try {
-			no.setValue("34.2896");
+			no.setValue("-34.2896");
 		} catch (IncompatibleCharacterException e) {
 			e.printStackTrace();
 		}
 		no.roundOff(2);
 		List<Character> result        = no.getValue();
 		List<Character> correctResult = new ArrayList<Character>();
+		correctResult.add('-');
 		correctResult.add('3');
 		correctResult.add('4');
 		correctResult.add('.');
 		correctResult.add('2');
 		correctResult.add('9');
-		assertTrue(result == correctResult);
+		assertTrue(isEqual(result, correctResult));
+	}
+	
+	private boolean isEqual(List<Character> result, List<Character> correctResult) {
+		int size = result.size();
+		if(size != correctResult.size()) {
+			return false;
+		}
+		for(int i=0; i<size; i++) {
+			if(result.get(i) != correctResult.get(i)) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 }
