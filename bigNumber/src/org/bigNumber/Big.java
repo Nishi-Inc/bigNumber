@@ -658,7 +658,7 @@ public final class Big implements Serializable, Comparable<Big> {
 	//========================== PRIVATE HELPER METHODS ================================
 	
 	private void syncFromValue() {
-		// TODO set all variables and values as per value in the value of the Big
+		// set all variables and values as per value in the value of the Big
 		// Variables to set size, isZero, isNegative, locationOfDecimal, isFractional, bigDecimal or bigInteger
 		List<Character> val = null;
 		val = this.getValue();
@@ -671,7 +671,32 @@ public final class Big implements Serializable, Comparable<Big> {
 			this.setNegative(false);
 		}
 		
-		// Write here
+		this.setZero(true);
+		int i;
+		if(this.isNegative()) {
+			i=1;
+		} else {
+			i=0;
+		}
+		for(; i<val.size(); i++){
+			char digit = val.get(i);
+			if(digit != '.') {
+				if(digit != '0') {
+					this.setZero(false);
+					break;
+				}
+			} else {
+				this.setLocationOfDecimal(i);
+				this.setFractional(true);
+			}
+		}
+		
+		String valueStr = this.toString();
+		if(this.isFractional()) {
+			this.setBigDecimal(new BigDecimal(valueStr));
+		} else {
+			this.setBigInteger(new BigInteger(valueStr));
+		}
 	}
 	
 	private void syncFromDecimal() {
@@ -1002,7 +1027,7 @@ public final class Big implements Serializable, Comparable<Big> {
 		return isZero;
 	}
 
-	public void setZero(boolean isZero) {
+	private void setZero(boolean isZero) {
 		this.isZero = isZero;
 	}
 	
