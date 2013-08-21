@@ -1,4 +1,4 @@
-package org.bigNumber.common.models;
+package org.bigNumber;
 
 import java.util.ArrayList;
 import java.util.List;
