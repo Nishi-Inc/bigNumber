@@ -1,8 +1,14 @@
 package org.bigNumber;
 
-import org.bigNumber.common.models.Big;
 import org.bigNumber.common.services.exceptions.IncompatibleCharacterException;
 
+/**
+ * This Class provides static utility methods to manipulate big numbers
+ * @author <a href="mailto:shuklaalok7@gmail.com">Alok Shukla</a>
+ * @Producer Nishi Inc.
+ * @since v1.0.0
+ * @deprecated
+ */
 public final class Utils {
 	
 	/**

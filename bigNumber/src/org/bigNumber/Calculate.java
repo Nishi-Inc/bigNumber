@@ -14,7 +14,6 @@ package org.bigNumber;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bigNumber.common.models.Big;
 import org.bigNumber.common.services.exceptions.IncompatibleCharacterException;
 
 /**
@@ -22,6 +21,7 @@ import org.bigNumber.common.services.exceptions.IncompatibleCharacterException;
  * @author <a href="mailto:shuklaalok7@gmail.com">Alok Shukla</a>
  * @since v0.1.0
  * @Producer Nishi Inc.
+ * @deprecated
  */
 public final class Calculate {
 

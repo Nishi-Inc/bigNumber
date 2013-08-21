@@ -2,6 +2,8 @@ package org.bigNumber.common.models;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.bigNumber.Big;
 import org.bigNumber.common.services.exceptions.IncompatibleCharacterException;
 import org.junit.Test;
 import junit.framework.TestCase;
