@@ -307,6 +307,7 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 	}
 	
 	/**
+	 * Now BigNumber <i>this</i> will hold product of <i>this</i> and provided number
 	 * @author Nishi Inc.
 	 * @since v1.0.0
 	 * @param number To multiply to <i>this</i>
