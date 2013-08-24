@@ -10,7 +10,7 @@ import junit.framework.TestCase;
 
 public class BigTest extends TestCase {
 	
-	@Test
+/*	@Test
 	public void testGetValue() {
 		BigNumber no = new BigNumber();
 		try {
@@ -35,16 +35,8 @@ public class BigTest extends TestCase {
 		} catch (IncompatibleCharacterException e) {
 			e.printStackTrace();
 		}
-		no.roundOff(2);
-		List<Character> result        = no.getValue();
-		List<Character> correctResult = new ArrayList<Character>();
-		correctResult.add('-');
-		correctResult.add('3');
-		correctResult.add('4');
-		correctResult.add('.');
-		correctResult.add('2');
-		correctResult.add('9');
-		assertTrue(isEqual(result, correctResult));
+		no.roundOff(3);
+		assertTrue(no.toString().contentEquals("-34.290"));
 	}
 	
 	private boolean isEqual(List<Character> result, List<Character> correctResult) {
@@ -58,6 +50,57 @@ public class BigTest extends TestCase {
 			}
 		}
 		return true;
+	}
+	
+	public void testPow() {
+		BigNumber num = new BigNumber();
+		try {
+			num = new BigNumber("34.1");
+		} catch (IncompatibleCharacterException e) {
+			e.printStackTrace();
+		}
+		num.pow(2);
+		assertTrue(num.toString().contentEquals("1162.81"));
+	}
+	
+	public void testCompareTo() {
+		BigNumber num1 = new BigNumber();
+		BigNumber num2 = new BigNumber();
+		try {
+			num1 = new BigNumber("-34.1");
+			num2 = new BigNumber("33.1123");
+		} catch (IncompatibleCharacterException e) {
+			e.printStackTrace();
+		}
+		assertTrue(num1.compareTo(num2) == -1);
+	}*/
+	
+	/*public void testAbsolute() {
+		BigNumber num1 = new BigNumber();
+		BigNumber num2 = new BigNumber();
+		try {
+			num1 = new BigNumber("1111");
+			num2 = new BigNumber("-2.0");
+		} catch (IncompatibleCharacterException e) {
+			e.printStackTrace();
+		}
+		num1.absolute();
+		num2.absolute();
+		assertTrue(num1.toString().contentEquals("1111"));
+		assertTrue(num2.toString().contentEquals("2.0"));
+	}*/
+	
+	public void testModulus() {
+		BigNumber num1 = new BigNumber();
+		BigNumber num2 = new BigNumber();
+		try {
+			num1 = new BigNumber("-34");
+			num2 = new BigNumber("3");
+		} catch (IncompatibleCharacterException e) {
+			e.printStackTrace();
+		}
+		num1.modulus(num2);
+		assertTrue(num1.toString().contentEquals("1"));
 	}
 	
 }

@@ -160,83 +160,21 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 	@Override
 	public int compareTo(BigNumber number) {
 		int result = 0;
-		int lengthOfFirstNumber  = this.size();
-		int lengthOfSecondNumber = number.size();
-
-		if(this.isNegative && !number.isNegative)
-			return -1;
-		if(!this.isNegative && number.isNegative)
-			return 1;
-		
-		//Both the numbers are of same sign
-		boolean reverse = false;
-		if(number.getValue().get(0) == '-')
-			reverse = true;
-
-		BigNumber tmp1	=	null;
-		BigNumber tmp2	=	null;
-		BigNumber frc1	=	null;
-		BigNumber frc2	=	null;
 
 		if(this.isFractional() && number.isFractional()) {
-			tmp1	=	new BigNumber();
-			tmp2	=	new BigNumber();
-			try {
-				tmp1.setValue(this.getValueTill(this.locationOfDecimal()-1));
-				tmp2.setValue(number.getValueTill(number.locationOfDecimal()-1));
-				result = tmp1.compareTo(tmp2);
-				if(result == 0) {
-					frc1	=	new BigNumber();
-					frc2	=	new BigNumber();
-					frc1.setValue(this.getValueBetween(this.locationOfDecimal()+1, this.size()-1));
-					frc2.setValue(number.getValueBetween(number.locationOfDecimal()+1, number.size()-1));
-					result	=	frc1.compareTo(frc2);
-				}
-			} catch (IncompatibleCharacterException e) {
-				e.printStackTrace();
-			}
-		} else if(this.isFractional() && !number.isFractional()) {
-			tmp1	=	new BigNumber();
-			try {
-				tmp1.setValue(this.getValueTill(this.locationOfDecimal()-1));
-				result = tmp1.compareTo(number);
-				if(result == 0)
-					result	=	1;
-			} catch (IncompatibleCharacterException e) {
-				e.printStackTrace();
-			}
+			// Both are fractional
+			result = this.getBigDecimal().compareTo(number.getBigDecimal());
 		} else if(!this.isFractional() && number.isFractional()) {
-			tmp2	=	new BigNumber();
-			try {
-				tmp2.setValue(number.getValueTill(number.locationOfDecimal()-1));
-				result = this.compareTo(tmp2);
-				if(result == 0)
-					result	=	-1;
-			} catch (IncompatibleCharacterException e) {
-				e.printStackTrace();
-			}
+			this.makeFractional();
+			result = this.getBigDecimal().compareTo(number.getBigDecimal());
+		} else if(this.isFractional() && !number.isFractional()) {
+			number.makeFractional();
+			result = this.getBigDecimal().compareTo(number.getBigDecimal());
 		} else {
-			// Both the numbers are non-fractional and of same sign
-			if(lengthOfFirstNumber > lengthOfSecondNumber)
-				return 1;
-			else if(lengthOfFirstNumber < lengthOfSecondNumber)
-				return -1;
-			else {
-				// Now both of them are of same sign and of same length
-				int length = lengthOfFirstNumber;
-				int i=0;
-				if(reverse)
-					i=1;
-				for(; i<=length; i++) {
-					if(this.getValue().get(i) < number.getValue().get(i))
-							return -1;
-					else if(this.getValue().get(i) > number.getValue().get(i))
-							return 1;
-				}
-			}
+			//Both are non-fractional
+			result = this.getBigInteger().compareTo(number.getBigInteger());
 		}
-		if(reverse)
-			result *= -1;
+
 		return result;
 	}
 	
@@ -298,7 +236,7 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 		value.replaceAll(" ", "");
 		int size = value.length();
 		boolean error = true;
-		this.setZero(true);
+		
 		for(int i=0; i<size; i++) {
 			Character digit = value.charAt(i);
 			/*if(digit == null) {
@@ -392,6 +330,7 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 			this.setBigInteger(this.getBigInteger().multiply(number.getBigInteger()));
 			this.syncFromInteger();
 		}
+		this.consolidate();
 	}
 	
 	/**
@@ -445,7 +384,8 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 	}
 	
 	/**
-	 * 
+	 * @author Nishi Inc.
+	 * @since v1.0.0
 	 * @param number A BigNumber to divide and compute remainder
 	 * @return An array of two BigNumber elements, the quotient <i>(this/number)</i> is the 0th element and remainder <i>(this%number)</i> is the 1st element
 	 */
@@ -481,22 +421,51 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 		return result;
 	}
 	
+	/**
+	 * After this operation <i>this</i> will hold value of +ve value of <i>this</i>
+	 * @author Nishi Inc.
+	 * @since v1.0.0
+	 */
 	public void absolute() {
-		if(this.isFractional()) {
+		/*if(this.isFractional()) {
 			this.setBigDecimal(this.getBigDecimal().abs());
 			this.syncFromDecimal();
 		} else {
 			this.setBigInteger(this.getBigInteger().abs());
 			this.syncFromInteger();
+		}*/
+		if(this.isNegative()) {
+			this.getValue().remove(0);
+			this.syncFromValue(true, true);
 		}
 	}
 	
+	/**
+	 * @author Nishi Inc.
+	 * @since v1.0.0
+	 * @param denominator
+	 */
+	public void modulus(BigNumber denominator) {
+		try {
+			this.setValue((this.divideAndRemainder(denominator))[1]);
+			this.syncFromValue(true, true);
+			this.absolute();
+		} catch (IncompatibleCharacterException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * @author Nishi Inc.
+	 * @since v1.0.0
+	 * @param power
+	 */
 	public void pow(int power) {
 		if(this.isFractional()) {
-			this.getBigDecimal().pow(power);
+			this.setBigDecimal(this.getBigDecimal().pow(power));
 			this.syncFromDecimal();
 		} else {
-			this.getBigInteger().pow(power);
+			this.setBigInteger(this.getBigInteger().pow(power));
 			this.syncFromInteger();
 		}
 	}
@@ -767,21 +736,35 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 		}
 		int j = this.locationOfDecimal();
 		int i = j+1;
-		if((this.size()-i) < numberOfDigitsAfterDecimal)
+		if((this.size()-i) < numberOfDigitsAfterDecimal) {
 			return;
+		}
 		else {
 			j += numberOfDigitsAfterDecimal;
 			i = j+1;
-			if((this.charAt(i) < '5') || (this.charAt(i) == '5' && this.charAt(j)%2 == 0))
+			if(i>=this.size()) {
 				return;
+			}
+			if((this.charAt(i) < '5') || (this.charAt(i) == '5' && this.charAt(j)%2 == 0)) {
+				return;
+			}
+			
+			for(;this.charAt(j) == '9';j--) {
+				try {
+					this.modify(j, '0');
+				} catch (IncompatibleCharacterException e) {
+					e.printStackTrace();
+				}
+			}
+			
 			try {
 				this.modify(j, this.charAt(j) + 1 - '0');
 			} catch (NumberFormatException | IncompatibleCharacterException e) {
 				e.printStackTrace();
 			}
-			j++;
-			while(j<this.size()) {
-				this.getValue().remove(j);
+			
+			while(i<this.size()) {
+				this.getValue().remove(i);
 			}
 		}
 	}
@@ -827,7 +810,7 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 				return;
 			else
 				throw new IncompatibleCharacterException("From BigNumber.modify(): newDIgit is incompatible.");
-		} else if(newDigit>'0' && newDigit<'9') {
+		} else if(newDigit>='0' && newDigit<='9') {
 			flag = true;
 		} else
 			throw new IncompatibleCharacterException("From BigNumber.modify(): newDIgit is incompatible.");
@@ -949,6 +932,14 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 			}
 		}
 		
+		if(this.size() == 0) {
+			try {
+				this.setValue(0);
+			} catch (IncompatibleCharacterException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		this.syncFromValue(true, true);
 	}
 	
@@ -1026,7 +1017,7 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 	/**
 	 * Sets all the field variables as per the value of bigNumber
 	 */
-	protected void syncFromValue(boolean toSetDecimal, boolean toSetInteger) {
+	private void syncFromValue(boolean toSetDecimal, boolean toSetInteger) {
 		// set all variables and values as per value in the value of the BigNumber
 		// Variables to set isZero, isNegative, locationOfDecimal, isFractional, bigDecimal or bigInteger
 		List<Character> val = null;
@@ -1075,7 +1066,7 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 	/**
 	 * Sets all the field variables as per the value of bigDecimal
 	 */
-	protected void syncFromDecimal() {
+	private void syncFromDecimal() {
 		try {
 			this.setValue(this.getBigDecimal());
 		} catch (IncompatibleCharacterException e) {
@@ -1088,7 +1079,7 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 	/**
 	 * Sets all the field variables as per the value of bigInteger
 	 */
-	protected void syncFromInteger() {
+	private void syncFromInteger() {
 		try {
 			this.setValue(this.getBigInteger());
 		} catch (IncompatibleCharacterException e) {
@@ -1098,8 +1089,11 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 		this.syncFromValue(true, false);
 	}
 	
-	protected void resetValue() {
+	private void resetValue() {
 		this.value = null;
+		this.setFractional(false);
+		this.setZero(true);
+		this.setNegative(false);
 	}
 	
 	//==================================================================================
@@ -1119,7 +1113,7 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 		return isNegative;
 	}
 	
-	protected void setNegative(boolean isNegative) {
+	private void setNegative(boolean isNegative) {
 		this.isNegative = isNegative;
 	}
 	
@@ -1133,7 +1127,7 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 		return isFractional;
 	}
 
-	protected void setFractional(boolean isFraction) {
+	private void setFractional(boolean isFraction) {
 		this.isFractional = isFraction;
 		if(!isFraction)
 			this.setLocationOfDecimal(-1);
@@ -1152,29 +1146,29 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 		return locationOfDecimal;
 	}
 
-	protected void setLocationOfDecimal(Integer locationOfDecimal) {
+	private void setLocationOfDecimal(Integer locationOfDecimal) {
 		this.locationOfDecimal = locationOfDecimal;
 	}
 
-	protected BigInteger getBigInteger() {
+	private BigInteger getBigInteger() {
 		if(bigInteger == null) {
 			this.setBigInteger(new BigInteger("0"));
 		}
 		return bigInteger;
 	}
 
-	protected void setBigInteger(BigInteger bigInteger) {
+	private void setBigInteger(BigInteger bigInteger) {
 		this.bigInteger = bigInteger;
 	}
 
-	protected BigDecimal getBigDecimal() {
+	private BigDecimal getBigDecimal() {
 		if(bigDecimal == null) {
 			this.setBigDecimal(new BigDecimal(0));
 		}
 		return bigDecimal;
 	}
 
-	protected void setBigDecimal(BigDecimal bigDecimal) {
+	private void setBigDecimal(BigDecimal bigDecimal) {
 		this.bigDecimal = bigDecimal;
 	}
 
@@ -1182,7 +1176,7 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 		return isZero;
 	}
 
-	protected void setZero(boolean isZero) {
+	private void setZero(boolean isZero) {
 		this.isZero = isZero;
 	}
 	
@@ -1215,7 +1209,7 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 	 * @author Nishi Inc.
 	 * @since v1.1.0
 	 */
-	protected static BigNumber multiply(BigNumber... numbers) {
+	private static BigNumber multiply(BigNumber... numbers) {
 		int total  = numbers.length;
 		BigNumber result = new BigNumber(numbers[0]);
 		
@@ -1259,7 +1253,7 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 	 * @param denominator or divisor
 	 * @return A BigNumber type variable containing result of arithmetic division of the provided numerator by the provided denominator
 	 */
-	protected static BigNumber divide(BigNumber numerator, BigNumber denominator) {
+	private static BigNumber divide(BigNumber numerator, BigNumber denominator) {
 		// TODO Write logic
 		BigNumber result	=	new BigNumber();
 		return result;
@@ -1274,7 +1268,7 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 	 * @author Nishi Inc.
 	 * @since v1.1.0
 	 */
-	protected static BigNumber modulus(BigNumber numerator, BigNumber denominator) throws IncompatibleCharacterException {
+	private static BigNumber modulus(BigNumber numerator, BigNumber denominator) throws IncompatibleCharacterException {
 		// TODO Write logic
 		if(numerator.isFractional() || denominator.isFractional())
 			throw new IncompatibleCharacterException("From Calculate.modulus(): Any of the numerator or denominator cannot be fractional.");
@@ -1291,7 +1285,7 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 	 * @author Nishi Inc.
 	 * @since v1.1.0
 	 */
-	protected static BigNumber mod(BigNumber numerator, BigNumber denominator) throws IncompatibleCharacterException {
+	private static BigNumber mod(BigNumber numerator, BigNumber denominator) throws IncompatibleCharacterException {
 		return modulus(numerator, denominator);
 	}
 
@@ -1300,7 +1294,7 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 	 * @param numbers BigNumber numbers
 	 * @return A BigNumber type variable containing result of arithmetic addition of the provided numbers
 	 */
-	protected static BigNumber add(BigNumber... numbers) {
+	private static BigNumber add(BigNumber... numbers) {
 		int total  = numbers.length;
 		
 		BigNumber result = new BigNumber(numbers[0]);
@@ -1343,7 +1337,7 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 	 * @param numbers BigNumber numbers
 	 * @return A BigNumber type variable containing result of arithmetic addition of the provided numbers
 	 */
-	protected static BigNumber sum(BigNumber... numbers) {
+	private static BigNumber sum(BigNumber... numbers) {
 		return add(numbers);
 	}
 
@@ -1355,7 +1349,7 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 	 * @author Nishi Inc.
 	 * @since v1.1.0
 	 */
-	protected static BigNumber subtract(BigNumber firstNumber, BigNumber secondNumber) {
+	private static BigNumber subtract(BigNumber firstNumber, BigNumber secondNumber) {
 		
 		BigNumber result = new BigNumber();
 
@@ -1388,7 +1382,7 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 	 * @param secondNumber
 	 * @return A BigNumber type variable containing firstNumber - secondNumber
 	 */
-	protected static BigNumber sub(BigNumber firstNumber, BigNumber secondNumber) {
+	private static BigNumber sub(BigNumber firstNumber, BigNumber secondNumber) {
 		return subtract(firstNumber, secondNumber);
 	}
 
@@ -1399,7 +1393,7 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 	 * @param number
 	 * @return A BigNumber type variable containing absolute value of the given BigNumber number
 	 */
-	protected static BigNumber absolute(BigNumber number) {
+	private static BigNumber absolute(BigNumber number) {
 		if(!number.isNegative())
 			return number;
 		BigNumber result = null;
@@ -1415,7 +1409,7 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 	 * @author Nishi Inc.
 	 * @since v1.1.0
 	 */
-	protected static BigNumber abs(BigNumber number) {
+	private static BigNumber abs(BigNumber number) {
 		return absolute(number);
 	}
 	
@@ -1428,7 +1422,7 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 	 * @author Nishi Inc.
 	 * @since v1.2.0 
 	 */
-	protected static BigNumber reverse(BigNumber number) {
+	private static BigNumber reverse(BigNumber number) {
 		number.reverse();
 		return number;
 	}
@@ -1440,7 +1434,7 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 	 * @author Nishi Inc.
 	 * @since v1.2.0 
 	 */
-	protected static BigNumber[] reverse(BigNumber... numbers) {
+	private static BigNumber[] reverse(BigNumber... numbers) {
 		for(BigNumber number : numbers) {
 			number.reverse();
 		}
@@ -1454,7 +1448,7 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 	 * @author Nishi Inc.
 	 * @since v1.2.0
 	 */
-	protected static BigNumber consolidate(BigNumber number) {
+	private static BigNumber consolidate(BigNumber number) {
 		number.consolidate();
 		return number;
 	}
@@ -1466,7 +1460,7 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 	 * @author Nishi Inc.
 	 * @since v1.2.0
 	 */
-	protected static BigNumber[] consolidate(BigNumber... numbers) {
+	private static BigNumber[] consolidate(BigNumber... numbers) {
 		for(BigNumber number : numbers) {
 			number.consolidate();
 		}
@@ -1482,7 +1476,7 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 	 * @author Nishi Inc.
 	 * @since v1.2.0
 	 */
-	protected static BigNumber append(BigNumber... numbers) throws IncompatibleCharacterException {
+	private static BigNumber append(BigNumber... numbers) throws IncompatibleCharacterException {
 		int length = numbers.length;
 		for(int i=1; i<length; i++)
 			numbers[0].append(numbers[i]);
@@ -1498,7 +1492,7 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 	 * @author Nishi Inc.
 	 * @since v1.2.0
 	 */
-	protected static BigNumber putAtFirst(BigNumber number, int digit) throws IncompatibleCharacterException {
+	private static BigNumber putAtFirst(BigNumber number, int digit) throws IncompatibleCharacterException {
 		number.putAtFirst(digit);
 		return number;
 	}
@@ -1512,7 +1506,7 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 	 * @author Nishi Inc.
 	 * @since v1.2.0
 	 */
-	protected static BigNumber putAtFirst(BigNumber number, char character) throws IncompatibleCharacterException{
+	private static BigNumber putAtFirst(BigNumber number, char character) throws IncompatibleCharacterException{
 		number.putAtFirst(character);
 		return number;
 	}
