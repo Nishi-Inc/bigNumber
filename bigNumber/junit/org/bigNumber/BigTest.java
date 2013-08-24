@@ -3,7 +3,7 @@ package org.bigNumber;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bigNumber.Big;
+import org.bigNumber.BigNumber;
 import org.bigNumber.common.services.exceptions.IncompatibleCharacterException;
 import org.junit.Test;
 import junit.framework.TestCase;
@@ -12,7 +12,7 @@ public class BigTest extends TestCase {
 	
 	@Test
 	public void testGetValue() {
-		Big no = new Big();
+		BigNumber no = new BigNumber();
 		try {
 			no.setValue("6343");
 		} catch (IncompatibleCharacterException e) {
@@ -29,7 +29,7 @@ public class BigTest extends TestCase {
 
 	@Test
 	public void testRoundOff() {
-		Big no = new Big();
+		BigNumber no = new BigNumber();
 		try {
 			no.setValue("-34.2896");
 		} catch (IncompatibleCharacterException e) {
