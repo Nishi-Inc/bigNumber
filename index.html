@@ -1,65 +1,101 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    
-	<meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-	<meta name="robots" content="index, follow">
-	<meta name="keywords" content="java,bignum library,bignum,big">
-	<meta name="description" content="">
-	
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="../stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="../stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="../stylesheets/print.css" media="print" />
+	<head>
+		<meta charset='utf-8'>
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<meta name="robots" content="index, follow">
+		<meta name="keywords" content="java,bignum library,bignum,big">
+		<meta name="description" content="">
+		
+		<link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
 
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+		<!--[if lt IE 9]>
+		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
 
-    <title>bigNumber - Install Guide</title>
-  </head>
+		<title>bigNumber by Nishi Inc.</title>
+	</head>
 
-  <body>
-    <header>
-      <div class="inner">
-        <h1>BigNumber</h1>
-        <h2>An API for Java to unite BigInteger and BigDecimal.</h2>
-        <a href="https://github.com/Nishi-Inc/bigNumber" class="button"><small>View project on</small>GitHub</a>
-      </div>
-    </header>
+	<body>
+		<header>
+			<div class="inner">
+				<h1>BigNumber</h1>
+				<h2>An API for Java to unite BigInteger and BigDecimal.</h2>
+				<a href="https://github.com/Nishi-Inc/bigNumber" class="button"><small>View project on</small>GitHub</a>
+			</div>
+		</header>
 
-    <div id="content-wrapper">
-      <div class="inner clearfix">
-        <section id="main-content">
-          <h1>
-<a name="bignumber" class="anchor" href="#bignumber"><span class="octicon octicon-link"></span></a>Introduction</h1>
+		<div id="content-wrapper">
+			<div class="inner clearfix">
+				<section id="main-content">
+					<h1><a name="intro" class="anchor" href="#intro"><span class="octicon octicon-link"></span>Introduction</a></h1>
+						This is a small library for Java to do calculations on very large numbers,
+						for example on numbers ranging from 100s-1000s digits. It basically combines
+						BigInteger and BigDecimal data types of Java and provides coherent methods to
+						 work with large numbers. This library is free to use, modify and distribute
+						 under Apache 2.0 license. For more information, please read API documentation.
+						 Please be informed that online API Documentation will always be updated to
+						 the latest version hence API documentation for older versions may not be found
+						 online, however after installing this library, there won't be any need to refer
+						 to online documentation at all.<br/>This library has following key features:
+						<ul>
+							<li>Provides powerful methods to do full arithmetic calculations on large numbers using optimized algorithms</li>
+							<li>Provides a data-type Big to create large numbers. This data-type eliminates the hassle of using Biginteger and Bigdecimal of Java.</li>
+							<li>Very small in size and provides powerful features which not available in inbuilt Java bignum library.</li>
+							<li>Integrates with almost all sort of Java projects flawlessly. To read how to install read Install guide.</li>
+							<li>No need to look for the <a href="API-Documentation/index.html">online API documentation</a> as its javadoc.jar is also available on the same download page.</li>
+							<li>It uses semantic versioning so you can be sure about the compatibility with your project when upgrading to any new version of this library.</li>
+						</ul>
 
-<p>This is an API for Java to handle very large numbers and do calculations on them.<br>For more information, please visit:<br></p><ul>
-<li><a href="https://github.com/Nishi-Inc/bigNumber/wiki">Wiki</a></li>
-<li><a href="https://github.com/Nishi-Inc/bigNumber/wiki/Download-and-Install-Guide">Download &amp; Install Guide</a></li>
-<li><a href="API-Documentation/index.html">API Documentation</a></li>
-</ul>
-        </section>
+					<h2><a name="requirements" class="anchor" href="#requirements"><span class="octicon octicon-link"></span>Requirements</a></h2>
+					<ul>
+						<li>JDK: 1.7 or above. It may also work for all JDK 1.5+ versions,
+						however full compatibility is not verified for 1.5 and 1.6.</li>
+						<li><b>Memory: No minimum requirement</li>
+						<li><b>Disk Space:</b> No minimum requirement</li>
+						<li><b>Processor:</b> No minimum requirement</li>
+					</ul>
 
-        <aside id="sidebar">
-          <a href="https://github.com/Nishi-Inc/bigNumber/zipball/master" class="button">
-            <small>Download Latest version</small>
-            v1.0.0-beta.jar
-          </a>
-          <a href="https://github.com/Nishi-Inc/bigNumber/tarball/master" class="button">
-            <small>Download Javadoc</small>
-            javadoc.jar
-          </a>
+					<h2><a name="installGuide" class="anchor" href="#installGuide"><span class="octicon octicon-link"></span>Download and Install guide</a></h2>
+						This API is currently in DEVELOPMENT phase. First beta version is available as 'bigNumber v1.0.0-beta'.<br/>
+						Download buttons are given on the right.<br/><br/>
+						
+					<h2><a name="issue" class="anchor" href="#issue"><span class="octicon octicon-link"></span>Report an issue</a></h2>
+						The links to lists of Known issues are given below. You can also add new issues on these pages.
+						<ul>
+							<li><a href="https://github.com/Nishi-Inc/bigNumber/issues?milestone=1&state=open">Known issues with v1.0.0</a></li>
+							<li><a href="https://github.com/Nishi-Inc/bigNumber/issues?milestone=2&state=open">Known issues with v1.1.0</a></li>
+							<li><a href="https://github.com/Nishi-Inc/bigNumber/issues?milestone=3&state=open">Known issues with v1.2.0</a></li>
+						</ul>
+						
+					<h3><a name="other" class="anchor" href="#other"><span class="octicon octicon-link"></span>Other Resources</a></h3>
+					<ul>
+						<li><a href="https://github.com/Nishi-Inc/bigNumber/wiki">Wiki</a></li>
+						<li><a href="pages/InstallGuide.html">Install Guide</a></li>
+						<li>For reference and javadoc location, <a href="API-Documentation/index.html">API Documentation</a></li>
+					</ul>
+				</section>
 
-          <p class="repo-owner"><a href="https://github.com/Nishi-Inc/bigNumber">bigNumber</a> is maintained by <a href="https://github.com/Nishi-Inc">Nishi Incorporation</a>, India.</p>
+				<aside id="sidebar">
+				  <a href="https://github.com/Nishi-Inc/bigNumber/releases/download/v1.0.0-beta/bigNumber-v1.0.0-beta.jar" class="button">
+					<small>Download Latest version</small>
+					v1.0.0-beta.jar
+				  </a>
+						  
+				  <a href="https://github.com/Nishi-Inc/bigNumber/releases/download/v1.0.0-beta/bigNumber-v1.0.0-beta-javadoc.jar" class="button">
+					<small>Download Javadoc</small>
+					javadoc.jar
+				  </a>
 
-          <p>&#169; 2013 Nishi Incorporation<br/>All rights reserved.</p>
-        </aside>
-      </div>
-    </div>
+				  <p class="repo-owner"><a href="https://github.com/Nishi-Inc/bigNumber">bigNumber</a> is maintained by <a href="https://github.com/Nishi-Inc">Nishi Incorporation</a>, India.</p>
 
-  
-  </body>
+				  <p>&#169; 2013 Nishi Incorporation<br/>All rights reserved.</p>
+				</aside>
+			</div>
+		</div>
+	</body>
 </html>
