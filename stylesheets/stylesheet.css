@@ -44,6 +44,7 @@ q:before, q:after {
 table {
 	border-collapse: collapse;
 	border-spacing: 0;
+	border: none;
 }
 
 /* LAYOUT STYLES */
@@ -65,6 +66,10 @@ a:hover {
 
 a.whiteLink {
     color: #FFFFFF;
+}
+
+.table-header{
+	font-weight: bold;
 }
 
 header {
