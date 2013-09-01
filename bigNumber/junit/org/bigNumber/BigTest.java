@@ -1,11 +1,7 @@
 package org.bigNumber;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bigNumber.BigNumber;
 import org.bigNumber.common.services.exceptions.IncompatibleCharacterException;
-import org.junit.Test;
 import junit.framework.TestCase;
 
 public class BigTest extends TestCase {
