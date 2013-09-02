@@ -6,6 +6,16 @@ import junit.framework.TestCase;
 
 public class BigTest extends TestCase {
 	
+	private BigNumberPool bigPool;
+	
+	private BigNumberPool getBigPool() {
+		if(bigPool != null) {
+			return bigPool;
+		}
+		bigPool = new BigNumberPool();
+		return bigPool;
+	}
+	
 /*	@Test
 	public void testGetValue() {
 		BigNumber no = new BigNumber();
@@ -87,16 +97,17 @@ public class BigTest extends TestCase {
 	}*/
 	
 	public void testModulus() {
-		BigNumber num1 = new BigNumber();
-		BigNumber num2 = new BigNumber();
+		BigNumber num1 = this.getBigPool().getBigNumber();
+		BigNumber num2 = this.getBigPool().getBigNumber();
 		try {
-			num1 = new BigNumber("-34");
-			num2 = new BigNumber("3");
+			num1.setValue("-34");
+			num2.setValue("3");
 		} catch (IncompatibleCharacterException e) {
 			e.printStackTrace();
 		}
 		num1.modulus(num2);
 		assertTrue(num1.toString().contentEquals("1"));
+		this.getBigPool().destroy(num1, num2);
 	}
 	
 }

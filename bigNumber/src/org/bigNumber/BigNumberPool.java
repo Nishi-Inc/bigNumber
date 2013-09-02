@@ -1,3 +1,15 @@
+/*
+ * ========================= DECLARATION ===============================
+ * NOTE: THIS IS NOT TO BE REMOVED IN ANY MODIFICATION & DISTRIBUTION
+ * OF THIS CLASS.
+ * 
+ * Author: Nishi Inc.
+ * Conceptualized by: Alok Shukla
+ * Made available for free by: Nishi Inc. 
+ * =====================================================================
+ */
+
+
 package org.bigNumber;
 
 import java.util.LinkedList;
@@ -5,12 +17,36 @@ import java.util.List;
 import org.bigNumber.BigNumber;
 import org.bigNumber.common.models.BigNumberFactory;
 
+/**
+ * A BigNumberPool which keeps BigNumbers and handles allocation
+ * @author Nishi Incorporation
+ * @since v1.0.0
+ */
 public class BigNumberPool implements BigNumberFactory {
 	
-	private List<BigNumber> allotted;
-	private List<BigNumber> free;
-	private int				capacity;
-	private int				loadFactor;
+	private List<BigNumber> 	allotted;
+	private List<BigNumber> 	free;
+	private Integer				capacity;
+	private Integer				loadFactor;
+	
+	private static int			index				=	0;
+	private static int			minCap				=	1;
+	private static int			maxCap				=	100;
+	private static int			minLoadFactor		=	0;
+	private static int			maxLoadFactor		=	100;
+	
+	private static final int	DEFAULT_LOAD_FACTOR	=	40;
+	private static final int	DEFAULT_CAPACITY	=	5;
+	
+	
+	public BigNumberPool(){}
+	
+	public BigNumberPool(int capacity, int loadFactor) {
+		this.setCapacity(capacity);
+		minCap = capacity;
+		this.setLoadFactor(loadFactor);
+		minLoadFactor = loadFactor;
+	}
 	
 	@Override
 	public BigNumber getBigNumber() {
@@ -36,9 +72,11 @@ public class BigNumberPool implements BigNumberFactory {
 	}
 	
 	private void destroy(BigNumber bignum) {
-		this.getAllotted().remove(bignum);
-		this.getFree().add(bignum);
-		this.managePool();
+		boolean flag = this.getAllotted().remove(bignum);
+		if(flag) {
+			this.getFree().add(bignum);
+			this.managePool();
+		}
 	}
 	
 	/**
@@ -70,6 +108,10 @@ public class BigNumberPool implements BigNumberFactory {
 	@SuppressWarnings("unused")
 	private void managePoolCapacityAndLoadFactor() {
 		// TODO Write logic
+		/* There should be some number(quotient, index, parameter) to
+		 * control modification and level of modification of capacity
+		 * and loadFactor. index is used here.
+		 */
 	}
 
 	private List<BigNumber> getFree() {
@@ -91,9 +133,16 @@ public class BigNumberPool implements BigNumberFactory {
 	 * @return loadFactor of BigNumber pool as an <i>int</i> (as percentage: a number between 1 to 100)
 	 */
 	private int getLoadFactor() {
-		if(loadFactor == 0) {
-			this.setLoadFactor(40);
+		if(loadFactor == null) {
+			this.setLoadFactor(DEFAULT_LOAD_FACTOR);
 		}
+		
+		if(loadFactor < minLoadFactor) {
+			this.setLoadFactor(minLoadFactor);
+		} else if(loadFactor > maxLoadFactor) {
+			this.setLoadFactor(maxLoadFactor);
+		}
+		
 		return loadFactor;
 	}
 
@@ -102,9 +151,16 @@ public class BigNumberPool implements BigNumberFactory {
 	}
 
 	private int getCapacity() {
-		if(capacity == 0) {
-			this.setCapacity(10);
+		if(capacity == null) {
+			this.setCapacity(DEFAULT_CAPACITY);
 		}
+		
+		if(capacity < minCap) {
+			this.setCapacity(minCap);
+		} else if(capacity > maxCap) {
+			this.setCapacity(maxCap);
+		}
+		
 		return capacity;
 	}
 
