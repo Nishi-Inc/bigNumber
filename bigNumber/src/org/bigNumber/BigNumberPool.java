@@ -28,8 +28,8 @@ public class BigNumberPool implements BigNumberFactory {
 	private List<BigNumber> 	free;
 	private Integer				capacity;
 	private Integer				loadFactor;
+	private Integer				limit;
 	
-	private static int			index				=	0;
 	private static int			minCap				=	1;
 	private static int			maxCap				=	100;
 	private static int			minLoadFactor		=	0;
@@ -58,6 +58,7 @@ public class BigNumberPool implements BigNumberFactory {
 		for(BigNumber bignum : this.getFree()) {
 			this.getFree().remove(bignum);
 			this.getAllotted().add(bignum);
+			this.updateIndex();
 			return bignum;
 		}
 		return null;
@@ -84,6 +85,7 @@ public class BigNumberPool implements BigNumberFactory {
 	 * <br/>loadFactor and currently allotted and free BigNumbers.
 	 */
 	private void managePool() {
+		this.updateIndex();
 		for(;this.getFree().size() > this.getCapacity();) {
 			for(BigNumber bignum : this.getFree()) {
 				this.getFree().remove(bignum);
@@ -92,26 +94,48 @@ public class BigNumberPool implements BigNumberFactory {
 		}
 		
 		int sizeOfAllotted = this.getAllotted().size();
-		int limit          = this.getCapacity() * (1 + this.getLoadFactor()/100) + 1;
-		for(;(this.getFree().size()+sizeOfAllotted > limit) && (!this.getFree().isEmpty());) {
+		for(;(this.getFree().size()+sizeOfAllotted > this.getLimit()) && (!this.getFree().isEmpty());) {
 			for(BigNumber bignum : this.getFree()) {
 				this.getFree().remove(bignum);
 				break;
 			}
 		}
+		this.updateIndex();
 	}
 	
 	/**
-	 * This determines appropriate values of <b>capacity</b> and <b>loadFactor</b> in run-time and sets them up.
-	 * It's the reason why <b>capacity</b> and <b>loadFactor</b> are not declared as constants.
+	 * This determines appropriate values of <b>capacity</b> and <b>loadFactor</b> in run-time and sets them up.<br/>
+	 * It's the reason why <b>capacity</b> and <b>loadFactor</b> are not declared as constants.<br/><br/>
+	 * Updates index as per current status of pool<br/>
+	 * Frequent calls to this method ensure proper value of index variable
 	 */
-	@SuppressWarnings("unused")
-	private void managePoolCapacityAndLoadFactor() {
-		// TODO Write logic
-		/* There should be some number(quotient, index, parameter) to
-		 * control modification and level of modification of capacity
-		 * and loadFactor. index is used here.
-		 */
+	private void updateIndex() {
+		int freeSize 		= this.getFree().size();
+		int allottedSize	= this.getAllotted().size();
+		
+		if(allottedSize > this.getCapacity()) {
+			if((freeSize+allottedSize)*5 > maxCap) {
+				maxCap = (freeSize+allottedSize)*10;
+			}
+			this.setCapacity((freeSize+allottedSize)*5);
+			this.setLoadFactor(DEFAULT_LOAD_FACTOR);
+		}
+		
+		if(allottedSize+1 < this.getCapacity()*0.2) {
+			if((allottedSize+1)*5 > maxCap) {
+				maxCap = allottedSize*10;
+			}
+			this.setCapacity((allottedSize+1)*5);
+			this.setLoadFactor(DEFAULT_LOAD_FACTOR);
+		}
+		
+		if(allottedSize+freeSize > this.getLimit()*0.9) {
+			if(this.getLimit() > maxCap) {
+				maxCap = this.getLimit()*2;
+			}
+			this.setLoadFactor(this.getLoadFactor()+10);
+			this.setCapacity(this.getLimit());
+		}
 	}
 
 	private List<BigNumber> getFree() {
@@ -166,6 +190,17 @@ public class BigNumberPool implements BigNumberFactory {
 
 	private void setCapacity(int capacity) {
 		this.capacity = capacity;
+	}
+
+	private Integer getLimit() {
+		if(limit == null) {
+			this.setLimit(this.getCapacity() * (1 + this.getLoadFactor()/100) + 1);
+		}
+		return limit;
+	}
+
+	private void setLimit(Integer limit) {
+		this.limit = limit;
 	}
 	
 }

@@ -420,6 +420,7 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 	}
 
 	/**
+	 * After this operation this = this^power
 	 * @author Nishi Inc.
 	 * @since v1.0.0
 	 * @param power
@@ -1213,22 +1214,41 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 			secondNumber.makeFractional();
 			result.setBigDecimal(firstNumber.getBigDecimal().multiply(secondNumber.getBigDecimal()));
 		}
-
+		
+		result.consolidate();
 		return result;
 	}
 
 	/**
-	 * 
+	 * @author Nishi Inc.
+	 * @since v1.0.0
+	 * @throws ArithmeticException When denominator is zero or when division is giving endless number
 	 * @param numerator or dividend
 	 * @param denominator or divisor
 	 * @return A BigNumber type variable containing result of arithmetic division of the provided numerator by the provided denominator
 	 */
-	public static BigNumber divide(BigNumber numerator, BigNumber denominator) {
+	public static BigNumber divide(BigNumber numerator, BigNumber denominator) throws ArithmeticException {
+		if(denominator.isZero()) {
+			throw new ArithmeticException();
+		}
+		
 		BigNumber result	=	new BigNumber();
 		numerator.makeFractional();
 		denominator.makeFractional();
-		result.setBigDecimal(numerator.getBigDecimal().divide(denominator.getBigDecimal()));
-
+		try {
+			result.setBigDecimal(numerator.getBigDecimal().divide(denominator.getBigDecimal()));
+		} catch(ArithmeticException e) {
+			numerator.consolidate();
+			denominator.consolidate();
+			if(!numerator.isFractional() && !denominator.isFractional()) {
+				numerator.getBigInteger().divide(denominator.getBigInteger());
+			} else {
+				throw e;
+			}
+		}
+		
+		numerator.consolidate();
+		denominator.consolidate();
 		return result;
 	}
 
@@ -1367,6 +1387,19 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 	 */
 	public static BigNumber abs(BigNumber number) {
 		return absolute(number);
+	}
+	
+	/**
+	 * @param number
+	 * @param power
+	 * @return A BigNumber containing number^power
+	 * @since v1.0.0
+	 * @author Nishi Incorporation
+	 */
+	public static BigNumber pow(BigNumber number, int power) {
+		BigNumber result = new BigNumber(number);
+		result.pow(power);
+		return result;
 	}
 
 	//=============================== Utility Methods ==========================================
