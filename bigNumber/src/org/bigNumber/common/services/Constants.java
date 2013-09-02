@@ -7,4 +7,6 @@ package org.bigNumber.common.services;
  */
 public final class Constants {
 	public final static Integer		DEFAULT_ROUND_OFF_DIGITS		=	2;
+	public static final int			DEFAULT_LOAD_FACTOR				=	40;
+	public static final int			DEFAULT_CAPACITY				=	5;
 }

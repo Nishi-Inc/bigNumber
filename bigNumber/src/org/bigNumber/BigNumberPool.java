@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import org.bigNumber.BigNumber;
 import org.bigNumber.common.models.BigNumberFactory;
+import org.bigNumber.common.services.Constants;
 
 /**
  * A BigNumberPool which keeps BigNumbers and handles allocation
@@ -34,9 +35,6 @@ public class BigNumberPool implements BigNumberFactory {
 	private static int			maxCap				=	100;
 	private static int			minLoadFactor		=	0;
 	private static int			maxLoadFactor		=	100;
-	
-	private static final int	DEFAULT_LOAD_FACTOR	=	40;
-	private static final int	DEFAULT_CAPACITY	=	5;
 	
 	
 	public BigNumberPool(){}
@@ -118,7 +116,7 @@ public class BigNumberPool implements BigNumberFactory {
 				maxCap = (freeSize+allottedSize)*10;
 			}
 			this.setCapacity((freeSize+allottedSize)*5);
-			this.setLoadFactor(DEFAULT_LOAD_FACTOR);
+			this.setLoadFactor(Constants.DEFAULT_LOAD_FACTOR);
 		}
 		
 		if(allottedSize+1 < this.getCapacity()*0.2) {
@@ -126,7 +124,7 @@ public class BigNumberPool implements BigNumberFactory {
 				maxCap = allottedSize*10;
 			}
 			this.setCapacity((allottedSize+1)*5);
-			this.setLoadFactor(DEFAULT_LOAD_FACTOR);
+			this.setLoadFactor(Constants.DEFAULT_LOAD_FACTOR);
 		}
 		
 		if(allottedSize+freeSize > this.getLimit()*0.9) {
@@ -158,7 +156,7 @@ public class BigNumberPool implements BigNumberFactory {
 	 */
 	private int getLoadFactor() {
 		if(loadFactor == null) {
-			this.setLoadFactor(DEFAULT_LOAD_FACTOR);
+			this.setLoadFactor(Constants.DEFAULT_LOAD_FACTOR);
 		}
 		
 		if(loadFactor < minLoadFactor) {
@@ -176,7 +174,7 @@ public class BigNumberPool implements BigNumberFactory {
 
 	private int getCapacity() {
 		if(capacity == null) {
-			this.setCapacity(DEFAULT_CAPACITY);
+			this.setCapacity(Constants.DEFAULT_CAPACITY);
 		}
 		
 		if(capacity < minCap) {
