@@ -36,9 +36,21 @@ public class BigNumberPool implements BigNumberFactory {
 	private static int			minLoadFactor		=	0;
 	private static int			maxLoadFactor		=	100;
 	
-	
+	/**
+	 * Constructs a pool with Constants.DEFAULT_CAPACITY and Constants.DEFAULT_LOAD_FACOTR<br/>
+	 * However, this pool can intelligently modify its <b>capacity</b> and <b>loadFactor</b> in runtime
+	 * @author Nishi Inc.
+	 * @since v1.0.0
+	 */
 	public BigNumberPool(){}
 	
+	/**
+	 * Constructs a pool with given capacity and loadFactor<br/>
+	 * However, this pool can intelligently modify its <b>capacity</b> and <b>loadFactor</b> 
+	 * in runtime but would not go below the provided capacity and loadFactor
+	 * @author Nishi Inc.
+	 * @since v1.0.0
+	 */
 	public BigNumberPool(int capacity, int loadFactor) {
 		this.setCapacity(capacity);
 		minCap = capacity;

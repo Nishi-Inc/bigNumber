@@ -141,7 +141,7 @@ public class BigTest extends TestCase {
 		this.getBigPool().destroy(num);
 	}
 	
-	public void testMultiply() {
+	public void testMultiplyStatic() {
 		BigNumber[] num = new BigNumber[5];
 		for(int i=0; i<5; i++) {
 			num[i] = this.getBigPool().getBigNumber();
@@ -162,7 +162,7 @@ public class BigTest extends TestCase {
 		this.getBigPool().destroy(num);
 	}
 	
-	public void testDivide() {
+	public void testDivideStatic() {
 		BigNumber num1 = this.getBigPool().getBigNumber();
 		BigNumber num2 = this.getBigPool().getBigNumber();
 		BigNumber result;
@@ -218,6 +218,116 @@ public class BigTest extends TestCase {
 			e.printStackTrace();
 		}
 		assertTrue(num1.getValueTill(5).contentEquals("332635"));
+		this.getBigPool().destroy(num1);
+	}
+	
+	public void testModify() {
+		BigNumber num1 = this.getBigPool().getBigNumber();
+		
+		try {
+			num1.setValue("33263547245296341");
+			num1.modify(1, '.');
+		} catch (IncompatibleCharacterException e) {
+			assertTrue(false);
+		}
+		assertTrue(num1.toString().contentEquals("3.263547245296341"));
+		this.getBigPool().destroy(num1);
+	}
+	
+	public void testAdd() {
+		BigNumber num1 = this.getBigPool().getBigNumber();
+		BigNumber num2 = this.getBigPool().getBigNumber();
+		try {
+			num1.setValue("11111111111111111");
+			num2.setValue("222222222222.22222");
+		} catch (IncompatibleCharacterException e) {
+			assertTrue(false);
+		}
+		num1.add(num2);
+		assertTrue(num1.toString().contentEquals("11111333333333333.22222"));
+		this.getBigPool().destroy(num1,num2);
+	}
+	
+	public void testMultiply() {
+		BigNumber num1 = this.getBigPool().getBigNumber();
+		BigNumber num2 = this.getBigPool().getBigNumber();
+		try {
+			num1.setValue("1000000000000000000000000");
+			num2.setValue("1000000000000000000000000");
+		} catch (IncompatibleCharacterException e) {
+			assertTrue(false);
+		}
+		num1.multiply(num2);
+		assertTrue(num1.toString().contentEquals("1000000000000000000000000000000000000000000000000"));
+		this.getBigPool().destroy(num1,num2);
+	}
+	
+	public void testDivide() {
+		BigNumber num1 = this.getBigPool().getBigNumber();
+		BigNumber num2 = this.getBigPool().getBigNumber();
+		try {
+			num1.setValue("1000000000000000000000000");
+			num2.setValue("1000000000000000000000000");
+		} catch (IncompatibleCharacterException e) {
+			assertTrue(false);
+		}
+		num1.divide(num2);
+		assertTrue(num1.toString().contentEquals("1"));
+		this.getBigPool().destroy(num1,num2);
+	}
+	
+	public void testHashCode() {
+		BigNumber num1 = this.getBigPool().getBigNumber();
+		BigNumber num2 = this.getBigPool().getBigNumber();
+		try {
+			num1.setValue("1000000000000000000000000");
+			num2.setValue("1000000000000000000000000");
+		} catch (IncompatibleCharacterException e) {
+			e.printStackTrace();
+		}
+		assertTrue(num1.hashCode() == num2.hashCode());
+		this.getBigPool().destroy(num1,num2);
+	}
+	
+/*	public void testToVariousVariables() {
+		BigNumber num1 = this.getBigPool().getBigNumber();
+		BigNumber num2 = this.getBigPool().getBigNumber();
+		try {
+			num1.setValue("10000000000000000.00000001");
+			num2.setValue("1000000000000000000000000");
+		} catch (IncompatibleCharacterException e) {
+			e.printStackTrace();
+		}
+		assertTrue(num2.toInteger().toString().contentEquals("1000000000000000000000000"));
+		this.getBigPool().destroy(num1,num2);
+	}
+	
+	public void testReverse() {
+		BigNumber num1 = this.getBigPool().getBigNumber();
+
+		try {
+			num1.setValue("-10200000000000000.00000001");
+
+		} catch (IncompatibleCharacterException e) {
+			e.printStackTrace();
+		}
+		num1.reverse();
+		assertTrue(num1.toString().contentEquals("-10000000.00000000000000201"));
+		this.getBigPool().destroy(num1);
+	}*/
+	
+	public void testAppend() {
+		BigNumber num1 = this.getBigPool().getBigNumber();
+		BigNumber num2 = this.getBigPool().getBigNumber();
+		
+		try {
+			num1.setValue("-102");
+			num2.setValue("137");
+			num1.append(num2);
+		} catch (IncompatibleCharacterException e) {
+			e.printStackTrace();
+		}
+		assertTrue(num1.toString().contentEquals("-102137"));
 		this.getBigPool().destroy(num1);
 	}
 	
