@@ -21,7 +21,7 @@ public class BigTest extends TestCase {
 		return bigPool;
 	}
 	
-	/*public void testGetValue() {
+	public void testGetValue() {
 		BigNumber no = this.getBigPool().getBigNumber();
 		try {
 			no.setValue("6343");
@@ -118,7 +118,7 @@ public class BigTest extends TestCase {
 		num1.modulus(num2);
 		assertTrue(num1.toString().contentEquals("1"));
 		this.getBigPool().destroy(num1, num2);
-	}*/
+	}
 	
 	public void testSum() {
 		BigNumber[] num = new BigNumber[5];
@@ -192,6 +192,33 @@ public class BigTest extends TestCase {
 		result = BigNumber.sub(num1, num2);
 		assertTrue(result.toString().contentEquals("29.1123"));
 		this.getBigPool().destroy(num1, num2);
+	}
+	
+	public void testToEngineeringString() {
+		BigNumber num1 = this.getBigPool().getBigNumber();
+				
+		try {
+			num1.setValue("332.1");
+		} catch (IncompatibleCharacterException e) {
+			e.printStackTrace();
+		}
+		assertTrue(num1.toEngineeringString().contentEquals("3.3E2"));
+		this.getBigPool().destroy(num1);
+	}
+	
+	/**
+	 * Tests <b>getValueBetween()</b> and <b>getValueTill()</b>
+	 */
+	public void testGetValueBetween() {
+		BigNumber num1 = this.getBigPool().getBigNumber();
+		
+		try {
+			num1.setValue("3326354724529634.1");
+		} catch (IncompatibleCharacterException e) {
+			e.printStackTrace();
+		}
+		assertTrue(num1.getValueTill(5).contentEquals("332635"));
+		this.getBigPool().destroy(num1);
 	}
 	
 }

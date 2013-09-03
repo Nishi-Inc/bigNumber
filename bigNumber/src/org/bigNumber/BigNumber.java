@@ -471,13 +471,40 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 		if(this.isZero()) {
 			return "0";
 		}
+		
+		StringBuilder result = new StringBuilder();
 
 		if(this.isFractional()) {
-			return this.getBigDecimal().toEngineeringString();
+			String decStr = this.getBigDecimal().toEngineeringString();
+			String[] keys = decStr.split("E");
+			if(keys.length == 2) {
+				keys[1] = ((Integer)(Integer.parseInt(keys[1]) + 2)).toString();
+				result.append(keys[0].charAt(0) + ".");
+				if(keys[0].charAt(2) > '5' || ((keys[0].charAt(1)-'0') %2 == 0 && keys[0].charAt(2) == '5')) {
+					result.append((char)(keys[0].charAt(1) + 1));
+				} else {
+					result.append(keys[0].charAt(1));
+				}
+				result.append("E" + keys[1]);
+			} else {
+				int size = keys[0].length();
+				if(size==1) {
+					result.append(keys[0] + "E0");
+				} else if(size == 2) {
+					result.append(keys[0].charAt(0) + "." + keys[0].charAt(1) + "E1");
+				} else {
+					result.append(keys[0].charAt(0) + ".");
+					if(keys[0].charAt(2) > '5' || ((keys[0].charAt(1)-'0') %2 == 0 && keys[0].charAt(2) == '5')) {
+						result.append((char)(keys[0].charAt(1) + 1));
+					} else {
+						result.append(keys[0].charAt(1));
+					}
+					result.append("E" + (keys[0].split("\\.")[0].length()-1));
+				}
+			}
+			return result.toString();
 		}
 		// Logic in case of BigInteger
-
-		StringBuilder result = new StringBuilder();
 
 		int i=0;
 		if(this.isNegative()) {
@@ -487,17 +514,16 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 
 		result.append(this.charAt(i));
 		if(i+1 < this.size()) {
-			result.append('.');
 			if(i+2 < this.size()) {
+				result.append('.');
 				if(this.charAt(i+2) > '5' || ((this.charAt(i+1)-'0') %2 == 0 && this.charAt(i+2) == '5')) {
-					result.append(this.charAt(i+1) + 1);
+					result.append((char)(this.charAt(i+1) + 1));
+				} else {
+					result.append(this.charAt(i+1));
 				}
-			} else {
-				result.append(this.charAt(i+1));
 			}
 		}
-		result.append('E');
-		result.append(this.size() - i - 1);
+		result.append('E' + (this.size() - i - 1));
 		return result.toString();
 	}
 
@@ -527,8 +553,8 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 	 * @since v1.0.0
 	 * @return Value of the BigNumber number as BigInteger
 	 */
-	public BigDecimal toBigInteger() {
-		return this.getBigDecimal();
+	public BigInteger toBigInteger() {
+		return this.getBigInteger();
 	}
 
 	/**
@@ -588,11 +614,11 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 	 * 
 	 * @param startIndex
 	 * @param endIndex
-	 * @return Value of the number as List of characters between (and including) the given indices
+	 * @return Value of the number as string containing characters between (and including) the given indices
 	 * @author Nishi Inc.
 	 * @since v0.1.0
 	 */
-	public List<Character> getValueBetween(int startIndex, int endIndex) {
+	public String getValueBetween(int startIndex, int endIndex) {
 		if(startIndex > this.size() || endIndex > this.size())
 			throw new ArrayIndexOutOfBoundsException();
 		else if(startIndex > endIndex) {
@@ -601,21 +627,21 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 			startIndex	=	tmp;
 		}
 
-		List<Character> result	=	new ArrayList<Character>();
+		StringBuilder result	=	new StringBuilder();
 		for(int i=startIndex; i<=endIndex; i++) {
-			result.add(this.getValue().get(i));
+			result.append(this.getValue().get(i));
 		}
-		return result;
+		return result.toString();
 	}
 
 	/**
 	 * 
 	 * @param index
-	 * @return Value of the number as List of characters till the given index
+	 * @return Value of the number as String containing characters till the given index
 	 * @author Nishi Inc.
 	 * @since v0.1.0
 	 */
-	public List<Character> getValueTill(int index) {
+	public String getValueTill(int index) {
 		return this.getValueBetween(0, index);
 	}
 
