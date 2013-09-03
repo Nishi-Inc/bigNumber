@@ -1,69 +1,153 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    
-	<meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-	<meta name="robots" content="index, nofollow">
-	<meta name="keywords" content="java,bignum library,bignum,big, bigNumber,number,arbitrary precision">
-	<meta name="description" content="Install guide to set-up bigNumber, a bignum library, in your Java project.">
-	
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-	<link rel='shortcut icon' type='image/x-icon' href='../images/favicon.ico' />
-    <link rel="stylesheet" type="text/css" href="../stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="../stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="../stylesheets/print.css" media="print" />
+	<head>
+		<meta charset='utf-8'>
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<meta name="robots" content="index, nofollow">
+		<meta name="keywords" content="java,bignum library,bignum,big, bigNumber,number,arbitrary precision">
+		<meta name="description" content="Install guide to set-up bigNumber, a bignum library, in your Java project.">
+		
+		<link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+		<link rel='shortcut icon' type='image/x-icon' href='../images/favicon.ico' />
+		<link rel="stylesheet" type="text/css" href="../stylesheets/stylesheet.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="../stylesheets/pygment_trac.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="../stylesheets/print.css" media="print" />
 
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+		<!--[if lt IE 9]>
+		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
 
-    <title>bigNumber - Install Guide</title>
-  </head>
+		<title>bigNumber: A bignum library for Java - Install Guide</title>
+	</head>
 
-  <body>
-    <header>
-      <div class="inner">
-        <h1><a class="whiteLink" href="../index.html">BigNumber</a></h1>
-        <h2>An API for Java to unite BigInteger and BigDecimal.</h2>
-        <a href="https://github.com/Nishi-Inc/bigNumber" class="button"><small>View project on</small>GitHub</a>
-      </div>
-    </header>
+	<body>
+		<header>
+			<div class="inner">
+				<h1><a class="whiteLink" href="../index.html">BigNumber</a></h1>
+				<h2>An API for Java to unite BigInteger and BigDecimal.</h2>
+				<a href="https://github.com/Nishi-Inc/bigNumber" class="button"><small>View project on</small>GitHub</a>
+			</div>
+		</header>
 
-    <div id="content-wrapper">
-      <div class="inner clearfix">
-        <section id="main-content">
-          <h1>
-<a name="bignumber" class="anchor" href="#bignumber"><span class="octicon octicon-link"></span></a>Install Guide</h1>
+		<div id="content-wrapper">
+			<div class="inner clearfix">
+				<section id="main-content">
+					<h1>
+						<a name="installguide" class="anchor" href="#installguide"><span class="octicon octicon-link">Install Guide</span></a>
+					</h1>
+					<p>
+						This API consists of only one JAR file, namely <code>bigNumber-va.b.c.jar</code> (javadoc.jar is optional) 
+						which can be downloaded from the links given in the sidebar on the right. Follow following 
+						simple steps to incorporate this API in your software.
+					</p>
 
-<p>This is an API for Java to handle very large numbers and do calculations on them.<br>For more information, please visit:<br></p><ul>
-<li><a href="https://github.com/Nishi-Inc/bigNumber/wiki">Wiki</a></li>
-<li><a href="pages/InstallGuide">Download &amp; Install Guide</a></li>
-<li><a href="API-Documentation/index.html">API Documentation</a></li>
-</ul>
-        </section>
+					<h2>
+						<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link">Installation</span></a>
+					</h2>
+					<p>
+						<ol>
+							<li>
+								Simply put <code>bigNumber-va.b.c.jar</code> in your server lib or application lib.
+								Server lib is usually found in your <code>Tomcat_installation_directory > lib</code>
+								and application lib can be usually found in <code>web-content > WEB-INF > lib</code>.
+								DO add application lib in the Java build path. Put these JARs in any of these 
+								two locations, but not in both, and refresh your project (In Eclipse, 
+								right-click on Project name and click 'Refresh'). Enjoy.
+							</li>
+							<li>
+								Optional Step, to get content-assist, you need to specify javadoc for the provided jar.
+							</li>
+						</ol>
+					</p>
 
-        <aside id="sidebar">
-          <a href="https://github.com/Nishi-Inc/bigNumber/releases/download/v1.0.0-beta/bigNumber-v1.0.0-beta.jar" class="button">
-            <small>Download Latest version</small>
-            v1.0.0-beta.jar
-          </a>
-		  		  
-          <a href="https://github.com/Nishi-Inc/bigNumber/releases/download/v1.0.0-beta/bigNumber-v1.0.0-beta-javadoc.jar" class="button">
-            <small>Download Javadoc</small>
-            javadoc.jar
-          </a>
-		  
-		  <p>For previous releases, Please visit <a href="https://github.com/Nishi-Inc/bigNumber/releases">GitHub release page</a>.</p>
+					<h2>
+						<a name="specifyingjavadoc" class="anchor" href="#specifyingjavadoc"><span class="octicon octicon-link">Specifying Javadoc (optional)</span></a>
+					</h2>
+					<h3>
+						<span class="octicon octicon-link">Web-based way</span>
+					</h3>
+					<p>
+						REMEMBER: The very latest javadoc will be available on web-location. It can be used, 
+						if you stay online while you code.
+						<ol>
+							<li>
+								Find <code>bigNumber-va.b.c.jar</code> file in the Project Explorer. 
+								Go to its properties (Right click on its name and the last options 
+								in the context menu would be 'Properties').
+							</li>
+							<li>
+								Click on 'Javadoc location'. 
+								Click on radio button labelled 'Javadoc URL'. 
+								Put <strong><a href="http://nishi-inc.github.io/bigNumber/API-Documentation">
+								http://nishi-inc.github.io/bigNumber/API-Documentation</a></strong>
+								in 'Javadoc location path'.
+							</li>
+							<li>
+								Click on 'OK'. You are good to go.
+							</li>
+						</ol>
+					</p>
+					
+					<h3>
+						<span class="octicon octicon-link">Recommended way</span>
+					</h3>
+					<p>
+						<ol>
+							<li>
+								If you have downloaded <code>bigNumber-va.b.c.jar</code>,
+								download <code>bigNumber-va.b.c-javadoc.jar</code> as well.
+							</li>
+							<li>
+								Find <code>bigNumber-va.b.c.jar</code> file in the Project Explorer.
+								Go to its properties (Right click on its name and the last options in 
+								the context menu would be 'Properties').
+							</li>
+							<li>
+								Click on 'Javadoc location'. Click on radio button labelled 
+								'Javadoc in archive'. Select 'External file' or 'Workspace file' 
+								as per the location where you have put <code>bigNumber-va.b.c-javadoc.jar</code>.
+								Give path to javadoc.jar file in 'Archive path' and leave 
+								'Path within archive' blank.
+							</li>
+							<li>
+								Click on 'OK'. You are good to go.
+							</li>
+						</ol>
+					</p>
 
-          <p class="repo-owner"><a href="https://github.com/Nishi-Inc/bigNumber">bigNumber</a> is maintained by <a href="https://github.com/Nishi-Inc">Nishi Incorporation</a>, India.</p>
+					<h2>
+						<a name="download" class="anchor" href="#download"><span class="octicon octicon-link">Download</span></a>
+					</h2>
+					<p>
+						Visit <a href="https://github.com/Nishi-Inc/bigNumber/releases">download page on GitHub</a>.
+					</p>
+				</section>
 
-          <p>&#169; 2013 Nishi Incorporation<br/>All rights reserved.</p>
-        </aside>
-      </div>
-    </div>
+				<aside id="sidebar">
+					<a href="https://github.com/Nishi-Inc/bigNumber/releases/download/v1.0.0-beta/bigNumber-v1.0.0-beta.jar" class="button">
+						<small>Download Latest version</small>
+						v1.0.0-beta.jar
+					</a>
 
-  
-  </body>
+					<a href="https://github.com/Nishi-Inc/bigNumber/releases/download/v1.0.0-beta/bigNumber-v1.0.0-beta-javadoc.jar" class="button">
+						<small>Download Javadoc</small>
+						javadoc.jar
+					</a>
+
+					<p>
+						For previous releases, Please visit <a href="https://github.com/Nishi-Inc/bigNumber/releases">GitHub release page</a>.
+					</p>
+
+					<p class="repo-owner">
+						<a href="https://github.com/Nishi-Inc/bigNumber">bigNumber</a> is maintained by <a href="https://github.com/Nishi-Inc">Nishi Incorporation</a>, India.
+					</p>
+
+					<p>
+						&#169; 2013 Nishi Incorporation<br/>All rights reserved.
+					</p>
+				</aside>
+			</div>
+		</div>
+	</body>
 </html>
