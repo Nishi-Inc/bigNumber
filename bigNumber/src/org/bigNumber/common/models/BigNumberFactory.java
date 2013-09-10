@@ -22,12 +22,22 @@ public interface BigNumberFactory {
 	
 	/**
 	 * @author Nishi Inc.
+	 * @since v1.0.0
 	 * @return A BigNumber object
 	 */
 	public BigNumber getBigNumber();
 	
 	/**
+	 * @author Nishi Inc.
+	 * @since v1.1.0
+	 * @param key
+	 * @return A BigNumber object which is on-hold corresponding to the given key
+	 */
+	public BigNumber getBigNumber(Integer key);
+	
+	/**
 	 * Returns the BigNumber object back to factory
+	 * @since v1.0.0
 	 * @param bignum
 	 */
 	public void destroy(BigNumber... bignums);

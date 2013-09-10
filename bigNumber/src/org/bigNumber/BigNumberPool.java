@@ -12,11 +12,13 @@
 
 package org.bigNumber;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import org.bigNumber.BigNumber;
 import org.bigNumber.common.models.BigNumberFactory;
 import org.bigNumber.common.services.Constants;
+import org.bigNumber.common.services.exceptions.IncompatibleCharacterException;
 
 /**
  * A BigNumberPool which keeps BigNumbers and handles allocation
@@ -25,11 +27,13 @@ import org.bigNumber.common.services.Constants;
  */
 public class BigNumberPool implements BigNumberFactory {
 	
-	private List<BigNumber> 	allotted;
-	private List<BigNumber> 	free;
-	private Integer				capacity;
-	private Integer				loadFactor;
-	private Integer				limit;
+	private List<BigNumber> 			allotted;
+	private List<BigNumber> 			free;
+	private HashMap<Integer, BigNumber> hold = new HashMap<Integer, BigNumber>();
+	private Integer						capacity;
+	private Integer						loadFactor;
+	private Integer						limit;
+	private Integer						key;
 	
 	private static int			minCap				=	1;
 	private static int			maxCap				=	100;
@@ -60,7 +64,6 @@ public class BigNumberPool implements BigNumberFactory {
 	
 	@Override
 	public BigNumber getBigNumber() {
-		
 		if(this.getFree().isEmpty()) {
 			this.getFree().add(new BigNumber());
 			return getBigNumber();
@@ -72,6 +75,14 @@ public class BigNumberPool implements BigNumberFactory {
 			return bignum;
 		}
 		return null;
+	}
+	
+	@Override
+	public BigNumber getBigNumber(Integer key) {
+		if(this.getHold().containsKey(key)) {
+			return this.getHold().get(key);
+		}
+		return getBigNumber();
 	}
 	
 	@Override
@@ -88,6 +99,21 @@ public class BigNumberPool implements BigNumberFactory {
 			this.getFree().add(bignum);
 			this.managePool();
 		}
+	}
+	
+	/**
+	 * Puts given BigNumber on-hold
+	 * @author Nishi Inc.
+	 * @since v1.1.0
+	 * @param bignum
+	 * @return A 'key' by which this particular number can be grabbed from the pool<br>
+	 * Just call getBigNumber(key)
+	 */
+	public Integer hold(BigNumber bignum) {
+		Integer key = nextKey();
+		this.getAllotted().remove(bignum);
+		this.getHold().put(key, bignum);
+		return key;
 	}
 	
 	/**
@@ -121,7 +147,7 @@ public class BigNumberPool implements BigNumberFactory {
 	 */
 	private void updateIndex() {
 		int freeSize 		= this.getFree().size();
-		int allottedSize	= this.getAllotted().size();
+		int allottedSize	= this.getAllotted().size() + this.getHold().size();
 		
 		if(allottedSize > this.getCapacity()) {
 			if((freeSize+allottedSize)*5 > maxCap) {
@@ -211,6 +237,17 @@ public class BigNumberPool implements BigNumberFactory {
 
 	private void setLimit(Integer limit) {
 		this.limit = limit;
+	}
+	
+	private HashMap<Integer, BigNumber> getHold() {
+		if(hold == null) {
+			hold = new HashMap<Integer, BigNumber>();
+		}
+		return hold;
+	}
+	
+	private Integer nextKey() {
+		return ++key;
 	}
 	
 }
