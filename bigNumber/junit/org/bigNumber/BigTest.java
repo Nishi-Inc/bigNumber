@@ -1,3 +1,14 @@
+/*
+ * ========================= DECLARATION ===============================
+ * NOTE: THIS IS NOT TO BE REMOVED IN ANY MODIFICATION & DISTRIBUTION
+ * OF THIS CLASS.
+ * 
+ * Author: Nishi Inc.
+ * Conceptualized by: Alok Shukla
+ * Made available for free by: Nishi Inc. 
+ * =====================================================================
+ */
+
 package org.bigNumber;
 
 import java.util.ArrayList;
