@@ -12,13 +12,13 @@
 
 package org.bigNumber;
 
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TreeMap;
 import org.bigNumber.BigNumber;
 import org.bigNumber.common.models.BigNumberFactory;
 import org.bigNumber.common.services.Constants;
-import org.bigNumber.common.services.exceptions.IncompatibleCharacterException;
 
 /**
  * A BigNumberPool which keeps BigNumbers and handles allocation
@@ -29,7 +29,7 @@ public class BigNumberPool implements BigNumberFactory {
 	
 	private List<BigNumber> 			allotted;
 	private List<BigNumber> 			free;
-	private HashMap<Integer, BigNumber> hold = new HashMap<Integer, BigNumber>();
+	private TreeMap<Integer, BigNumber> hold;
 	private Integer						capacity;
 	private Integer						loadFactor;
 	private Integer						limit;
@@ -80,7 +80,10 @@ public class BigNumberPool implements BigNumberFactory {
 	@Override
 	public BigNumber getBigNumber(Integer key) {
 		if(this.getHold().containsKey(key)) {
-			return this.getHold().get(key);
+			BigNumber result =  this.getHold().get(key);
+			this.getHold().remove(key);
+			this.getAllotted().add(result);
+			return result;
 		}
 		return getBigNumber();
 	}
@@ -93,16 +96,33 @@ public class BigNumberPool implements BigNumberFactory {
 		}
 	}
 	
+	/**
+	 * Destroys BigNumber in pool
+	 * @author Nishi Inc.
+	 * @since v1.0.0
+	 * @param bignum
+	 */
 	private void destroy(BigNumber bignum) {
-		boolean flag = this.getAllotted().remove(bignum);
-		if(flag) {
+		boolean removedFromAllotted = this.getAllotted().remove(bignum);
+		boolean presentInHold;
+		if(removedFromAllotted) {
 			this.getFree().add(bignum);
 			this.managePool();
+		} else {
+			presentInHold = this.getHold().containsValue(bignum);
+			if(presentInHold) {
+				Integer key = this.getKeyFromHold(bignum);
+				this.getHold().remove(key);
+				this.getFree().add(bignum);
+				this.managePool();
+			}
 		}
 	}
 	
 	/**
-	 * Puts given BigNumber on-hold
+	 * Puts given BigNumber on-hold.<br/>
+	 * If the given number was not initially allocated, it's added to pool and put at hold.<br/>
+	 * DO NOT FORGET TO DESTROY NUMBERS ON-HOLD.
 	 * @author Nishi Inc.
 	 * @since v1.1.0
 	 * @param bignum
@@ -129,7 +149,7 @@ public class BigNumberPool implements BigNumberFactory {
 			}
 		}
 		
-		int sizeOfAllotted = this.getAllotted().size();
+		int sizeOfAllotted = this.getAllotted().size() + this.getHold().size();
 		for(;(this.getFree().size()+sizeOfAllotted > this.getLimit()) && (!this.getFree().isEmpty());) {
 			for(BigNumber bignum : this.getFree()) {
 				this.getFree().remove(bignum);
@@ -172,6 +192,22 @@ public class BigNumberPool implements BigNumberFactory {
 			this.setLoadFactor(this.getLoadFactor()+10);
 			this.setCapacity(this.getLimit());
 		}
+	}
+	
+	/**
+	 * Linear search
+	 * @param bignum
+	 * @return key corresponding to the given BigNumber
+	 */
+	private Integer getKeyFromHold(BigNumber bignum) {
+		Iterator<Integer> iter = this.getHold().keySet().iterator();
+		while(iter.hasNext()) {
+			Integer SetElement = iter.next();
+			if(this.getHold().get(SetElement).equals(bignum)) {
+				return SetElement;
+			}
+		}
+		return null;
 	}
 
 	private List<BigNumber> getFree() {
@@ -239,9 +275,9 @@ public class BigNumberPool implements BigNumberFactory {
 		this.limit = limit;
 	}
 	
-	private HashMap<Integer, BigNumber> getHold() {
+	private TreeMap<Integer, BigNumber> getHold() {
 		if(hold == null) {
-			hold = new HashMap<Integer, BigNumber>();
+			hold = new TreeMap<Integer, BigNumber>();
 		}
 		return hold;
 	}
