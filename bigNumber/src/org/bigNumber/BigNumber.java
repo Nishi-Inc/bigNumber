@@ -1420,6 +1420,30 @@ public final class BigNumber implements Serializable, Comparable<BigNumber> {
 		result.pow(power);
 		return result;
 	}
+	
+	/**
+	 * @author Nishi Incorporation
+	 * @since v1.1.0
+	 * @param number
+	 * @return A BigNumber containing value of factorial(given number)
+	 */
+	public static BigNumber factorialOf(BigNumber number) {
+		BigNumber result	= new BigNumber(number);
+		BigNumber i			= new BigNumber();
+		BigNumber unit		= null;
+		
+		try {
+			unit = new BigNumber(1);
+		} catch (IncompatibleCharacterException e) {
+			e.printStackTrace();
+		}
+		
+		for(i.setValue(sub(number, unit)); !i.isZero(); i.setValue(sub(number, unit))) {
+			result.multiply(i);
+		}
+		
+		return result;
+	}
 
 	//=============================== Utility Methods ==========================================
 
