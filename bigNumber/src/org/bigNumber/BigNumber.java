@@ -16,7 +16,6 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import org.bigNumber.common.services.Constants;
-import org.bigNumber.common.services.exceptions.IncompatibleCharacterException;
 import org.bigNumber.interfaces.MathematicalMethods;
 import org.bigNumber.interfaces.UtilityMethods;
 import org.bigNumber.parents.StaticMethods;
@@ -50,11 +49,7 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 	 * @since v0.1.0
 	 */
 	public BigNumber(){
-		try {
-			this.setValue(0);
-		} catch (IncompatibleCharacterException e) {
-			e.printStackTrace();
-		}
+        this.setValue(0);
 	}
 
 	/**
@@ -73,11 +68,7 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 	 * @since v1.0.0
 	 */
 	public BigNumber(BigDecimal number) {
-		try {
-			this.setValue(number.toPlainString());
-		} catch (IncompatibleCharacterException e) {
-			e.printStackTrace();
-		}
+		this.setValue(number.toPlainString());
 	}
 
 	/**
@@ -86,20 +77,15 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 	 * @since v1.0.0
 	 */
 	public BigNumber(BigInteger number) {
-		try {
-			this.setValue(number.toString());
-		} catch (IncompatibleCharacterException e) {
-			e.showMsg();
-		}
+		this.setValue(number.toString());
 	}
 
 	/**
 	 * @author Nishi Inc.
 	 * @since v1.0.0
 	 * @param number
-	 * @throws IncompatibleCharacterException
 	 */
-	public BigNumber(String number) throws IncompatibleCharacterException {
+	public BigNumber(String number) {
 		this.setValue(number);
 	}
 
@@ -107,9 +93,8 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 	 * @author Nishi Inc.
 	 * @since v1.0.0
 	 * @param number
-	 * @throws IncompatibleCharacterException
 	 */
-	public BigNumber(List<Character> number) throws IncompatibleCharacterException {
+	public BigNumber(List<Character> number) {
 		this.setValue(number);
 	}
 
@@ -117,9 +102,8 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 	 * @author Nishi Inc.
 	 * @since v1.0.0
 	 * @param number
-	 * @throws IncompatibleCharacterException
 	 */
-	public BigNumber(Integer number) throws IncompatibleCharacterException {
+	public BigNumber(Integer number) {
 		this.setValue(number);
 	}
 
@@ -127,9 +111,8 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 	 * @author Nishi Inc.
 	 * @since v1.0.0
 	 * @param number
-	 * @throws IncompatibleCharacterException
 	 */
-	public BigNumber(Float number) throws IncompatibleCharacterException {
+	public BigNumber(Float number) {
 		this.setValue(number);
 	}
 
@@ -137,9 +120,8 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 	 * @author Nishi Inc.
 	 * @since v1.0.0
 	 * @param number
-	 * @throws IncompatibleCharacterException
 	 */
-	public BigNumber(Double number) throws IncompatibleCharacterException {
+	public BigNumber(Double number) {
 		this.setValue(number);
 	}
 
@@ -215,21 +197,17 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 	//================================ setValue() ======================================
 
 	@Override
-	public <E extends Comparable<E>> void setValue(E number) throws IncompatibleCharacterException {
+	public <E extends Comparable<E>> void setValue(E number) {
 		this.setValue(number.toString());
 	}
 
 	@Override
 	public void setValue(BigNumber number) {
-		try {
-			this.setValue(number.getValue());
-		} catch (IncompatibleCharacterException e) {
-			e.printStackTrace();
-		}
+		this.setValue(number.getValue());
 	}
 
 	@Override
-	public void setValue(List<Character> number) throws IncompatibleCharacterException {
+	public void setValue(List<Character> number) {
 		StringBuilder chars	=	new StringBuilder();
 		int size			=	number.size();
 		for(int i=0; i<size; i++) {
@@ -239,7 +217,7 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 	}
 
 	@Override
-	public void setValue(String value) throws IncompatibleCharacterException {
+	public void setValue(String value) {
 		this.resetValue();
 		value.replaceAll(" ", "");
 		int size = value.length();
@@ -258,12 +236,12 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 				error = false;
 			}
 			if(error) {
-				throw new IncompatibleCharacterException("From BigNumber.setValue(): value is incompatible.");
+				throw new IllegalArgumentException("From BigNumber.setValue(): value is incompatible.");
 			}
 
 			if(digit == '.') {
 				if(this.isFractional()){
-					throw new IncompatibleCharacterException("From BigNumber.setValue(): value is incompatible.");
+					throw new IllegalArgumentException("From BigNumber.setValue(): value is incompatible.");
 				}
 				this.setFractional(true);
 				this.setLocationOfDecimal(i);
@@ -564,11 +542,7 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 	}
 
 	public void makeNegative() {
-		try {
-			this.putAtFirst('-');
-		} catch (IncompatibleCharacterException e) {
-			e.showMsg();
-		}
+		this.putAtFirst('-');
 	}
 
 	public void roundOff(Integer numberOfDigitsAfterDecimal) {
@@ -594,18 +568,10 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 			}
 
 			for(;this.charAt(j) == '9';j--) {
-				try {
-					this.modify(j, '0');
-				} catch (IncompatibleCharacterException e) {
-					e.printStackTrace();
-				}
+				this.modify(j, '0');
 			}
 
-			try {
-				this.modify(j, this.charAt(j) + 1 - '0');
-			} catch (NumberFormatException | IncompatibleCharacterException e) {
-				e.printStackTrace();
-			}
+			this.modify(j, this.charAt(j) + 1 - '0');
 
 			while(i<this.size()) {
 				this.getValue().remove(i);
@@ -617,7 +583,7 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 		this.roundOff(Constants.DEFAULT_ROUND_OFF_DIGITS);
 	}
 
-	public void modify(int index, int newDigit) throws IncompatibleCharacterException {
+	public void modify(int index, int newDigit) {
 		if(index == 0) {
 			this.getValue().remove(0);
 			this.putAtFirst(newDigit);
@@ -625,13 +591,13 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 		}
 		
 		if(newDigit>9 || newDigit<0) {
-			throw new IncompatibleCharacterException("From BigNumber.modify(): newDIgit is incompatible.");
+			throw new IllegalArgumentException("From BigNumber.modify(): newDIgit is incompatible.");
 		}
 		this.getValue().add(index, (char)(newDigit + '0'));
 		this.getValue().remove(index+1);
 	}
 
-	public void modify(int index, char newDigit) throws IncompatibleCharacterException {
+	public void modify(int index, char newDigit) {
 		if(index == 0) {
 			this.getValue().remove(0);
 			this.putAtFirst(newDigit);
@@ -645,16 +611,16 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 			} else if(this.getValue().get(index) == '.') {
 				return;
 			} else {
-				throw new IncompatibleCharacterException("From BigNumber.modify(): newDIgit is incompatible.");
+				throw new IllegalArgumentException("From BigNumber.modify(): newDigit is incompatible.");
 			}
 		} else if(newDigit>='0' && newDigit<='9') {
 			this.modify(index, newDigit-'0');
 		} else {
-			throw new IncompatibleCharacterException("From BigNumber.modify(): newDIgit is incompatible.");
+			throw new IllegalArgumentException("From BigNumber.modify(): newDigit is incompatible.");
 		}
 	}
 
-	public void insert(int index, char digit) throws IncompatibleCharacterException {
+	public void insert(int index, char digit) {
 		if(index == 0) {
 			this.putAtFirst(digit);
 			return;
@@ -667,26 +633,26 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 			} else if(this.getValue().get(index) == '.') {
 				return;
 			} else {
-				throw new IncompatibleCharacterException("From BigNumber.insert(): newDIgit is incompatible.");
+				throw new IllegalArgumentException("From BigNumber.insert(): newDigit is incompatible.");
 			}
 		} else if(digit>='0' && digit<='9') {
 			this.insert(index, digit-'0');
 		} else {
-			throw new IncompatibleCharacterException("From BigNumber.insert(): newDIgit is incompatible.");
+			throw new IllegalArgumentException("From BigNumber.insert(): newDigit is incompatible.");
 		}
 	}
 
-	public void insert(int index, int digit) throws IncompatibleCharacterException {
+	public void insert(int index, int digit) {
 		if(digit>9 || digit<0) {
-			throw new IncompatibleCharacterException("From BigNumber.insert(): newDIgit is incompatible.");
+			throw new IllegalArgumentException("From BigNumber.insert(): newDigit is incompatible.");
 		}
 		this.getValue().add(index, (char)(digit + '0'));
 		this.syncFromValue();
 	}
 
-	public void putAtFirst(int digit) throws IncompatibleCharacterException {
+	public void putAtFirst(int digit) {
 		if(digit>9 || digit<0) {
-			throw new IncompatibleCharacterException("From BigNumber.insert(): newDIgit is incompatible.");
+			throw new IllegalArgumentException("From BigNumber.insert(): newDIgit is incompatible.");
 		}
 		List<Character> dig = new ArrayList<Character>();
 		dig.add((char) (digit + '0'));
@@ -694,7 +660,7 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 		this.setValue(dig);
 	}
 
-	public void putAtFirst(char character) throws IncompatibleCharacterException {
+	public void putAtFirst(char character) {
 		List<Character> dig = new ArrayList<Character>();
 		dig.add(character);
 		dig.addAll(this.getValue());
@@ -714,11 +680,8 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 				this.getValue().remove(size);
 				continue;
 			}
-			try {
-				this.insert(count+limit, this.charAt(size-1));
-			} catch (IncompatibleCharacterException e) {
-				e.showMsg();
-			}
+
+            this.insert(count+limit, this.charAt(size-1));
 			this.getValue().remove(size);
 		}
 		
@@ -747,30 +710,26 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 		}
 		
 		if(this.size() == 0) {
-			try {
-				this.setValue(0);
-			} catch (IncompatibleCharacterException e) {
-				e.printStackTrace();
-			}
+            this.setValue(0);
 		}
 
 		this.syncFromValue();
 	}
 
-	public void append(BigNumber number) throws IncompatibleCharacterException {
+	public void append(BigNumber number) {
 		if(this.isFractional() && number.isFractional()) {
-			throw new IncompatibleCharacterException("From BigNumber.append(): A number cannot have two decimal points.");
+			throw new IllegalArgumentException("From BigNumber.append(): A number cannot have two decimal points.");
 		}
 		if(number.isNegative()) {
-			throw new IncompatibleCharacterException("From BigNumber.append(): Second number should not be negative.");
+			throw new IllegalArgumentException("From BigNumber.append(): Second number should not be negative.");
 		}
 		this.getValue().addAll(number.getValue());
 		this.syncFromValue();
 	}
 
-	public void append (int number) throws IncompatibleCharacterException {
+	public void append (int number) {
 		if(number < 0) {
-			throw new IncompatibleCharacterException("From BigNumber.append(): number is incompatible.");
+			throw new IllegalArgumentException("From BigNumber.append(): number is incompatible.");
 		}
 		ArrayList<Character> num = new ArrayList<Character>();
 		for(; number>10; number /= 10) {
@@ -785,11 +744,7 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 			return;
 		}
 
-		try {
-			this.setValue(this.toString() + ".00");
-		} catch (IncompatibleCharacterException e) {
-			e.printStackTrace();
-		}
+        this.setValue(this.toString() + ".00");
 	}
 
 
@@ -841,19 +796,11 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 	}
 
 	protected void syncFromDecimal() {
-		try {
-			this.setValue(this.getBigDecimal());
-		} catch (IncompatibleCharacterException e) {
-			e.printStackTrace();
-		}
+		this.setValue(this.getBigDecimal());
 	}
 
 	protected void syncFromInteger() {
-		try {
-			this.setValue(this.getBigInteger());
-		} catch (IncompatibleCharacterException e) {
-			e.printStackTrace();
-		}
+		this.setValue(this.getBigInteger());
 	}
 
 	private void resetValue() {

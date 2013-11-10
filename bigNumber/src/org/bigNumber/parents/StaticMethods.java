@@ -13,7 +13,7 @@
 package org.bigNumber.parents;
 
 import org.bigNumber.BigNumber;
-import org.bigNumber.common.services.exceptions.IncompatibleCharacterException;
+import org.bigNumber.common.services.Constants;
 
 /**
  * Superclass for BigNumber
@@ -116,15 +116,8 @@ public abstract class StaticMethods extends Methods {
 	public static BigNumber factorialOf(BigNumber number) {
 		BigNumber result	= new BigNumber(number);
 		BigNumber i			= new BigNumber();
-		BigNumber unit		= null;
-		
-		try {
-			unit = new BigNumber(1);
-		} catch (IncompatibleCharacterException e) {
-			e.printStackTrace();
-		}
-		
-		for(i.setValue(sub(number, unit)); !i.isZero(); i.setValue(sub(number, unit))) {
+
+		for(i.setValue(sub(number, Constants.UNITY)); !i.isZero(); i.setValue(sub(number, Constants.UNITY))) {
 			result.multiply(i);
 		}
 		
@@ -165,14 +158,12 @@ public abstract class StaticMethods extends Methods {
 	}
 	
 	/**
-	 * @param firstNumber
-	 * @param secondNumber
+	 * @param numbers
 	 * @return A BigNumber number having secondNumber concatenated to firstNumber
-	 * @throws IncompatibleCharacterException
 	 * @author Nishi Inc.
 	 * @since v1.0.0
 	 */
-	public static BigNumber append(BigNumber... numbers) throws IncompatibleCharacterException {
+	public static BigNumber append(BigNumber... numbers) {
 		BigNumber result = new BigNumber(numbers[0]);
 		int length 		 = numbers.length;
 		for(int i=1; i<length; i++) {

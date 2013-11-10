@@ -1,5 +1,7 @@
 package org.bigNumber.common.services;
 
+import org.bigNumber.BigNumber;
+
 /**
  * Objects of this class are not to be created.
  * @author Nishi Inc.
@@ -20,4 +22,12 @@ public final class Constants {
 	 * For BigNumberPool
 	 */
 	public static final int			DEFAULT_CAPACITY				=	5;
+
+
+    public static final BigNumber UNITY         =   new BigNumber(1);
+
+    public static final String AT               =   "@";
+    public static final String COLON            =   ":";
+    public static final String DOUBLE_QUOTE     =   "\"";
+    public static final String SINGLE_QUOTE     =   "\'";
 }

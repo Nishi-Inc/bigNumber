@@ -5,7 +5,6 @@ import java.math.BigInteger;
 import java.util.List;
 
 import org.bigNumber.BigNumber;
-import org.bigNumber.common.services.exceptions.IncompatibleCharacterException;
 
 public interface UtilityMethods {
 	
@@ -129,58 +128,52 @@ public interface UtilityMethods {
 	 * @param index
 	 * @param newDigit
 	 * @author Nishi Inc.
-	 * @throws IncompatibleCharacterException 
 	 * @since v0.1.0
 	 */
-	public void modify(int index, int newDigit) throws IncompatibleCharacterException;
+	public void modify(int index, int newDigit);
 	
 	/**
 	 * Changes the digit at the given index to the given digit
 	 * @param index
 	 * @param newDigit
 	 * @author Nishi Inc.
-	 * @throws IncompatibleCharacterException 
 	 * @since v0.1.0
 	 */
-	public void modify(int index, char newDigit) throws IncompatibleCharacterException;
+	public void modify(int index, char newDigit);
 	
 	/**
 	 * Inserts a new digit at the given index
 	 * @param index
 	 * @param digit
-	 * @throws IncompatibleCharacterException
 	 * @author Nishi Inc.
 	 * @since v0.1.0
 	 */
-	public void insert(int index, char digit) throws IncompatibleCharacterException;
+	public void insert(int index, char digit);
 	
 	/**
 	 * Inserts a new digit at the given index
 	 * @param index
 	 * @param digit
-	 * @throws IncompatibleCharacterException
 	 * @author Nishi Inc.
 	 * @since v0.1.0
 	 */
-	public void insert(int index, int digit) throws IncompatibleCharacterException;
+	public void insert(int index, int digit);
 	
 	/**
 	 * Puts the given digit at the beginning of the given number
 	 * @param digit An int
-	 * @throws IncompatibleCharacterException
 	 * @author Nishi Inc.
 	 * @since August 8, 2013, v0.1.0
 	 */
-	public void putAtFirst(int digit) throws IncompatibleCharacterException;
+	public void putAtFirst(int digit);
 	
 	/**
 	 * Puts the given character at the beginning of the given number
 	 * @param character A char
-	 * @throws IncompatibleCharacterException
 	 * @author Nishi Inc.
 	 * @since August 8, 2013, v0.1.0
 	 */
-	public void putAtFirst(char character) throws IncompatibleCharacterException;
+	public void putAtFirst(char character);
 	
 	/**
 	 * Reverses the BigNumber
@@ -199,20 +192,18 @@ public interface UtilityMethods {
 	/**
 	 * Appends the given number to the calling number
 	 * @param number
-	 * @throws IncompatibleCharacterException
 	 * @author Nishi Inc.
 	 * @since v0.1.0
 	 */
-	public void append(BigNumber number) throws IncompatibleCharacterException;
+	public void append(BigNumber number);
 	
 	/**
 	 * Appends the given positive number to the BigNumber number
 	 * @param number
-	 * @throws IncompatibleCharacterException
 	 * @author Nishi Inc.
 	 * @since v0.1.0 
 	 */
-	public void append (int number) throws IncompatibleCharacterException;
+	public void append (int number);
 	
 	/**
 	 * Does nothing if <i>this</i> is already fractional else appends ".00"

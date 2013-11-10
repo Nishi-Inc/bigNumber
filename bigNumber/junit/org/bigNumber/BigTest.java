@@ -13,8 +13,7 @@ package org.bigNumber;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.bigNumber.BigNumber;
-import org.bigNumber.common.services.exceptions.IncompatibleCharacterException;
+
 import junit.framework.TestCase;
 
 public class BigTest extends TestCase {
@@ -306,7 +305,7 @@ public class BigTest extends TestCase {
 		try {
 			num1.setValue("10000000000000000.00000001");
 			num2.setValue("1000000000000000000000000");
-		} catch (IncompatibleCharacterException e) {
+		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		}
 		assertTrue(num2.toInteger().toString().contentEquals("1000000000000000000000000"));
@@ -319,7 +318,7 @@ public class BigTest extends TestCase {
 		try {
 			num1.setValue("-10200000000000000.00000001");
 
-		} catch (IncompatibleCharacterException e) {
+		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		}
 		num1.reverse();

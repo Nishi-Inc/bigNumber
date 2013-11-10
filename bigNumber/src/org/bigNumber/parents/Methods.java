@@ -13,7 +13,6 @@ package org.bigNumber.parents;
 
 import java.util.List;
 import org.bigNumber.BigNumber;
-import org.bigNumber.common.services.exceptions.IncompatibleCharacterException;
 
 public abstract class Methods extends Root {
 	
@@ -39,11 +38,10 @@ public abstract class Methods extends Root {
 	 * toString() method on the provided number will be called hence do not use primitive types
 	 * @param number
 	 * As String, Integer, Float, Double, Long etc.
-	 * @throws IncompatibleCharacterException
 	 * @author Nishi Inc.
 	 * @since August 6, 2013, v0.1.0
 	 */
-	public abstract <E extends Comparable<E>> void setValue(E number) throws IncompatibleCharacterException;
+	public abstract <E extends Comparable<E>> void setValue(E number);
 	
 	/**
 	 * It puts the provided number in the BigNumber variable
@@ -57,11 +55,10 @@ public abstract class Methods extends Root {
 	/**
 	 * It puts the provided number in the BigNumber variable
 	 * @param number As String which may contain only numbers 0 to 9, a leading -ve sign '-' and a decimal point  
-	 * @throws IncompatibleCharacterException
 	 * @author Nishi Inc.
 	 * @since August 6, 2013, v0.1.0
 	 */
-	public abstract void setValue(List<Character> number) throws IncompatibleCharacterException;
+	public abstract void setValue(List<Character> number);
 
 	/**
 	 * <ul><li>No character accept '0' to '9', '.' and '-' is allowed.</li>
@@ -69,9 +66,8 @@ public abstract class Methods extends Root {
 	 * <li>Spaces (' ' or " ") in the provided String are removed before setting the value so no problem with spaces.</li>
 	 * <li>'-' is allowed only as first character</li></ul>
 	 * @param value
-	 * @throws IncompatibleCharacterException
 	 */
-	public abstract void setValue(String value) throws IncompatibleCharacterException;
+	public abstract void setValue(String value);
 	
 	/**
 	 * @return position of decimal point in the fractional number,
