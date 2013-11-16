@@ -1,6 +1,6 @@
 package org.bigNumber.common.services;
 
-import org.bigNumber.BigNumber;
+import org.bigNumber.models.BigNumber;
 
 /**
  * Objects of this class are not to be created.

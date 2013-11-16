@@ -9,9 +9,9 @@
  * =====================================================================
  */
 
-package org.bigNumber.common.models;
+package org.bigNumber.common.interfaces;
 
-import org.bigNumber.BigNumber;
+import org.bigNumber.models.BigNumber;
 
 /**
  * A factory to generate BigNumber objects

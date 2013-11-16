@@ -10,16 +10,18 @@
  */
 
 
-package org.bigNumber.interfaces;
+package org.bigNumber.common.interfaces;
 
-import org.bigNumber.BigNumber;
+import org.bigNumber.models.BigNumber;
+
+import java.io.Serializable;
 
 /**
  * 
  * @author Nishi Inc.
  * @since v1.1.0
  */
-public interface MathematicalMethods {
+public interface MathematicalMethods extends Comparable<BigNumber>, Serializable {
 
 	/**
 	 * @author Nishi Inc.

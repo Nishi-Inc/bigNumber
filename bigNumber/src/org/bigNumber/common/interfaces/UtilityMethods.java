@@ -1,12 +1,13 @@
-package org.bigNumber.interfaces;
+package org.bigNumber.common.interfaces;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
-import org.bigNumber.BigNumber;
+import org.bigNumber.models.BigNumber;
 
-public interface UtilityMethods {
+public interface UtilityMethods extends Comparable<BigNumber>, Serializable{
 	
 	/**
 	 * Returns a plain String containing value of the BigNumber Number

@@ -9,7 +9,7 @@
  * =====================================================================
  */
 
-package org.bigNumber;
+package org.bigNumber.models;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -18,18 +18,15 @@ import java.util.List;
 
 import org.bigNumber.common.services.ErrorMessages;
 import org.bigNumber.common.services.GlobalConstants;
-import org.bigNumber.interfaces.MathematicalMethods;
-import org.bigNumber.interfaces.UtilityMethods;
-import org.bigNumber.parents.StaticMethods;
+import org.bigNumber.common.interfaces.MathematicalMethods;
+import org.bigNumber.common.interfaces.UtilityMethods;
 
 /**
  * This class makes BigNumber type objects
  * @author <a href="mailto:shuklaalok7@gmail.com">Nishi Inc.</a>
  * @since August 7, 2013, v0.1.0
  */
-public class BigNumber extends StaticMethods implements MathematicalMethods, UtilityMethods {
-
-    public static final long serialVersionUID = 1L;
+public class BigNumber extends Root {
 
     private static final Integer	DEFAULT_ROUND_OFF_DIGITS = 2;
 
