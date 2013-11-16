@@ -15,7 +15,9 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-import org.bigNumber.common.services.Constants;
+
+import org.bigNumber.common.services.ErrorMessages;
+import org.bigNumber.common.services.GlobalConstants;
 import org.bigNumber.interfaces.MathematicalMethods;
 import org.bigNumber.interfaces.UtilityMethods;
 import org.bigNumber.parents.StaticMethods;
@@ -27,9 +29,18 @@ import org.bigNumber.parents.StaticMethods;
  */
 public class BigNumber extends StaticMethods implements MathematicalMethods, UtilityMethods {
 
-	public static final long serialVersionUID = 1L;
+    public static final long serialVersionUID = 1L;
 
-	private List<Character>		value;
+    private static final Integer	DEFAULT_ROUND_OFF_DIGITS = 2;
+
+    private static final String FROM            = "From BigNumber.";
+    private static final String APPEND          = "append";
+    private static final String INSERT          = "insert";
+    private static final String MODIFY          = "modify";
+    private static final String SET_VALUE       = "setValue";
+    private static final String PUT_AT_FIRST    = "putAtFirst";
+
+    private List<Character>		value;
 	private BigInteger			bigInteger;
 	private BigDecimal			bigDecimal;
 	private boolean				isNegative			=	false;
@@ -151,12 +162,13 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 
 	@Override
 	public int hashCode() {
+        final int PRIME = 13;
 	    int hash = 0;
 	    List<Character> val = this.getValue();
 	    for(int digit : val) {
-	    	digit -= 48;
+	    	digit -= GlobalConstants.ASCII_ZERO;
 	    	if(digit>=0 && digit<=9) {
-	    		hash = hash * 13 + digit;
+	    		hash = hash * PRIME + digit;
 	    	}
 	    }
 	    return hash;
@@ -218,8 +230,9 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 
 	@Override
 	public void setValue(String value) {
+        String methodName = BigNumber.SET_VALUE;
 		this.resetValue();
-		value.replaceAll(" ", "");
+		value.replaceAll(GlobalConstants.SPACE, GlobalConstants.BLANK);
 		int size = value.length();
 		boolean error = true;
 
@@ -228,30 +241,30 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 			/*if(digit == null) {
 				break;
 			}*/
-			if(digit <= '9' && digit >= '0') {
+			if(digit <= GlobalConstants.NINE && digit >= GlobalConstants.ZERO) {
 				error = false;
-			} else if(digit == '-') {
+			} else if(digit == GlobalConstants.MINUS) {
 				error = false;
-			} else if(digit == '.') {
+			} else if(digit == GlobalConstants.DECIMAL_POINT) {
 				error = false;
 			}
 			if(error) {
-				throw new IllegalArgumentException("From BigNumber.setValue(): value is incompatible.");
+				throw new IllegalArgumentException(BigNumber.FROM + methodName + ErrorMessages.INCOMPATIBLE_VALUE_MSG.getValue());
 			}
 
-			if(digit == '.') {
+			if(digit == GlobalConstants.DECIMAL_POINT) {
 				if(this.isFractional()){
-					throw new IllegalArgumentException("From BigNumber.setValue(): value is incompatible.");
+					throw new IllegalArgumentException(BigNumber.FROM + methodName + ErrorMessages.INCOMPATIBLE_VALUE_MSG.getValue());
 				}
 				this.setFractional(true);
 				this.setLocationOfDecimal(i);
 			}
-			if(this.isZero() && (digit > '0' && digit <= '9')) {
+			if(this.isZero() && (digit > GlobalConstants.ZERO && digit <= GlobalConstants.NINE)) {
 				this.setZero(false);
 			}
 			
 			if(this.locationOfDecimal() == 0) {
-				this.getValue().add('0');
+				this.getValue().add(GlobalConstants.ZERO);
 				this.setLocationOfDecimal(1);
 			}
 			this.getValue().add(digit);
@@ -384,37 +397,37 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 
 	public String toEngineeringString() {
 		if(this.isZero()) {
-			return "0";
+			return GlobalConstants.ZERO_STR;
 		}
 		
 		StringBuilder result = new StringBuilder();
 
 		if(this.isFractional()) {
 			String decStr = this.getBigDecimal().toEngineeringString();
-			String[] keys = decStr.split("E");
+			String[] keys = decStr.split(GlobalConstants.ENGINEERING_SYMBOL);
 			if(keys.length == 2) {
 				keys[1] = ((Integer)(Integer.parseInt(keys[1]) + 2)).toString();
-				result.append(keys[0].charAt(0) + ".");
-				if(keys[0].charAt(2) > '5' || ((keys[0].charAt(1)-'0') %2 == 0 && keys[0].charAt(2) == '5')) {
+				result.append(keys[0].charAt(0) + GlobalConstants.DECIMAL_POINT);
+				if(keys[0].charAt(2) > GlobalConstants.FIVE || ((keys[0].charAt(1)-GlobalConstants.ZERO) %2 == 0 && keys[0].charAt(2) == GlobalConstants.FIVE)) {
 					result.append((char)(keys[0].charAt(1) + 1));
 				} else {
 					result.append(keys[0].charAt(1));
 				}
-				result.append("E" + keys[1]);
+				result.append(GlobalConstants.ENGINEERING_SYMBOL + keys[1]);
 			} else {
 				int size = keys[0].length();
 				if(size==1) {
-					result.append(keys[0] + "E0");
+					result.append(keys[0] + GlobalConstants.ENGINEERING_SYMBOL + GlobalConstants.ZERO_STR);
 				} else if(size == 2) {
-					result.append(keys[0].charAt(0) + "." + keys[0].charAt(1) + "E1");
+					result.append(keys[0].charAt(0) + GlobalConstants.DECIMAL_POINT_STR + keys[0].charAt(1) + GlobalConstants.ENGINEERING_SYMBOL + GlobalConstants.ONE_STR);
 				} else {
-					result.append(keys[0].charAt(0) + ".");
-					if(keys[0].charAt(2) > '5' || ((keys[0].charAt(1)-'0') %2 == 0 && keys[0].charAt(2) == '5')) {
+					result.append(keys[0].charAt(0) + GlobalConstants.DECIMAL_POINT_STR);
+					if(keys[0].charAt(2) > GlobalConstants.FIVE || ((keys[0].charAt(1)-GlobalConstants.ZERO) %2 == 0 && keys[0].charAt(2) == GlobalConstants.FIVE)) {
 						result.append((char)(keys[0].charAt(1) + 1));
 					} else {
 						result.append(keys[0].charAt(1));
 					}
-					result.append("E" + (keys[0].split("\\.")[0].length()-1));
+					result.append(GlobalConstants.ENGINEERING_SYMBOL + (keys[0].split("\\.")[0].length()-1));
 				}
 			}
 			return result.toString();
@@ -423,7 +436,7 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 
 		int i=0;
 		if(this.isNegative()) {
-			result.append("-");
+			result.append(GlobalConstants.MINUS_STR);
 			i = 1;
 		}
 
@@ -431,7 +444,7 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 		if(i+1 < this.size()) {
 			if(i+2 < this.size()) {
 				result.append('.');
-				if(this.charAt(i+2) > '5' || ((this.charAt(i+1)-'0') %2 == 0 && this.charAt(i+2) == '5')) {
+				if(this.charAt(i+2) > GlobalConstants.FIVE || ((this.charAt(i+1)-GlobalConstants.ZERO) %2 == 0 && this.charAt(i+2) == GlobalConstants.FIVE)) {
 					result.append((char)(this.charAt(i+1) + 1));
 				} else {
 					result.append(this.charAt(i+1));
@@ -542,7 +555,7 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 	}
 
 	public void makeNegative() {
-		this.putAtFirst('-');
+		this.putAtFirst(GlobalConstants.MINUS);
 	}
 
 	public void roundOff(Integer numberOfDigitsAfterDecimal) {
@@ -563,15 +576,15 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 			if(i>=this.size()) {
 				return;
 			}
-			if((this.charAt(i) < '5') || (this.charAt(i) == '5' && this.charAt(j)%2 == 0)) {
+			if((this.charAt(i) < GlobalConstants.FIVE) || (this.charAt(i) == GlobalConstants.FIVE && this.charAt(j)%2 == 0)) {
 				return;
 			}
 
-			for(;this.charAt(j) == '9';j--) {
-				this.modify(j, '0');
+			for(;this.charAt(j) == GlobalConstants.NINE; j--) {
+				this.modify(j, GlobalConstants.ZERO);
 			}
 
-			this.modify(j, this.charAt(j) + 1 - '0');
+			this.modify(j, this.charAt(j) + 1 - GlobalConstants.ZERO);
 
 			while(i<this.size()) {
 				this.getValue().remove(i);
@@ -580,10 +593,11 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 	}
 
 	public void roundOff() {
-		this.roundOff(Constants.DEFAULT_ROUND_OFF_DIGITS);
+		this.roundOff(BigNumber.DEFAULT_ROUND_OFF_DIGITS);
 	}
 
 	public void modify(int index, int newDigit) {
+        String methodName = BigNumber.MODIFY;
 		if(index == 0) {
 			this.getValue().remove(0);
 			this.putAtFirst(newDigit);
@@ -591,71 +605,75 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 		}
 		
 		if(newDigit>9 || newDigit<0) {
-			throw new IllegalArgumentException("From BigNumber.modify(): newDIgit is incompatible.");
+			throw new IllegalArgumentException(BigNumber.FROM + methodName + ErrorMessages.NEW_DIGIT_INCOMPATIBLE_MSG.getValue());
 		}
-		this.getValue().add(index, (char)(newDigit + '0'));
+		this.getValue().add(index, (char)(newDigit + GlobalConstants.ZERO));
 		this.getValue().remove(index+1);
 	}
 
 	public void modify(int index, char newDigit) {
+        String methodName = BigNumber.MODIFY;
 		if(index == 0) {
 			this.getValue().remove(0);
 			this.putAtFirst(newDigit);
 			return;
 		}
 		
-		if(newDigit == '.') {
+		if(newDigit == GlobalConstants.DECIMAL_POINT) {
 			if(!this.isFractional()) {
 				this.getValue().add(index, newDigit);
 				this.getValue().remove(index+1);
-			} else if(this.getValue().get(index) == '.') {
+			} else if(this.getValue().get(index) == GlobalConstants.DECIMAL_POINT) {
 				return;
 			} else {
-				throw new IllegalArgumentException("From BigNumber.modify(): newDigit is incompatible.");
+				throw new IllegalArgumentException(BigNumber.FROM + methodName + ErrorMessages.NEW_DIGIT_INCOMPATIBLE_MSG.getValue());
 			}
-		} else if(newDigit>='0' && newDigit<='9') {
-			this.modify(index, newDigit-'0');
+		} else if(newDigit>=GlobalConstants.ZERO && newDigit<=GlobalConstants.NINE) {
+			this.modify(index, newDigit-GlobalConstants.ZERO);
 		} else {
-			throw new IllegalArgumentException("From BigNumber.modify(): newDigit is incompatible.");
+			throw new IllegalArgumentException(BigNumber.FROM + methodName + ErrorMessages.NEW_DIGIT_INCOMPATIBLE_MSG.getValue());
 		}
 	}
 
 	public void insert(int index, char digit) {
+        String methodName = BigNumber.INSERT;
 		if(index == 0) {
 			this.putAtFirst(digit);
 			return;
 		}
 		
-		if(digit == '.') {
+		if(digit == GlobalConstants.DECIMAL_POINT) {
 			if(!this.isFractional()) {
 				this.getValue().add(index, digit);
 				this.syncFromValue();
-			} else if(this.getValue().get(index) == '.') {
+			} else if(this.getValue().get(index) == GlobalConstants.DECIMAL_POINT) {
 				return;
 			} else {
-				throw new IllegalArgumentException("From BigNumber.insert(): newDigit is incompatible.");
+				throw new IllegalArgumentException(BigNumber.FROM + methodName + ErrorMessages.NEW_DIGIT_INCOMPATIBLE_MSG.getValue());
 			}
-		} else if(digit>='0' && digit<='9') {
-			this.insert(index, digit-'0');
+		} else if(digit>=GlobalConstants.ZERO && digit<=GlobalConstants.NINE) {
+			this.insert(index, digit-GlobalConstants.ZERO);
 		} else {
-			throw new IllegalArgumentException("From BigNumber.insert(): newDigit is incompatible.");
+			throw new IllegalArgumentException(BigNumber.FROM + methodName + ErrorMessages.NEW_DIGIT_INCOMPATIBLE_MSG.getValue());
 		}
 	}
 
 	public void insert(int index, int digit) {
+        String methodName = BigNumber.INSERT;
 		if(digit>9 || digit<0) {
-			throw new IllegalArgumentException("From BigNumber.insert(): newDigit is incompatible.");
+			throw new IllegalArgumentException(BigNumber.FROM + methodName + ErrorMessages.NEW_DIGIT_INCOMPATIBLE_MSG.getValue());
 		}
-		this.getValue().add(index, (char)(digit + '0'));
+		this.getValue().add(index, (char)(digit + GlobalConstants.ZERO));
 		this.syncFromValue();
 	}
 
 	public void putAtFirst(int digit) {
+        String methodName = BigNumber.PUT_AT_FIRST;
 		if(digit>9 || digit<0) {
-			throw new IllegalArgumentException("From BigNumber.insert(): newDIgit is incompatible.");
+			throw new IllegalArgumentException(BigNumber.FROM + methodName + ErrorMessages.NEW_DIGIT_INCOMPATIBLE_MSG.getValue());
 		}
 		List<Character> dig = new ArrayList<Character>();
-		dig.add((char) (digit + '0'));
+		dig.add((char) (digit + GlobalConstants.ZERO));
 		dig.addAll(this.getValue());
 		this.setValue(dig);
 	}
@@ -675,8 +693,8 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 		}
 		
 		for(int count=0; count<=size-limit-1; count++) {
-			if(this.charAt(size-1) == '.') {
-				this.getValue().add(count+limit, '.');
+			if(this.charAt(size-1) == GlobalConstants.DECIMAL_POINT) {
+				this.getValue().add(count+limit, GlobalConstants.DECIMAL_POINT);
 				this.getValue().remove(size);
 				continue;
 			}
@@ -696,16 +714,16 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 			startIndex = 1;
 		}
 
-		for(;this.charAt(startIndex) == '0'; this.getValue().remove(startIndex));
+		for(;this.charAt(startIndex) == GlobalConstants.ZERO; this.getValue().remove(startIndex));
 
 		if(this.isFractional()) {
 			// Consolidate from other end as well
-			for(int i=this.size()-1; this.charAt(i) == '0'; i=this.size()-1) {
+			for(int i=this.size()-1; this.charAt(i) == GlobalConstants.ZERO; i=this.size()-1) {
 				this.getValue().remove(i);
 			}
 		}
 
-		if(this.charAt(this.size()-1) == '.') {
+		if(this.charAt(this.size()-1) == GlobalConstants.DECIMAL_POINT) {
 			this.getValue().remove(this.size()-1);
 		}
 		
@@ -717,23 +735,25 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 	}
 
 	public void append(BigNumber number) {
+        String methodName = BigNumber.APPEND;
 		if(this.isFractional() && number.isFractional()) {
-			throw new IllegalArgumentException("From BigNumber.append(): A number cannot have two decimal points.");
+			throw new IllegalArgumentException(BigNumber.FROM + methodName + ErrorMessages.TWO_DECIMAL_POINTS_MSG.getValue());
 		}
 		if(number.isNegative()) {
-			throw new IllegalArgumentException("From BigNumber.append(): Second number should not be negative.");
+			throw new IllegalArgumentException(BigNumber.FROM + methodName + ErrorMessages.SECOND_NUMBER_NEGATIVE_MSG.getValue());
 		}
 		this.getValue().addAll(number.getValue());
 		this.syncFromValue();
 	}
 
 	public void append (int number) {
+        String methodName = BigNumber.APPEND;
 		if(number < 0) {
-			throw new IllegalArgumentException("From BigNumber.append(): number is incompatible.");
+			throw new IllegalArgumentException(BigNumber.FROM + methodName + ErrorMessages.INCOMPATIBLE_VALUE_MSG.getValue());
 		}
 		ArrayList<Character> num = new ArrayList<Character>();
 		for(; number>10; number /= 10) {
-			num.add(0, (char)(number%10 + '0'));
+			num.add(0, (char)(number%10 + GlobalConstants.ZERO));
 		}
 		this.getValue().addAll(num);
 		this.syncFromValue();
@@ -744,7 +764,7 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 			return;
 		}
 
-        this.setValue(this.toString() + ".00");
+        this.setValue(this.toString() + GlobalConstants.DECIMAL_POINT + GlobalConstants.ZERO_STR + GlobalConstants.ZERO_STR);
 	}
 
 
@@ -760,7 +780,7 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 
 		//this.setSize(val.size());
 
-		if(val.get(0) == '-') {
+		if(val.get(0) == GlobalConstants.MINUS) {
 			this.setNegative(true);
 		} else {
 			this.setNegative(false);
@@ -777,8 +797,8 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 
 		for(; i<val.size(); i++){
 			char digit = val.get(i);
-			if(digit != '.') {
-				if(digit > '0' && digit < '9') {
+			if(digit != GlobalConstants.DECIMAL_POINT) {
+				if(digit > GlobalConstants.ZERO && digit < GlobalConstants.NINE) {
 					this.setZero(false);
 				}
 			} else {
@@ -852,7 +872,7 @@ public class BigNumber extends StaticMethods implements MathematicalMethods, Uti
 
 	protected BigInteger getBigInteger() {
 		if(bigInteger == null) {
-			this.setBigInteger(new BigInteger("0"));
+			this.setBigInteger(new BigInteger(GlobalConstants.ZERO_STR));
 		}
 		return bigInteger;
 	}

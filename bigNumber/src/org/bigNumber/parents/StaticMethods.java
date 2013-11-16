@@ -13,7 +13,7 @@
 package org.bigNumber.parents;
 
 import org.bigNumber.BigNumber;
-import org.bigNumber.common.services.Constants;
+import org.bigNumber.common.services.GlobalConstants;
 
 /**
  * Superclass for BigNumber
@@ -117,7 +117,7 @@ public abstract class StaticMethods extends Methods {
 		BigNumber result	= new BigNumber(number);
 		BigNumber i			= new BigNumber();
 
-		for(i.setValue(sub(number, Constants.UNITY)); !i.isZero(); i.setValue(sub(number, Constants.UNITY))) {
+		for(i.setValue(sub(number, GlobalConstants.UNITY)); !i.isZero(); i.setValue(sub(i, GlobalConstants.UNITY))) {
 			result.multiply(i);
 		}
 		

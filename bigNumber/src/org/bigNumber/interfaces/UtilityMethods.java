@@ -117,7 +117,7 @@ public interface UtilityMethods {
 	public void roundOff(Integer numberOfDigitsAfterDecimal);
 	
 	/**
-	 * Rounds off a number to the number of digits specified by Constants.DEFAULT_ROUND_OFF_DIGITS
+	 * Rounds off a number to the number of digits specified by GlobalConstants.DEFAULT_ROUND_OFF_DIGITS
 	 * @author Nishi Inc.
 	 * @since August 8, 2013, v0.1.0
 	 */

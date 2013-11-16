@@ -1,5 +1,5 @@
 language: java
 install: true
-ant: true
+script: run_tests.sh
 jdk:
   -oraclejdk7

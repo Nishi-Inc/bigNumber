@@ -38,7 +38,7 @@ public interface BigNumberFactory {
 	/**
 	 * Returns the BigNumber object back to factory
 	 * @since v1.0.0
-	 * @param bignums
+	 * @param bignums BigNumbers to return back to pool
 	 */
 	public void destroy(BigNumber... bignums);
 	

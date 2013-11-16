@@ -9,7 +9,6 @@
  * =====================================================================
  */
 
-
 package org.bigNumber.parents;
 
 import java.io.Serializable;
@@ -27,7 +26,7 @@ public abstract class Root implements Serializable, Comparable<BigNumber> {
 	/**
 	 * @return 0 if equal, +1 if greater and -1 if less
 	 * @author Nishi Inc.
-	 * @since v0.1.0
+	 * @since v1.1.0
 	 */
 	@Override
 	public abstract int compareTo(BigNumber number);

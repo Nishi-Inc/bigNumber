@@ -16,9 +16,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
-import org.bigNumber.BigNumber;
+
 import org.bigNumber.common.models.BigNumberFactory;
-import org.bigNumber.common.services.Constants;
 
 /**
  * A BigNumberPool which keeps BigNumbers and handles allocation
@@ -26,22 +25,33 @@ import org.bigNumber.common.services.Constants;
  * @since v1.0.0
  */
 public class BigNumberPool implements BigNumberFactory {
-	
-	private List<BigNumber> 			allotted;
-	private List<BigNumber> 			free;
-	private TreeMap<Integer, BigNumber> hold;
-	private Integer						capacity;
-	private Integer						loadFactor;
+
+    public static final int	DEFAULT_LOAD_FACTOR =	40;
+    public static final int	DEFAULT_CAPACITY    =	5;
+
+    private static int MIN_CAP                      =	1;
+    private static int MAX_CAP                      =	100;
+    private static int MIN_LOAD_FACTOR              =	0;
+    private static int MAX_LOAD_FACTOR              =	100;
+    private static int LIMIT_MULTIPLIER             =   2;
+    private static int MIN_LOAD_PERCENTAGE          =   20;
+    private static int MAX_LOAD_PERCENTAGE          =   90;
+    private static int LOAD_FACTOR_INCREMENT        =   10;
+    private static int MAX_CAP_INCREASE_MULTIPLIER  =   10;
+    private static int MAX_CAP_TOLERANCE_MULTIPLIER =   5;
+
+    private Integer						key;
 	private Integer						limit;
-	private Integer						key;
-	
-	private static int			minCap				=	1;
-	private static int			maxCap				=	100;
-	private static int			minLoadFactor		=	0;
-	private static int			maxLoadFactor		=	100;
+    private Integer						capacity;
+    private Integer						loadFactor;
+
+    private List<BigNumber> 			free;
+    private List<BigNumber> 			allotted;
+
+    private TreeMap<Integer, BigNumber> hold;
 	
 	/**
-	 * Constructs a pool with Constants.DEFAULT_CAPACITY and Constants.DEFAULT_LOAD_FACOTR<br/>
+	 * Constructs a pool with GlobalConstants.DEFAULT_CAPACITY and GlobalConstants.DEFAULT_LOAD_FACOTR<br/>
 	 * However, this pool can intelligently modify its <b>capacity</b> and <b>loadFactor</b> in runtime
 	 * @author Nishi Inc.
 	 * @since v1.0.0
@@ -57,9 +67,9 @@ public class BigNumberPool implements BigNumberFactory {
 	 */
 	public BigNumberPool(int capacity, int loadFactor) {
 		this.setCapacity(capacity);
-		minCap = capacity;
+		BigNumberPool.MIN_CAP = capacity;
 		this.setLoadFactor(loadFactor);
-		minLoadFactor = loadFactor;
+		BigNumberPool.MIN_LOAD_FACTOR = loadFactor;
 	}
 	
 	@Override
@@ -85,7 +95,7 @@ public class BigNumberPool implements BigNumberFactory {
 			this.getAllotted().add(result);
 			return result;
 		}
-		return getBigNumber();
+		return this.getBigNumber();
 	}
 	
 	@Override
@@ -108,15 +118,15 @@ public class BigNumberPool implements BigNumberFactory {
 		if(removedFromAllotted) {
 			this.getFree().add(bignum);
 			this.managePool();
-		} else {
-			presentInHold = this.getHold().containsValue(bignum);
-			if(presentInHold) {
-				Integer key = this.getKeyFromHold(bignum);
-				this.getHold().remove(key);
-				this.getFree().add(bignum);
-				this.managePool();
-			}
+            return;
 		}
+        presentInHold = this.getHold().containsValue(bignum);
+        if(presentInHold) {
+            Integer key = this.getKeyFromHold(bignum);
+            this.getHold().remove(key);
+            this.getFree().add(bignum);
+            this.managePool();
+        }
 	}
 	
 	/**
@@ -170,26 +180,26 @@ public class BigNumberPool implements BigNumberFactory {
 		int allottedSize	= this.getAllotted().size() + this.getHold().size();
 		
 		if(allottedSize > this.getCapacity()) {
-			if((freeSize+allottedSize)*5 > maxCap) {
-				maxCap = (freeSize+allottedSize)*10;
+			if((freeSize+allottedSize)*BigNumberPool.MAX_CAP_TOLERANCE_MULTIPLIER > MAX_CAP) {
+				MAX_CAP = (freeSize+allottedSize)*BigNumberPool.MAX_CAP_INCREASE_MULTIPLIER;
 			}
-			this.setCapacity((freeSize+allottedSize)*5);
-			this.setLoadFactor(Constants.DEFAULT_LOAD_FACTOR);
+			this.setCapacity((freeSize+allottedSize)*BigNumberPool.MAX_CAP_TOLERANCE_MULTIPLIER);
+			this.setLoadFactor(BigNumberPool.DEFAULT_LOAD_FACTOR);
 		}
 		
-		if(allottedSize+1 < this.getCapacity()*0.2) {
-			if((allottedSize+1)*5 > maxCap) {
-				maxCap = allottedSize*10;
+		if(allottedSize+1 < this.getCapacity()*(BigNumberPool.MIN_LOAD_PERCENTAGE/100)) {
+			if((allottedSize+1)*BigNumberPool.MAX_CAP_TOLERANCE_MULTIPLIER > BigNumberPool.MAX_CAP) {
+				BigNumberPool.MAX_CAP = allottedSize*BigNumberPool.MAX_CAP_INCREASE_MULTIPLIER;
 			}
-			this.setCapacity((allottedSize+1)*5);
-			this.setLoadFactor(Constants.DEFAULT_LOAD_FACTOR);
+			this.setCapacity((allottedSize+1)*BigNumberPool.MAX_CAP_TOLERANCE_MULTIPLIER);
+			this.setLoadFactor(BigNumberPool.DEFAULT_LOAD_FACTOR);
 		}
 		
-		if(allottedSize+freeSize > this.getLimit()*0.9) {
-			if(this.getLimit() > maxCap) {
-				maxCap = this.getLimit()*2;
+		if(allottedSize+freeSize > this.getLimit()*(BigNumberPool.MAX_LOAD_PERCENTAGE/100)) {
+			if(this.getLimit() > MAX_CAP) {
+				MAX_CAP = this.getLimit()*BigNumberPool.LIMIT_MULTIPLIER;
 			}
-			this.setLoadFactor(this.getLoadFactor()+10);
+			this.setLoadFactor(this.getLoadFactor() + BigNumberPool.LOAD_FACTOR_INCREMENT);
 			this.setCapacity(this.getLimit());
 		}
 	}
@@ -230,13 +240,13 @@ public class BigNumberPool implements BigNumberFactory {
 	 */
 	private int getLoadFactor() {
 		if(loadFactor == null) {
-			this.setLoadFactor(Constants.DEFAULT_LOAD_FACTOR);
+			this.setLoadFactor(BigNumberPool.DEFAULT_LOAD_FACTOR);
 		}
 		
-		if(loadFactor < minLoadFactor) {
-			this.setLoadFactor(minLoadFactor);
-		} else if(loadFactor > maxLoadFactor) {
-			this.setLoadFactor(maxLoadFactor);
+		if(loadFactor < MIN_LOAD_FACTOR) {
+			this.setLoadFactor(MIN_LOAD_FACTOR);
+		} else if(loadFactor > MAX_LOAD_FACTOR) {
+			this.setLoadFactor(MAX_LOAD_FACTOR);
 		}
 		
 		return loadFactor;
@@ -248,13 +258,13 @@ public class BigNumberPool implements BigNumberFactory {
 
 	private int getCapacity() {
 		if(capacity == null) {
-			this.setCapacity(Constants.DEFAULT_CAPACITY);
+			this.setCapacity(BigNumberPool.DEFAULT_CAPACITY);
 		}
 		
-		if(capacity < minCap) {
-			this.setCapacity(minCap);
-		} else if(capacity > maxCap) {
-			this.setCapacity(maxCap);
+		if(capacity < MIN_CAP) {
+			this.setCapacity(MIN_CAP);
+		} else if(capacity > MAX_CAP) {
+			this.setCapacity(MAX_CAP);
 		}
 		
 		return capacity;
