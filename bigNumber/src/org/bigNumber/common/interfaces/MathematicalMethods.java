@@ -82,4 +82,12 @@ public interface MathematicalMethods extends Comparable<BigNumber>, Serializable
 	 */
 	public void pow(int power);
 
+    /**
+     * @author Nishi Inc
+     * @since v1.1.0
+     * @return A BigNumber, Factorial value of the calling number no change in the calling number will be made
+     * @deprecated
+     */
+    public BigNumber factorial();
+
 }

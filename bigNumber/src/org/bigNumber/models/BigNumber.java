@@ -39,7 +39,6 @@ public class BigNumber extends Root {
 
     private List<Character>		value;
 	private BigInteger			bigInteger;
-	private BigDecimal			bigDecimal;
 	private boolean				isNegative			=	false;
 	private boolean				isFractional		=	false;
 	private boolean				isZero				=	false;
@@ -764,6 +763,24 @@ public class BigNumber extends Root {
         this.setValue(this.toString() + GlobalConstants.DECIMAL_POINT + GlobalConstants.ZERO_STR + GlobalConstants.ZERO_STR);
 	}
 
+    @Override
+    public BigNumber factorial() {
+        if((this.compareTo(new BigNumber()) == 0) || (this.compareTo(GlobalConstants.UNITY) == 0)) {
+            return GlobalConstants.UNITY;
+        }
+
+        BigNumber result = new BigNumber();
+        BigNumber i = new BigNumber();
+        result.setValue(this);
+
+        for(i.setValue(subtract(this, GlobalConstants.UNITY)); i.compareTo(GlobalConstants.UNITY) != 0;i.setValue(subtract(i, GlobalConstants.UNITY))) {
+            result.multiply(i);
+        }
+
+        result.consolidate();
+        return result;
+    }
+
 
 	//==================================================================================
 
@@ -802,6 +819,9 @@ public class BigNumber extends Root {
 				this.setLocationOfDecimal(i);
 				this.setFractional(true);
 			}
+            if(this.isFractional() && !this.isZero()) {
+                break;
+            }
 		}
 
 		String valueStr = this.toString();
@@ -879,18 +899,6 @@ public class BigNumber extends Root {
 		this.syncFromInteger();
 	}
 
-	private BigDecimal getBigDecimal() {
-		if(bigDecimal == null) {
-			this.setBigDecimal(new BigDecimal(0));
-		}
-		return bigDecimal;
-	}
-
-	private void setBigDecimal(BigDecimal bigDecimal) {
-		this.bigDecimal = bigDecimal;
-		this.syncFromDecimal();
-	}
-
 	@Override
 	public boolean isZero() {
 		return isZero;
@@ -899,159 +907,6 @@ public class BigNumber extends Root {
 	private void setZero(boolean isZero) {
 		this.isZero = isZero;
 	}
-	
-	/*==========================================================
-	 * 						Public Static Methods
-	 * =========================================================
-	 */
-	
-	/**
-	 * Same as sum()
-	 * @param numbers BigNumber numbers
-	 * @return A BigNumber type variable containing result of arithmetic addition of the provided numbers
-	 */
-	public static BigNumber add(BigNumber... numbers) {
-		int total  = numbers.length;
 
-		BigNumber result = new BigNumber(numbers[0]);
-
-		for(int i=1; i<total; i++) {
-			result = addTwo(result, numbers[i]);
-		}
-		return result;
-	}
-
-	/**
-	 * @param firstNumber
-	 * @param secondNumber
-	 * @return
-	 */
-	private static BigNumber addTwo(BigNumber firstNumber, BigNumber secondNumber) {
-		BigNumber result = new BigNumber();
-
-		if(!firstNumber.isFractional() && !secondNumber.isFractional()) {
-			//Both are non-fractional
-			result.setBigInteger(firstNumber.getBigInteger().add(secondNumber.getBigInteger()));
-		} else {
-			firstNumber.makeFractional();
-			secondNumber.makeFractional();
-			result.setBigDecimal(firstNumber.getBigDecimal().add(secondNumber.getBigDecimal()));
-		}
-
-		return result;
-	}
-	
-	/**
-	 * Same as sub()
-	 * @param firstNumber
-	 * @param secondNumber
-	 * @return A BigNumber type variable containing firstNumber - secondNumber
-	 * @author Nishi Inc.
-	 * @since v1.0.0
-	 */
-	public static BigNumber subtract(BigNumber firstNumber, BigNumber secondNumber) {
-		BigNumber result = new BigNumber();
-
-		if(firstNumber.isFractional() && secondNumber.isFractional()) {
-			//Both are non-fractional
-			result.setBigInteger(firstNumber.getBigInteger().subtract(secondNumber.getBigInteger()));
-		} else {
-			firstNumber.makeFractional();
-			secondNumber.makeFractional();
-			result.setBigDecimal(firstNumber.getBigDecimal().subtract(secondNumber.getBigDecimal()));
-		}
-
-		return result;
-	}
-	
-	/**
-	 * @param numbers BigNumber numbers
-	 * @return A BigNumber number containing product of the numbers provided
-	 * @author Nishi Inc.
-	 * @since v1.1.0
-	 */
-	public static BigNumber multiply(BigNumber... numbers) {
-		int total  = numbers.length;
-		BigNumber result = new BigNumber(numbers[0]);
-
-		for(int i=1; i<total; i++) {
-			result = BigNumber.multiplyTwo(result, numbers[i]);
-		}
-
-		return result;
-	}
-	
-	/**
-	 * @author Nishi Inc.
-	 * @since v1.1.0
-	 * @param firstNumber
-	 * @param secondNumber
-	 * @return
-	 */
-	private static BigNumber multiplyTwo(BigNumber firstNumber, BigNumber secondNumber) {
-		BigNumber result = new BigNumber();
-
-		if(!firstNumber.isFractional() && !secondNumber.isFractional()) {
-			// Both are non-fractional
-			result.setBigInteger(firstNumber.getBigInteger().multiply(secondNumber.getBigInteger()));
-		} else {
-			firstNumber.makeFractional();
-			secondNumber.makeFractional();
-			result.setBigDecimal(firstNumber.getBigDecimal().multiply(secondNumber.getBigDecimal()));
-		}
-		
-		result.consolidate();
-		return result;
-	}
-
-	/**
-	 * @author Nishi Inc.
-	 * @since v1.0.0
-	 * @throws ArithmeticException When denominator is zero or when division is giving endless number
-	 * @param numerator or dividend
-	 * @param denominator or divisor
-	 * @return A BigNumber type variable containing result of arithmetic division of the provided numerator by the provided denominator
-	 */
-	public static BigNumber divide(BigNumber numerator, BigNumber denominator) throws ArithmeticException {
-		if(denominator.isZero()) {
-			throw new ArithmeticException();
-		}
-		
-		BigNumber result	=	new BigNumber();
-		numerator.makeFractional();
-		denominator.makeFractional();
-		try {
-			result.setBigDecimal(numerator.getBigDecimal().divide(denominator.getBigDecimal()));
-		} catch(ArithmeticException e) {
-			numerator.consolidate();
-			denominator.consolidate();
-			if(!numerator.isFractional() && !denominator.isFractional()) {
-				numerator.getBigInteger().divide(denominator.getBigInteger());
-			} else {
-				throw e;
-			}
-		}
-		
-		numerator.consolidate();
-		denominator.consolidate();
-		return result;
-	}
-	
-	/**
-	 * Returns absolute value of the given number
-	 * @author Nishi Inc.
-	 * @since v1.1.0
-	 * @param number
-	 * @return A BigNumber type variable containing absolute value of the given BigNumber number
-	 */
-	public static BigNumber absolute(BigNumber number) {
-		if(!number.isNegative()) {
-			return number;
-		}
-		BigNumber result = new BigNumber(number);
-		result.getValue().remove(0);
-		result.syncFromValue();
-		return result;
-	}
 	
 }

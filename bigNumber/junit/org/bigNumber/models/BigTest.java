@@ -9,7 +9,7 @@
  * =====================================================================
  */
 
-package org.bigNumber;
+package org.bigNumber.models;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +41,8 @@ public class BigTest extends TestCase {
 
     public void testFactorialOf() {
         BigNumber no = this.getBigPool().getBigNumber();
-        no.setValue("5");
-        BigNumber correctResult = new BigNumber("120");
+        no.setValue("1");
+        BigNumber correctResult = new BigNumber("1");
         BigNumber result = BigNumber.factorialOf(no);
         assertTrue(result.equals(correctResult));
     }
