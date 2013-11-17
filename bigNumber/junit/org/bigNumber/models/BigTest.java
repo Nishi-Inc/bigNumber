@@ -96,7 +96,7 @@ public class BigTest extends TestCase {
 		BigNumber num2 = this.getBigPool().getBigNumber();
         num1.setValue("-34.1");
         num2.setValue("33.1123");
-        String detail = num2.detail();
+        String detail = num1.toJSON();
 		assertTrue(num1.compareTo(num2) == -1);
 		this.getBigPool().destroy(num1, num2);
 	}

@@ -216,6 +216,6 @@ public interface UtilityMethods extends Comparable<BigNumber>, Serializable{
      *
      * @return A String containing BigNumber in JSON format
      */
-    public String detail();
+    public String toJSON();
 	
 }

@@ -338,7 +338,7 @@ public class BigNumber extends Root {
 	}
 
 	public BigNumber[] divideAndRemainder(BigNumber number) {
-		BigNumber[] result = {new BigNumber(),new BigNumber()};
+		BigNumber[] result = {new BigNumber(), new BigNumber()};
 
 		if(!this.isFractional() && !number.isFractional()) {
 			// Both are non-fractional			
@@ -783,30 +783,31 @@ public class BigNumber extends Root {
     }
 
     @Override
-    public String detail() {
+    public String toJSON() {
         StringBuilder bigNum = new StringBuilder(GlobalConstants.LEFT_BRACE);
 
         if(this.isZero()) {
-            bigNum.append("value" + GlobalConstants.COLON + GlobalConstants.ZERO_STR);
-            bigNum.append(GlobalConstants.COMMA + "isZero" + GlobalConstants.COLON + true);
+            bigNum.append("\"value\"" + GlobalConstants.COLON + GlobalConstants.DOUBLE_QUOTE + GlobalConstants.ZERO_STR + GlobalConstants.DOUBLE_QUOTE);
+            bigNum.append(GlobalConstants.COMMA + "\"isZero\"" + GlobalConstants.COLON + true);
         } else {
-            bigNum.append("value" + GlobalConstants.COLON + StringUtils.combine(this.getValue(), GlobalConstants.BLANK));
-            bigNum.append(GlobalConstants.COMMA + "isZero" + GlobalConstants.COLON + false);
+            bigNum.append(GlobalConstants.DOUBLE_QUOTE + "value" + GlobalConstants.DOUBLE_QUOTE + GlobalConstants.COLON + GlobalConstants.DOUBLE_QUOTE +
+                    StringUtils.combine(this.getValue(), GlobalConstants.BLANK) + GlobalConstants.DOUBLE_QUOTE);
+            bigNum.append(GlobalConstants.COMMA + GlobalConstants.DOUBLE_QUOTE + "isZero" + GlobalConstants.DOUBLE_QUOTE + GlobalConstants.COLON + false);
         }
 
         if(this.isFractional()) {
-            bigNum.append(GlobalConstants.COMMA + "isFractional" + GlobalConstants.COLON + true);
-            bigNum.append(GlobalConstants.COMMA + "bigDecimal" + GlobalConstants.COLON + this.getBigDecimal().toString());
-            bigNum.append(GlobalConstants.COMMA + "locationOfDecimal" + GlobalConstants.COLON + this.locationOfDecimal());
+            bigNum.append(GlobalConstants.COMMA + GlobalConstants.DOUBLE_QUOTE + "isFractional" + GlobalConstants.DOUBLE_QUOTE + GlobalConstants.COLON + true);
+            bigNum.append(GlobalConstants.COMMA + GlobalConstants.DOUBLE_QUOTE + "bigDecimal" + GlobalConstants.DOUBLE_QUOTE + GlobalConstants.COLON + GlobalConstants.DOUBLE_QUOTE + this.getBigDecimal().toString() + GlobalConstants.DOUBLE_QUOTE);
+            bigNum.append(GlobalConstants.COMMA + GlobalConstants.DOUBLE_QUOTE + "locationOfDecimal" + GlobalConstants.DOUBLE_QUOTE + GlobalConstants.COLON + GlobalConstants.DOUBLE_QUOTE + this.locationOfDecimal() + GlobalConstants.DOUBLE_QUOTE);
         } else {
-            bigNum.append(GlobalConstants.COMMA + "isFractional" + GlobalConstants.COLON + false);
-            bigNum.append(GlobalConstants.COMMA + "bigInteger" + GlobalConstants.COLON + this.getBigInteger().toString());
+            bigNum.append(GlobalConstants.COMMA + GlobalConstants.DOUBLE_QUOTE + "isFractional" + GlobalConstants.DOUBLE_QUOTE + GlobalConstants.COLON + false);
+            bigNum.append(GlobalConstants.COMMA + GlobalConstants.DOUBLE_QUOTE + "bigInteger" + GlobalConstants.DOUBLE_QUOTE + GlobalConstants.COLON + GlobalConstants.DOUBLE_QUOTE + this.getBigInteger().toString() + GlobalConstants.DOUBLE_QUOTE);
         }
 
         if(this.isNegative()) {
-            bigNum.append(GlobalConstants.COMMA + "isNegative" + GlobalConstants.COLON + true);
+            bigNum.append(GlobalConstants.COMMA + GlobalConstants.DOUBLE_QUOTE + "isNegative" + GlobalConstants.DOUBLE_QUOTE + GlobalConstants.COLON + true);
         } else {
-            bigNum.append(GlobalConstants.COMMA + "isNegative" + GlobalConstants.COLON + false);
+            bigNum.append(GlobalConstants.COMMA + GlobalConstants.DOUBLE_QUOTE + "isNegative" + GlobalConstants.DOUBLE_QUOTE + GlobalConstants.COLON + false);
         }
 
         bigNum.append(GlobalConstants.RIGHT_BRACE);
