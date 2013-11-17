@@ -9,7 +9,7 @@
  * =====================================================================
  */
 
-package org.bigNumber.models;
+package java.org.bigNumber.models;
 
 import java.util.ArrayList;
 import java.util.List;
