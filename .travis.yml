@@ -1,4 +1,4 @@
 language: java
-script: ./run_tests.sh
+install: mvn test
 jdk:
   -oraclejdk7
