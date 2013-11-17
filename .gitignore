@@ -2,7 +2,6 @@
 
 # For .idea
 # XML is only to prevent .idea/*.xml files, make appropriate changes if needed #
-*.xml
 *.name
 
 # Package Files #
