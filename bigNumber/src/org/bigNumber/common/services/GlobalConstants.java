@@ -35,12 +35,17 @@ public final class GlobalConstants {
     public static final String COLON            =   ":";
     public static final String SPACE            =   " ";
     public static final String BLANK            =   "";
-    public static final String BACK_SLACE       =   "\\";
+    public static final String COMMA            =   ",";
+    public static final String BACK_SLASH       =   "\\";
+    public static final String LEFT_BRACE       =   "{";
+    public static final String RIGHT_BRACE      =   "}";
     public static final String LEFT_BRACKET     =   "(";
     public static final String RIGHT_BRACKET    =   ")";
     public static final String DOUBLE_QUOTE     =   "\"";
     public static final String SINGLE_QUOTE     =   "\'";
 
+    public static final String LEFT_SQUARE_BRACKET  =   "[";
+    public static final String RIGHT_SQUARE_BRACKET =   "]";
     public static final String DECIMAL_POINT_STR    =   ".";
     public static final String ENGINEERING_SYMBOL   =   "E";
 

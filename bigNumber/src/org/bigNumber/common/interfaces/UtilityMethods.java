@@ -208,7 +208,14 @@ public interface UtilityMethods extends Comparable<BigNumber>, Serializable{
 	
 	/**
 	 * Does nothing if <i>this</i> is already fractional else appends ".00"
+     * @since v1.0.0
 	 */
 	public void makeFractional();
+
+    /**
+     *
+     * @return A String containing BigNumber in JSON format
+     */
+    public String detail();
 	
 }

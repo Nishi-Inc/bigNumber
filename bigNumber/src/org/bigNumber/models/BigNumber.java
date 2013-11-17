@@ -20,6 +20,7 @@ import org.bigNumber.common.services.ErrorMessages;
 import org.bigNumber.common.services.GlobalConstants;
 import org.bigNumber.common.interfaces.MathematicalMethods;
 import org.bigNumber.common.interfaces.UtilityMethods;
+import org.bigNumber.common.services.StringUtils;
 
 /**
  * This class makes BigNumber type objects
@@ -773,12 +774,44 @@ public class BigNumber extends Root {
         BigNumber i = new BigNumber();
         result.setValue(this);
 
-        for(i.setValue(subtract(this, GlobalConstants.UNITY)); i.compareTo(GlobalConstants.UNITY) != 0;i.setValue(subtract(i, GlobalConstants.UNITY))) {
+        for(i.setValue(subtract(this, GlobalConstants.UNITY)); i.compareTo(GlobalConstants.UNITY) != 0; i.setValue(subtract(i, GlobalConstants.UNITY))) {
             result.multiply(i);
         }
 
         result.consolidate();
         return result;
+    }
+
+    @Override
+    public String detail() {
+        StringBuilder bigNum = new StringBuilder(GlobalConstants.LEFT_BRACE);
+
+        if(this.isZero()) {
+            bigNum.append("value" + GlobalConstants.COLON + GlobalConstants.ZERO_STR);
+            bigNum.append(GlobalConstants.COMMA + "isZero" + GlobalConstants.COLON + true);
+        } else {
+            bigNum.append("value" + GlobalConstants.COLON + StringUtils.combine(this.getValue(), GlobalConstants.BLANK));
+            bigNum.append(GlobalConstants.COMMA + "isZero" + GlobalConstants.COLON + false);
+        }
+
+        if(this.isFractional()) {
+            bigNum.append(GlobalConstants.COMMA + "isFractional" + GlobalConstants.COLON + true);
+            bigNum.append(GlobalConstants.COMMA + "bigDecimal" + GlobalConstants.COLON + this.getBigDecimal().toString());
+            bigNum.append(GlobalConstants.COMMA + "locationOfDecimal" + GlobalConstants.COLON + this.locationOfDecimal());
+        } else {
+            bigNum.append(GlobalConstants.COMMA + "isFractional" + GlobalConstants.COLON + false);
+            bigNum.append(GlobalConstants.COMMA + "bigInteger" + GlobalConstants.COLON + this.getBigInteger().toString());
+        }
+
+        if(this.isNegative()) {
+            bigNum.append(GlobalConstants.COMMA + "isNegative" + GlobalConstants.COLON + true);
+        } else {
+            bigNum.append(GlobalConstants.COMMA + "isNegative" + GlobalConstants.COLON + false);
+        }
+
+        bigNum.append(GlobalConstants.RIGHT_BRACE);
+
+        return bigNum.toString();
     }
 
 
