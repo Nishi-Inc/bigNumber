@@ -11,7 +11,7 @@
     <build>
         <directory>bin</directory>
         <outputDirectory>bin/classes</outputDirectory>
-        <finalName>${artifactId}-${version}</finalName>
+        <finalName>${project.artifactId}-${project.version}</finalName>
         <testOutputDirectory>bin/test-classes</testOutputDirectory>
         <sourceDirectory>src/main/java</sourceDirectory>
         <testSourceDirectory>src/test</testSourceDirectory>
