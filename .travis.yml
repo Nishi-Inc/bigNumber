@@ -1,5 +1,4 @@
 language: java
-install: true
 script: ./run_tests.sh
 jdk:
   -oraclejdk7
