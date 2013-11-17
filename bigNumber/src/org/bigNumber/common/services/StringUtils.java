@@ -2,6 +2,7 @@ package org.bigNumber.common.services;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -42,6 +43,10 @@ public final class StringUtils {
      * @return String chopped from the given regex
      */
     public static String chop(String str, String reg) {
+        if(StringUtils.isBlank(reg)) {
+            return str;
+        }
+
         String[] strArray = str.split(reg);
         if(StringUtils.isBlank(strArray[strArray.length-1])) {
             strArray[strArray.length-1] = null;
@@ -53,9 +58,21 @@ public final class StringUtils {
         return result.toString();
     }
 
+    /**
+     *
+     * @param charList
+     * @param repeatingString
+     * @return
+     */
     public static String combine(List<Character> charList, String repeatingString) {
-        CharSequence[] charArray = (CharSequence[]) charList.toArray();
-        return StringUtils.combine(charArray, repeatingString);
+        List<CharSequence> strList = new ArrayList<CharSequence>();
+        StringBuilder strBuilder = new StringBuilder();
+        for(Character dummy : charList) {
+            strBuilder.delete(0, strBuilder.length());
+            strBuilder.append(dummy);
+            strList.add(strBuilder.toString());
+        }
+        return StringUtils.combine(strList, repeatingString);
     }
 
 
@@ -67,8 +84,11 @@ public final class StringUtils {
      * @return
      */
     public static String combine(Collection<? extends CharSequence> strList, String repeatingString) {
-        CharSequence[] strArray = (CharSequence[])strList.toArray();
-        return StringUtils.combine(strArray, repeatingString);
+        StringBuilder result = new StringBuilder();
+        for(CharSequence charSequence : strList) {
+            result.append(charSequence + repeatingString);
+        }
+        return StringUtils.chop(result.toString(), repeatingString);
     }
 
     /**
