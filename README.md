@@ -2,7 +2,7 @@ bigNumber&nbsp;&nbsp;&nbsp;&nbsp;[![Build Status](https://travis-ci.org/Nishi-In
 =========
 
 This is an API for Java to handle very large numbers and do calculations on them. Basically it combines BigInteger and
-BigDecimal of java<br/><br/>
+BigDecimal of java.<br/><br/>
 For more information, please visit:<br/>
 <ul>
     <li><a href="http://nishi-inc.github.io/bigNumber">Website</a></li>
