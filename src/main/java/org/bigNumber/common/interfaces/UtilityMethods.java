@@ -3,6 +3,7 @@ package org.bigNumber.common.interfaces;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.MathContext;
 import java.util.List;
 
 import org.bigNumber.models.BigNumber;
@@ -112,10 +113,10 @@ public interface UtilityMethods extends Comparable<BigNumber>, Serializable{
 	/**
 	 * Rounds off a number to the given number of digits
 	 * @author Nishi Inc.
-	 * @param numberOfDigitsAfterDecimal
+	 * @param mathContext
 	 * @since August 8, 2013, v0.1.0
 	 */
-	public void roundOff(Integer numberOfDigitsAfterDecimal);
+	public void roundOff(MathContext mathContext);
 	
 	/**
 	 * Rounds off a number to the number of digits specified by GlobalConstants.DEFAULT_ROUND_OFF_DIGITS
