@@ -28,9 +28,12 @@ public interface BigNumberFactory {
 	public BigNumber getBigNumber();
 	
 	/**
+     * It returns the BigNumber which was put on-hold respective to the provided key<br/>
+     * In case the key is wrong and/or no BigNumber exists corresponding to it a new BigNumber would be returned.<br/>
+     * Make sure that you do handle it as well.
 	 * @author Nishi Inc.
 	 * @since v1.1.0
-	 * @param key
+	 * @param key Integer to get corresponding BigNumber
 	 * @return A BigNumber object which is on-hold corresponding to the given key
 	 */
 	public BigNumber getBigNumber(Integer key);
@@ -41,5 +44,17 @@ public interface BigNumberFactory {
 	 * @param bignums BigNumbers to return back to pool
 	 */
 	public void destroy(BigNumber... bignums);
+
+    /**
+     * Puts given BigNumber on-hold.<br/>
+     * If the given number was not initially allocated, it's added to pool and put at hold.<br/>
+     * DO NOT FORGET TO DESTROY NUMBERS ON-HOLD.
+     * @author Nishi Inc.
+     * @since v1.1.0
+     * @param bignum Put this bigNumber on-hold
+     * @return A 'key' by which this particular number can be grabbed from the pool<br>
+     * Just call getBigNumber(key)
+     */
+    public Integer hold(BigNumber bignum);
 	
 }
