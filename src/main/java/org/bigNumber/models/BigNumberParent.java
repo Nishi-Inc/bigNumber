@@ -13,6 +13,7 @@ package org.bigNumber.models;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.MathContext;
 import java.util.List;
 
@@ -30,8 +31,14 @@ public abstract class BigNumberParent implements NonStaticMethods {
 
 	protected static final long serialVersionUID = 1L;
 
-    protected BigDecimal bigDecimal;
-    protected BigNumberMathContext defaultBigNumberMathContext;
+    protected boolean				isNegative			=	false;
+    protected boolean				isFractional		=	false;
+    protected boolean				isZero				=	false;
+    protected Integer				locationOfDecimal;
+    protected BigInteger            bigInteger;
+    protected BigDecimal            bigDecimal;
+    protected List<Character>		value;
+    protected BigNumberMathContext  defaultBigNumberMathContext;
 
     protected BigDecimal getBigDecimal() {
         if(bigDecimal == null) {
@@ -53,6 +60,9 @@ public abstract class BigNumberParent implements NonStaticMethods {
         this.syncFromDecimal();
     }
 
+    /**
+     * Sets all the fields of BigNumber as per the value of BigDecimal field
+     */
     protected abstract void syncFromDecimal();
 
 }

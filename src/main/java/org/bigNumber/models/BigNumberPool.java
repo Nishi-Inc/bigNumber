@@ -51,7 +51,7 @@ public class BigNumberPool implements BigNumberFactory {
     private TreeMap<Integer, BigNumber> hold;
 	
 	/**
-	 * Constructs a pool with GlobalConstants.DEFAULT_CAPACITY and GlobalConstants.DEFAULT_LOAD_FACOTR<br/>
+	 * Constructs a pool with DEFAULT_CAPACITY and DEFAULT_LOAD_FACOTR<br/>
 	 * However, this pool can intelligently modify its <b>capacity</b> and <b>loadFactor</b> in runtime
 	 * @author Nishi Inc.
 	 * @since v1.0.0
@@ -110,7 +110,7 @@ public class BigNumberPool implements BigNumberFactory {
 	 * Destroys BigNumber in pool
 	 * @author Nishi Inc.
 	 * @since v1.0.0
-	 * @param bignum
+	 * @param bignum BigNumber to get rid of
 	 */
 	private void destroy(BigNumber bignum) {
 		boolean removedFromAllotted = this.getAllotted().remove(bignum);
@@ -129,16 +129,7 @@ public class BigNumberPool implements BigNumberFactory {
         }
 	}
 	
-	/**
-	 * Puts given BigNumber on-hold.<br/>
-	 * If the given number was not initially allocated, it's added to pool and put at hold.<br/>
-	 * DO NOT FORGET TO DESTROY NUMBERS ON-HOLD.
-	 * @author Nishi Inc.
-	 * @since v1.1.0
-	 * @param bignum
-	 * @return A 'key' by which this particular number can be grabbed from the pool<br>
-	 * Just call getBigNumber(key)
-	 */
+	@Override
 	public Integer hold(BigNumber bignum) {
 		Integer key = nextKey();
 		this.getAllotted().remove(bignum);
@@ -147,8 +138,8 @@ public class BigNumberPool implements BigNumberFactory {
 	}
 	
 	/**
-	 * Manages BigNumber pool as per defined capacity,
-	 * <br/>loadFactor and currently allotted and free BigNumbers.
+	 * Manages BigNumber pool as per defined capacity,<br/>
+	 * loadFactor and currently allotted and free BigNumbers.
 	 */
 	private void managePool() {
 		this.updateIndex();
@@ -291,7 +282,10 @@ public class BigNumberPool implements BigNumberFactory {
 		}
 		return hold;
 	}
-	
+
+    /**
+     * @return nextKey or <code>++key</code>
+     */
 	private Integer nextKey() {
 		return ++key;
 	}

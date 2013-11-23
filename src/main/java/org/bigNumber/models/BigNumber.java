@@ -28,22 +28,13 @@ import org.bigNumber.common.services.StringUtils;
  */
 public class BigNumber extends BigNumberParent {
 
-    private static final Integer	DEFAULT_ROUND_OFF_DIGITS = 2;
-
-    private static final String FROM            = "From BigNumber.";
-    private static final String APPEND          = "append";
-    private static final String INSERT          = "insert";
-    private static final String MODIFY          = "modify";
-    private static final String SET_VALUE       = "setValue";
-    private static final String PUT_AT_FIRST    = "putAtFirst";
-
-    private List<Character>		value;
-	private BigInteger			bigInteger;
-	private boolean				isNegative			=	false;
-	private boolean				isFractional		=	false;
-	private boolean				isZero				=	false;
-	private Integer				locationOfDecimal;
-
+    private static final String     FROM                     = "From BigNumber.";
+    private static final String     APPEND                   = "append";
+    private static final String     INSERT                   = "insert";
+    private static final String     MODIFY                   = "modify";
+    private static final String     SET_VALUE                = "setValue";
+    private static final String     PUT_AT_FIRST             = "putAtFirst";
+    private static final Integer    DEFAULT_ROUND_OFF_DIGITS = 2;
 
 	//____________________________________________________________________________________
 	//********************************* CONSTRUCTORS *************************************
@@ -60,8 +51,8 @@ public class BigNumber extends BigNumberParent {
 	}
 
 	/**
-	 * 
-	 * @param number
+	 * Create a copy from the given BigNumber
+	 * @param number A BigNumber
 	 * @author Nishi Inc.
 	 * @since v0.1.0
 	 */
