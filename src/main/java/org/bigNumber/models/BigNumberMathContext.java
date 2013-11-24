@@ -6,6 +6,9 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 
 /**
+ * Default variables numberOfDigitsAfterDecimal is 6<br/>
+ * roundingMode is <strong>HALF_EVEN</strong><br/>
+ * precision is always <code>MathContext.UNLIMITED.getPrecision()</code>
  * @author aloks
  * Date: 21/11/13
  * Time: 3:27 PM
@@ -14,17 +17,17 @@ import java.math.RoundingMode;
 public class BigNumberMathContext {
 
     private static final int DEFAULT_NUMBER_OF_DIGITS_AFTER_DECIMAL = 6;
-    private static final RoundingMode DEFUALT_ROUNDING_MODE         = RoundingMode.HALF_EVEN;
+    private static final RoundingMode DEFAULT_ROUNDING_MODE         = RoundingMode.HALF_EVEN;
 
     private RoundingMode roundingMode;
     private Integer numberOfDigitsAfterDecimal;
     private int precision;
 
     /**
-     * Defualt constructor
+     * Default constructor
      */
     public BigNumberMathContext() {
-        this.roundingMode = BigNumberMathContext.DEFUALT_ROUNDING_MODE;
+        this.roundingMode = BigNumberMathContext.DEFAULT_ROUNDING_MODE;
         this.precision = MathContext.UNLIMITED.getPrecision();
         this.setNumberOfDigitsAfterDecimal(BigNumberMathContext.DEFAULT_NUMBER_OF_DIGITS_AFTER_DECIMAL);
     }

@@ -1,6 +1,7 @@
 package org.bigNumber.common.interfaces;
 
 import org.bigNumber.models.BigNumber;
+import org.bigNumber.models.BigNumberMathContext;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -186,10 +187,11 @@ public interface NonStaticMethods extends Comparable<BigNumber>, Serializable {
     /**
      * Rounds off a number to the given number of digits
      * @author Nishi Inc.
-     * @param mathContext
+     * @param mathContext A BigNumberMathContext object to define roundingOff parameters
      * @since August 8, 2013, v0.1.0
+     * @see BigNumberMathContext
      */
-    public void roundOff(MathContext mathContext);
+    public void roundOff(BigNumberMathContext mathContext);
 
     /**
      * Rounds off a number to the number of digits specified by GlobalConstants.DEFAULT_ROUND_OFF_DIGITS

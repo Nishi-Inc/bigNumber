@@ -7,8 +7,7 @@ package org.bigNumber.common.services;
  * @since 2.0.0
  */
 public final class BigNumberUtils {
-    // TODO Keep two interfaces StaticMethods and NonStaticMethods
-    // TODO #33 : BigNumberUtil will implement StaticMethods while BigNumberParent will implement NonStaticMethods which extends Serializable and Comparable<BigNumber>
+    // TODO #33 : BigNumberUtil will implement StaticMethods while BigNumber will implement NonStaticMethods which extends Serializable and Comparable<BigNumber>
     // TODO Make necessary changes in Tests
     // TODO Set default mathContext in BigNUmber constructor
 

@@ -9,13 +9,14 @@
  * =====================================================================
  */
 
-package test.java;
+package java;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
 import org.bigNumber.models.BigNumber;
+import org.bigNumber.models.BigNumberMathContext;
 import org.bigNumber.models.BigNumberPool;
 import org.bigNumber.common.services.GlobalConstants;
 
@@ -63,7 +64,9 @@ public class BigTest extends TestCase {
 	public void testRoundOff() {
 		BigNumber no = this.getBigPool().getBigNumber();
         no.setValue("-34.2896");
-		no.roundOff(3);
+        BigNumberMathContext mathContext = new BigNumberMathContext();
+        mathContext.setNumberOfDigitsAfterDecimal(3);
+		no.roundOff(mathContext);
 		assertTrue(no.toString().contentEquals("-34.290"));
 		this.getBigPool().destroy(no);
 	}
