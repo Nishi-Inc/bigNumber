@@ -47,6 +47,7 @@ public class BigNumber extends BigNumberParent {
 	 * @since v0.1.0
 	 */
 	public BigNumber(){
+        this.defaultBigNumberMathContext = new BigNumberMathContext();
         this.setValue(0);
 	}
 
@@ -541,6 +542,7 @@ public class BigNumber extends BigNumberParent {
 		this.putAtFirst(GlobalConstants.MINUS);
 	}
 
+    @Override
 	public void roundOff(BigNumberMathContext mathContext) {
         if(!this.isFractional()) {
             return;
