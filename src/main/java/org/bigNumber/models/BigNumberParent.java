@@ -11,16 +11,11 @@
 
 package org.bigNumber.models;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.MathContext;
 import java.util.List;
 
 import org.bigNumber.common.interfaces.NonStaticMethods;
-import org.bigNumber.common.services.GlobalConstants;
-import org.bigNumber.common.interfaces.MathematicalMethods;
-import org.bigNumber.common.interfaces.UtilityMethods;
 
 /**
  * Parent class for BigNumber
