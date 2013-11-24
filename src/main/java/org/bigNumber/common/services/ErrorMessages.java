@@ -20,7 +20,7 @@ public enum ErrorMessages {
     }
 
     public String getValue() {
-        return PREPEND + this.value;
+        return ErrorMessages.PREPEND + this.value;
     }
 
 }
