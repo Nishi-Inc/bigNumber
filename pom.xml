@@ -4,9 +4,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.bigNumber</groupId>
+    <groupId>org.nishi.bigNumber</groupId>
     <artifactId>bigNumber</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.0.0</version>
+
+    <developers>
+        <developer>
+            <name>Alok Shukla</name>
+            <email>shuklaalok7@gmail.com</email>
+            <organization>Nishi Incorporation</organization>
+        </developer>
+    </developers>
 
     <build>
         <directory>bin</directory>
@@ -14,15 +22,17 @@
         <finalName>${project.artifactId}-${project.version}</finalName>
         <testOutputDirectory>bin/test-classes</testOutputDirectory>
         <sourceDirectory>src/main/java</sourceDirectory>
-        <testSourceDirectory>src/test</testSourceDirectory>
+        <testSourceDirectory>src/test/java</testSourceDirectory>
     </build>
 
     <dependencies>
+        <!-- For unit testing -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.11</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 </project>
