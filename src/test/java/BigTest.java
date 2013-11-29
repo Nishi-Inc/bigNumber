@@ -12,11 +12,12 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import org.nishi.helper.GlobalConstants;
+
 import junit.framework.TestCase;
 import org.bigNumber.models.BigNumber;
 import org.bigNumber.models.BigNumberMathContext;
 import org.bigNumber.models.BigNumberPool;
-import org.bigNumber.common.services.GlobalConstants;
 
 public class BigTest extends TestCase {
 	

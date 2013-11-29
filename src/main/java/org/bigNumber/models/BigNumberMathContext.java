@@ -1,7 +1,5 @@
 package org.bigNumber.models;
 
-import org.bigNumber.common.services.GlobalConstants;
-
 import java.math.MathContext;
 import java.math.RoundingMode;
 
