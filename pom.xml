@@ -23,6 +23,8 @@
         <testOutputDirectory>bin/test-classes</testOutputDirectory>
         <sourceDirectory>src/main/java</sourceDirectory>
         <testSourceDirectory>src/test/java</testSourceDirectory>
+
+
     </build>
 
     <dependencies>
@@ -34,14 +36,13 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- For helper methods
+        <!-- For helper methods -->
         <dependency>
             <groupId>org.nishi</groupId>
             <artifactId>java-helper</artifactId>
-            <version>1.0.0</version>
+            <version>0.1.0</version>
             <scope>compile</scope>
         </dependency>
-        -->
 
     </dependencies>
 </project>

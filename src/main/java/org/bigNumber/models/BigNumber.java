@@ -13,13 +13,13 @@ package org.bigNumber.models;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.nishi.helper.GlobalConstants;
+import org.nishi.helper.StringUtils;
+
 import org.bigNumber.common.services.ErrorMessages;
-import org.bigNumber.common.services.GlobalConstants;
-import org.bigNumber.common.services.StringUtils;
 
 /**
  * This class makes BigNumber type objects
@@ -27,6 +27,9 @@ import org.bigNumber.common.services.StringUtils;
  * @since August 7, 2013, v0.1.0
  */
 public class BigNumber extends BigNumberParent {
+
+    private static final BigNumber one   = new BigNumber(1);
+    private static final BigNumber UNITY = one;
 
     private static final String     FROM                     = "From BigNumber.";
     private static final String     APPEND                   = "append";
@@ -756,15 +759,15 @@ public class BigNumber extends BigNumberParent {
 	}
 
     public BigNumber factorial() {
-        if((this.compareTo(new BigNumber()) == 0) || (this.compareTo(GlobalConstants.UNITY) == 0)) {
-            return GlobalConstants.UNITY;
+        if((this.compareTo(new BigNumber()) == 0) || (this.compareTo(UNITY) == 0)) {
+            return UNITY;
         }
 
         BigNumber result = new BigNumber();
         BigNumber i = new BigNumber();
         result.setValue(this);
 
-        for(i.setValue(subtract(this, GlobalConstants.UNITY)); i.compareTo(GlobalConstants.UNITY) != 0; i.setValue(subtract(i, GlobalConstants.UNITY))) {
+        for(i.setValue(subtract(this, UNITY)); i.compareTo(UNITY) != 0; i.setValue(subtract(i, UNITY))) {
             result.multiply(i);
         }
 
@@ -1075,7 +1078,7 @@ public class BigNumber extends BigNumberParent {
         BigNumber result	= new BigNumber(number);
         BigNumber i			= new BigNumber();
 
-        for(i.setValue(sub(number, GlobalConstants.UNITY)); !i.isZero(); i.setValue(sub(i, GlobalConstants.UNITY))) {
+        for(i.setValue(sub(number, UNITY)); !i.isZero(); i.setValue(sub(i, UNITY))) {
             result.multiply(i);
         }
 
