@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.TreeMap;
 
 import org.bigNumber.common.interfaces.BigNumberFactory;
+import org.nishi.helper.Validate;
 
 /**
  * A BigNumberPool which keeps BigNumbers and handles allocation
@@ -40,20 +41,17 @@ public class BigNumberPool implements BigNumberFactory {
     private static int MAX_CAP_INCREASE_MULTIPLIER  =   10;
     private static int MAX_CAP_TOLERANCE_MULTIPLIER =   5;
 
-    private Integer						key;
-	private Integer						limit;
-    private Integer						capacity;
-    private Integer						loadFactor;
-
-    private List<org.bigNumber.models.BigNumber> 			free;
-    private List<BigNumber> 			allotted;
+    private Integer				key;
+	private Integer				limit;
+    private Integer				capacity;
+    private Integer				loadFactor;
+    private Integer 			noOfAllottedBigNumbers = 0;
 
     private TreeMap<Integer, BigNumber> hold;
 	
 	/**
 	 * Constructs a pool with DEFAULT_CAPACITY and DEFAULT_LOAD_FACOTR<br/>
 	 * However, this pool can intelligently modify its <b>capacity</b> and <b>loadFactor</b> in runtime
-	 * @author Nishi Inc.
 	 * @since v1.0.0
 	 */
 	public BigNumberPool(){}
@@ -74,17 +72,9 @@ public class BigNumberPool implements BigNumberFactory {
 	
 	@Override
 	public BigNumber getBigNumber() {
-		if(this.getFree().isEmpty()) {
-			this.getFree().add(new BigNumber());
-			return getBigNumber();
-		}
-		for(BigNumber bignum : this.getFree()) {
-			this.getFree().remove(bignum);
-			this.getAllotted().add(bignum);
-			this.updateIndex();
-			return bignum;
-		}
-		return null;
+        this.setNoOfAllottedBigNumbers(this.getNoOfAllottedBigNumbers() + 1);
+        this.updateIndex();
+        return new BigNumber();
 	}
 	
 	@Override
@@ -92,7 +82,7 @@ public class BigNumberPool implements BigNumberFactory {
 		if(this.getHold().containsKey(key)) {
 			BigNumber result =  this.getHold().get(key);
 			this.getHold().remove(key);
-			this.getAllotted().add(result);
+            this.setNoOfAllottedBigNumbers(this.getNoOfAllottedBigNumbers() + 1);
 			return result;
 		}
 		return this.getBigNumber();
@@ -113,26 +103,19 @@ public class BigNumberPool implements BigNumberFactory {
 	 * @param bignum BigNumber to get rid of
 	 */
 	private void destroy(BigNumber bignum) {
-		boolean removedFromAllotted = this.getAllotted().remove(bignum);
-		boolean presentInHold;
-		if(removedFromAllotted) {
-			this.getFree().add(bignum);
-			this.managePool();
-            return;
-		}
-        presentInHold = this.getHold().containsValue(bignum);
-        if(presentInHold) {
+        if(this.getHold().containsValue(bignum)) {
             Integer key = this.getKeyFromHold(bignum);
             this.getHold().remove(key);
-            this.getFree().add(bignum);
-            this.managePool();
+        } else {
+            this.setNoOfAllottedBigNumbers(this.getNoOfAllottedBigNumbers()-1);
         }
+        this.managePool();
 	}
 	
 	@Override
 	public Integer hold(BigNumber bignum) {
 		Integer key = nextKey();
-		this.getAllotted().remove(bignum);
+		this.setNoOfAllottedBigNumbers(this.getNoOfAllottedBigNumbers()-1);
 		this.getHold().put(key, bignum);
 		return key;
 	}
@@ -143,21 +126,12 @@ public class BigNumberPool implements BigNumberFactory {
 	 */
 	private void managePool() {
 		this.updateIndex();
-		for(;this.getFree().size() > this.getCapacity();) {
-			for(BigNumber bignum : this.getFree()) {
-				this.getFree().remove(bignum);
-				break;
-			}
+
+		/*int sizeOfAllotted = this.getNoOfAllottedBigNumbers() + this.getHold().size();
+		for(;(this.getFree()+sizeOfAllotted > this.getLimit());) {
+
 		}
-		
-		int sizeOfAllotted = this.getAllotted().size() + this.getHold().size();
-		for(;(this.getFree().size()+sizeOfAllotted > this.getLimit()) && (!this.getFree().isEmpty());) {
-			for(BigNumber bignum : this.getFree()) {
-				this.getFree().remove(bignum);
-				break;
-			}
-		}
-		this.updateIndex();
+		this.updateIndex(); */
 	}
 	
 	/**
@@ -167,8 +141,8 @@ public class BigNumberPool implements BigNumberFactory {
 	 * Frequent calls to this method ensure proper value of index variable
 	 */
 	private void updateIndex() {
-		int freeSize 		= this.getFree().size();
-		int allottedSize	= this.getAllotted().size() + this.getHold().size();
+		int freeSize 		= this.getFree();
+		int allottedSize	= this.getNoOfAllottedBigNumbers() + this.getHold().size();
 		
 		if(allottedSize > this.getCapacity()) {
 			if((freeSize+allottedSize)*BigNumberPool.MAX_CAP_TOLERANCE_MULTIPLIER > MAX_CAP) {
@@ -211,21 +185,8 @@ public class BigNumberPool implements BigNumberFactory {
 		return null;
 	}
 
-	private List<BigNumber> getFree() {
-		if(free == null) {
-			free = new LinkedList<BigNumber>();
-		}
-		return free;
-	}
 
-	private List<BigNumber> getAllotted() {
-		if(allotted == null) {
-			allotted = new LinkedList<BigNumber>();
-		}
-		return allotted;
-	}
-
-	/**
+    /**
 	 * loadFactor cannot be equal to 0
 	 * @return loadFactor of BigNumber pool as an <i>int</i> (as percentage: a number between 1 to 100)
 	 */
@@ -289,5 +250,16 @@ public class BigNumberPool implements BigNumberFactory {
 	private Integer nextKey() {
 		return ++key;
 	}
-	
+
+    private Integer getFree() {
+        return this.getCapacity() - (this.getNoOfAllottedBigNumbers() + this.getHold().size()) ;
+    }
+
+    private Integer getNoOfAllottedBigNumbers() {
+        return this.noOfAllottedBigNumbers;
+    }
+
+    private void setNoOfAllottedBigNumbers(Integer noOfAllottedBigNumbers) {
+        this.noOfAllottedBigNumbers = noOfAllottedBigNumbers;
+    }
 }

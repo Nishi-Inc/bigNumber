@@ -6,7 +6,6 @@ import org.bigNumber.models.BigNumberMathContext;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.MathContext;
 import java.util.List;
 
 /**
@@ -18,36 +17,35 @@ import java.util.List;
 public interface NonStaticMethods extends Comparable<BigNumber>, Serializable {
 
     /**
-     * @author Nishi Inc.
      * @since v1.0.0
      * @param number To add to <i>this</i>
+     * @return BigNumber Sum of this + givenNumber
      */
-    public void add(BigNumber number);
+    public BigNumber add(BigNumber number);
 
     /**
-     * Now BigNumber <i>this</i> will hold product of <i>this</i> and provided number
-     * @author Nishi Inc.
+     * @return BigNumber product of <i>this</i> and provided number
      * @since v1.0.0
      * @param number To multiply to <i>this</i>
      */
-    public void multiply(BigNumber number);
+    public BigNumber multiply(BigNumber number);
 
     /**
-     * @author Nishi Inc.
+     * @return BigNumber <code>this - number</code>
      * @since v1.0.0
-     * @param number To multiply to <i>this</i>
+     * @param number To subtract from <i>this</i>
      */
-    public void subtract(BigNumber number);
+    public BigNumber subtract(BigNumber number);
 
     /**
-     * @author Nishi Inc.
+     *
      * @since v1.0.0
      * @param number to divide <i>this</i> with
+     * @return BigNumber <code>this/number</code>
      */
-    public void divide(BigNumber number);
+    public BigNumber divide(BigNumber number);
 
     /**
-     * @author Nishi Inc.
      * @since v1.0.0
      * @param number A BigNumber to divide and compute remainder
      * @return An array of two BigNumber elements, the quotient <i>(this/number)</i> is the 0th element and remainder <i>(this%number)</i> is the 1st element
@@ -55,29 +53,27 @@ public interface NonStaticMethods extends Comparable<BigNumber>, Serializable {
     public BigNumber[] divideAndRemainder(BigNumber number);
 
     /**
-     * After this operation <i>this</i> will hold value of +ve value of <i>this</i>
-     * @author Nishi Inc.
+     * @return If <code>this.isNegative()</code> is true, <code>- this</code><br/>
+     * else <code>this</code>
      * @since v1.0.0
      */
-    public void absolute();
+    public BigNumber absolute();
 
     /**
-     * @author Nishi Inc.
+     * @return BigNumber containing <code>this % denominator</code>
+     * @param denominator The number to divide <code>this</code> with
      * @since v1.0.0
-     * @param denominator
      */
-    public void modulus(BigNumber denominator);
+    public BigNumber modulus(BigNumber denominator);
 
     /**
-     * After this operation this = this^power
-     * @author Nishi Inc.
+     * @return <code>this^power</code>
+     * @param power int to raise power with
      * @since v1.0.0
-     * @param power
      */
-    public void pow(int power);
+    public BigNumber pow(int power);
 
     /**
-     * @author Nishi Inc
      * @since v1.1.0
      * @return A BigNumber, Factorial value of the calling number no change in the calling number will be made
      * @deprecated
@@ -163,130 +159,116 @@ public interface NonStaticMethods extends Comparable<BigNumber>, Serializable {
 
     /**
      * Gives the character at specified index
-     * @param index
+     * @param index where?
      * @return The character at the specified index
-     * @author Nishi Inc.
      * @since v0.1.0
      */
     public Character charAt(int index);
 
     /**
-     * It doesn't return an Integer.<br/>It discards the fractional part and keeps the whole number.
-     * @author Nishi Inc.
+     * @return An Integer.<br/>It discards the fractional part and keeps the whole number.
      * @since v0.1.0
      */
-    public void convertToInteger();
+    public BigNumber convertToInteger();
 
     /**
-     * Converts a number to negative
-     * @author Nishi Inc.
+     * @return Converts a number to negative
      * @since August 8, 2013, v0.1.0
      */
-    public void makeNegative();
+    public BigNumber makeNegative();
 
     /**
-     * Rounds off a number to the given number of digits
-     * @author Nishi Inc.
+     * @return Rounds off a number to the given number of digits
      * @param mathContext A BigNumberMathContext object to define roundingOff parameters
      * @since August 8, 2013, v0.1.0
      * @see BigNumberMathContext
      */
-    public void roundOff(BigNumberMathContext mathContext);
+    public BigNumber roundOff(BigNumberMathContext mathContext);
 
     /**
-     * Rounds off a number to the number of digits specified by GlobalConstants.DEFAULT_ROUND_OFF_DIGITS
-     * @author Nishi Inc.
+     * @return Rounds off a number to the number of digits specified by GlobalConstants.DEFAULT_ROUND_OFF_DIGITS
      * @since August 8, 2013, v0.1.0
      */
-    public void roundOff();
+    public BigNumber roundOff();
 
     /**
-     * Changes the digit at the given index to the given digit
-     * @param index
-     * @param newDigit
-     * @author Nishi Inc.
+     * @return Changes the digit at the given index to the given digit
+     * @param index where
+     * @param newDigit changes to this newDigit
      * @since v0.1.0
      */
-    public void modify(int index, int newDigit);
+    public BigNumber modify(int index, int newDigit);
 
     /**
-     * Changes the digit at the given index to the given digit
-     * @param index
-     * @param newDigit
-     * @author Nishi Inc.
+     * @return Changes the digit at the given index to the given digit
+     * @param index where to change
+     * @param newDigit what to change to
      * @since v0.1.0
      */
-    public void modify(int index, char newDigit);
+    public BigNumber modify(int index, char newDigit);
 
     /**
-     * Inserts a new digit at the given index
-     * @param index
-     * @param digit
-     * @author Nishi Inc.
+     * @return Inserts a new digit at the given index
+     * @param index where?
+     * @param digit what?
      * @since v0.1.0
      */
-    public void insert(int index, char digit);
+    public BigNumber insert(int index, char digit);
 
     /**
-     * Inserts a new digit at the given index
-     * @param index
-     * @param digit
-     * @author Nishi Inc.
+     * @return Inserts a new digit at the given index
+     * @param index where to insert
+     * @param digit what to insert
      * @since v0.1.0
      */
-    public void insert(int index, int digit);
+    public BigNumber insert(int index, int digit);
 
     /**
-     * Puts the given digit at the beginning of the given number
+     * @return Puts the given digit at the beginning of the given number
      * @param digit An int
-     * @author Nishi Inc.
      * @since August 8, 2013, v0.1.0
      */
-    public void putAtFirst(int digit);
+    public BigNumber putAtFirst(int digit);
 
     /**
-     * Puts the given character at the beginning of the given number
+     * @return Puts the given character at the beginning of the given number
      * @param character A char
      * @author Nishi Inc.
      * @since August 8, 2013, v0.1.0
      */
-    public void putAtFirst(char character);
+    public BigNumber putAtFirst(char character);
 
     /**
-     * Reverses the BigNumber
-     * @author Nishi Inc.
+     * @return Reverses the BigNumber
      * @since v0.1.0
      */
-    public void reverse();
+    public BigNumber reverse();
 
     /**
-     * Removes leading zeroes as well as trailing zeroes in case of fraction
-     * @author Nishi Inc.
+     * @return Removes leading zeroes as well as trailing zeroes in case of fraction
      * @since v1.0.0
      */
-    public void consolidate();
+    public BigNumber consolidate();
 
     /**
-     * Appends the given number to the calling number
-     * @param number
-     * @author Nishi Inc.
+     * @return Appends the given number to the calling number
+     * @param number A BigNumber
      * @since v0.1.0
      */
-    public void append(BigNumber number);
+    public BigNumber append(BigNumber number);
 
     /**
-     * Appends the given positive number to the BigNumber number
-     * @param number
-     * @author Nishi Inc.
+     * @return Appends the given positive number to the BigNumber number
+     * @param number A positive int
      * @since v0.1.0
      */
-    public void append (int number);
+    public BigNumber append (int number);
 
     /**
-     * Does nothing if <i>this</i> is already fractional else appends ".00"
+     * @return The same BigNumber if <i>this</i> is already fractional else appends ".00"
      * @since v1.0.0
      */
-    public void makeFractional();
+    public BigNumber makeFractional();
 
     /**
      *
