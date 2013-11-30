@@ -16,6 +16,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bigNumber.common.services.BigNumberUtils;
 import org.nishi.helper.GlobalConstants;
 import org.nishi.helper.StringUtils;
 
@@ -37,7 +38,6 @@ public class BigNumber extends BigNumberParent {
     private static final String     MODIFY                   = "modify";
     private static final String     SET_VALUE                = "setValue";
     private static final String     PUT_AT_FIRST             = "putAtFirst";
-    private static final Integer    DEFAULT_ROUND_OFF_DIGITS = 2;
 
 	//____________________________________________________________________________________
 	//********************************* CONSTRUCTORS *************************************
@@ -132,81 +132,37 @@ public class BigNumber extends BigNumberParent {
 	//____________________________________________________________________________________
 
 
-	//================================ INHERITED METHODS ===============================
-
-	@Override
-	public int compareTo(BigNumber number) {
-		int result = 0;
-
-		if(!this.isFractional() && !number.isFractional()) {
-			//Both are non-fractional
-			result = this.getBigInteger().compareTo(number.getBigInteger());
-		} else {
-			this.makeFractional();
-			number.makeFractional();
-			result = this.getBigDecimal().compareTo(number.getBigDecimal());
-			this.consolidate();
-			number.consolidate();
-		}
-		return result;
-	}
-
-	@Override
-	public int hashCode() {
-        final int PRIME = 13;
-	    int hash = 0;
-	    List<Character> val = this.getValue();
-	    for(int digit : val) {
-	    	digit -= GlobalConstants.ASCII_ZERO;
-	    	if(digit>=0 && digit<=9) {
-	    		hash = hash * PRIME + digit;
-	    	}
-	    }
-	    return hash;
-	}
-	
-	@Override
-	public boolean equals(Object number) {
-		if(number instanceof BigNumber && this.compareTo((BigNumber) number) == 0) {
-			return true;
-		}
-		return false;
-	}
-	
-	@Override
-	public String toString() {
-		StringBuilder result 	= new StringBuilder();
-		List<Character> value	= this.getValue();
-		if(value != null) {
-			int size = this.size();
-			for(int i=0; i<size; i++) {
-				result.append(value.get(i));
-			}
-		}
-		return result.toString();
-	}
-
-	/*public String toString() {
-		if(this.isFractional()) {
-			return this.getBigDecimal().toPlainString();
-		}
-		return this.getBigInteger().toString();
-	}*/
-
-	//==================================================================================
-
-
 
 	//================================ setValue() ======================================
 
+    /**
+     * It puts the provided number in the BigNumber variable
+     * toString() method on the provided number will be called hence do not use primitive types
+     * @param number
+     * As String, Integer, Float, Double, Long etc.
+     * @author Nishi Inc.
+     * @since August 6, 2013, v0.1.0
+     */
 	public <E extends Comparable<E>> void setValue(E number) {
 		this.setValue(number.toString());
 	}
 
+    /**
+     * It puts the provided number in the BigNumber variable
+     * @param number BigNumber number
+     * @since v0.1.0
+     */
 	public void setValue(BigNumber number) {
 		this.setValue(number.getValue());
 	}
 
+    /**
+     * <ul><li>No character accept '0' to '9', '.' and '-' is allowed.</li>
+     * <li>No two '.' are allowed.</li>
+     * <li>Spaces (' ' or " ") in the provided String are removed before setting the value so no problem with spaces.</li>
+     * <li>'-' is allowed only as first character</li></ul>
+     * @param number
+     */
 	public void setValue(List<Character> number) {
 		StringBuilder chars	=	new StringBuilder();
 		int size			=	number.size();
@@ -216,6 +172,11 @@ public class BigNumber extends BigNumberParent {
 		this.setValue(chars.toString());
 	}
 
+    /**
+     * It puts the provided number in the BigNumber variable
+     * @param value As String which may contain only numbers 0 to 9, a leading -ve sign '-' and a decimal point
+     * @since August 6, 2013, v0.1.0
+     */
 	public void setValue(String value) {
         String methodName = BigNumber.SET_VALUE;
 		this.resetValue();
@@ -264,67 +225,71 @@ public class BigNumber extends BigNumberParent {
 
 	//================================ Mathematical ====================================
 
-	public void add(BigNumber number) {
-		if(!this.isFractional() && !number.isFractional()) {
+	public BigNumber add(BigNumber number) {
+        BigNumber result = new BigNumber(this);
+		if(!result.isFractional() && !number.isFractional()) {
 			//Both are non-fractional
-			this.setBigInteger(this.getBigInteger().add(number.getBigInteger()));
+			result.setBigInteger(result.getBigInteger().add(number.getBigInteger()));
 		} else {
-			this.makeFractional();
-			number.makeFractional();
-			this.setBigDecimal(this.getBigDecimal().add(number.getBigDecimal()));
-			number.consolidate();
+			result = result.makeFractional();
+			number = number.makeFractional();
+			result.setBigDecimal(result.getBigDecimal().add(number.getBigDecimal()));
+			// number = number.consolidate();
 		}
-		this.consolidate();
+		return result.consolidate();
 	}
 
-	public void multiply(BigNumber number) {
-
+    @Override
+	public BigNumber multiply(BigNumber number) {
+        BigNumber result = new BigNumber();
 		if(!this.isFractional() && !number.isFractional()) {
 			//Both are non-fractional
-			this.setBigInteger(this.getBigInteger().multiply(number.getBigInteger()));
+			result.setBigInteger(this.getBigInteger().multiply(number.getBigInteger()));
 		} else {
-			this.makeFractional();
-			number.makeFractional();
-			this.setBigDecimal(this.getBigDecimal().multiply(number.getBigDecimal()));
-			number.consolidate();
+			result = this.makeFractional();
+			number = number.makeFractional();
+			result.setBigDecimal(result.getBigDecimal().multiply(number.getBigDecimal()));
+			// number.consolidate();
 		}
-		this.consolidate();
+		return result.consolidate();
 	}
 
-	public void subtract(BigNumber number) {
-		if(!this.isFractional() && !number.isFractional()) {
+    @Override
+	public BigNumber subtract(BigNumber number) {
+        BigNumber result = new BigNumber();
+        if(!this.isFractional() && !number.isFractional()) {
 			//Both are non-fractional
-			this.setBigInteger(this.getBigInteger().subtract(number.getBigInteger()));
+			result.setBigInteger(this.getBigInteger().subtract(number.getBigInteger()));
 		} else {
-			this.makeFractional();
-			number.makeFractional();
-			this.setBigDecimal(this.getBigDecimal().subtract(number.getBigDecimal()));
-			number.consolidate();
+			result = this.makeFractional();
+			number = number.makeFractional();
+			result.setBigDecimal(result.getBigDecimal().subtract(number.getBigDecimal()));
+			// number = number.consolidate();
 		}
-		this.consolidate();
+		return result.consolidate();
 	}
 
-	public void divide(BigNumber number) {
+    @Override
+	public BigNumber divide(BigNumber number) {
 		if(number.isZero()) {
 			throw new ArithmeticException();
 		}
 		
-		this.makeFractional();
-		number.makeFractional();
+		BigNumber result = new BigNumber(this.makeFractional());
+		number = number.makeFractional();
 		try {
-			this.setBigDecimal(this.getBigDecimal().divide(number.getBigDecimal()));
+			result.setBigDecimal(result.getBigDecimal().divide(number.getBigDecimal()));
 		} catch(ArithmeticException e) {
-			this.consolidate();
-			number.consolidate();
-			if(!this.isFractional() && !number.isFractional()) {
-				this.getBigInteger().divide(number.getBigInteger());
+			result = result.consolidate();
+			number = number.consolidate();
+			if(!result.isFractional() && !number.isFractional()) {
+				result.setBigInteger(result.getBigInteger().divide(number.getBigInteger()));
 			} else {
 				throw e;
 			}
 		}
-		
-		this.consolidate();
-		number.consolidate();
+
+		return result.consolidate();
 	}
 
 	public BigNumber[] divideAndRemainder(BigNumber number) {
@@ -350,31 +315,29 @@ public class BigNumber extends BigNumberParent {
 		return result;
 	}
 
-	public void absolute() {
-		/*if(this.isFractional()) {
-			this.setBigDecimal(this.getBigDecimal().abs());
-			this.();
-		} else {
-			this.setBigInteger(this.getBigInteger().abs());
-			this.();
-		}*/
+    @Override
+	public BigNumber absolute() {
 		if(this.isNegative()) {
-			this.getValue().remove(0);
-			this.syncFromValue();
-		}
-	}
-
-	public void modulus(BigNumber denominator) {
-		this.setValue((this.divideAndRemainder(denominator))[1]);
-		this.syncFromValue();
-		this.absolute();
-	}
-
-	public void pow(int power) {
-		if(this.isFractional()) {
-			this.setBigDecimal(this.getBigDecimal().pow(power));
+            BigNumber result = new BigNumber(this);
+			result.getValue().remove(0);
+			result.syncFromValue();
+            return result;
 		} else {
-			this.setBigInteger(this.getBigInteger().pow(power));
+            return this;
+        }
+	}
+
+    @Override
+	public BigNumber modulus(BigNumber denominator) {
+        return new BigNumber(this.divideAndRemainder(denominator)[1]).absolute();
+	}
+
+    @Override
+	public BigNumber pow(int power) {
+        if(this.isFractional()) {
+			return new BigNumber(this.getBigDecimal().pow(power));
+		} else {
+            return new BigNumber(this.getBigInteger().pow(power));
 		}
 	}
 
@@ -502,10 +465,12 @@ public class BigNumber extends BigNumberParent {
 		return result;
 	}
 
+    @Override
 	public Integer size() {
 		return this.getValue().size();
 	}
 
+    @Override
 	public String getValueBetween(int startIndex, int endIndex) {
 		if(startIndex > this.size() || endIndex > this.size())
 			throw new ArrayIndexOutOfBoundsException();
@@ -522,143 +487,159 @@ public class BigNumber extends BigNumberParent {
 		return result.toString();
 	}
 
+    @Override
 	public String getValueTill(int index) {
 		return this.getValueBetween(0, index);
 	}
 
+    @Override
 	public Character charAt(int index) {
 		return this.getValue().get(index);
 	}
 
-	public void convertToInteger() {
+    @Override
+	public BigNumber convertToInteger() {
 		if(!this.isFractional())
-			return;
+			return this;
 		else {
-			for(int i=this.locationOfDecimal(); i<this.size();) {
-				this.getValue().remove(i);
-			}
-			this.syncFromValue();
+            // FIXME If this GlobalConstants.DECIMAL_POINT_STR causes any issue
+			return new BigNumber(this.toString().split(GlobalConstants.DECIMAL_POINT_STR)[1]);
 		}
 	}
 
-	public void makeNegative() {
-		this.putAtFirst(GlobalConstants.MINUS);
+    @Override
+	public BigNumber makeNegative() {
+		return this.putAtFirst(GlobalConstants.MINUS);
 	}
 
     @Override
-	public void roundOff(BigNumberMathContext mathContext) {
+	public BigNumber roundOff(BigNumberMathContext mathContext) {
+        //return this.isFractional()? new BigNumber(this.getBigDecimal().round(BigNumberMathContext.getMathContextObject(mathContext))) : this;
+
+
         if(!this.isFractional()) {
-            return;
+            return this;
         }
 
 		if(mathContext.getNumberOfDigitsAfterDecimal() == 0) {
-			this.convertToInteger();
-			return;
+			return new BigNumber(this.convertToInteger());
 		}
 
 		int j = this.locationOfDecimal();
 		int i = j+1;
 		if((this.size()-i) < mathContext.getNumberOfDigitsAfterDecimal()) {
-			return;
+			return this;
 		}
 
         j += mathContext.getNumberOfDigitsAfterDecimal();
         i = j+1;
         if(i>=this.size()) {
-            return;
+            return this;
         }
         if((this.charAt(i) < GlobalConstants.FIVE) || (this.charAt(i) == GlobalConstants.FIVE && this.charAt(j)%2 == 0)) {
-            return;
+            return this;
         }
 
-        for(;this.charAt(j) == GlobalConstants.NINE; j--) {
-            this.modify(j, GlobalConstants.ZERO);
+        BigNumber result = new BigNumber(this);
+        for(;result.charAt(j) == GlobalConstants.NINE; j--) {
+            result.setValue(result.modify(j, GlobalConstants.ZERO));
         }
 
-        this.modify(j, this.charAt(j) + 1 - GlobalConstants.ZERO);
+        result.setValue(result.modify(j, result.charAt(j) + 1 - GlobalConstants.ZERO));
 
-        while(i<this.size()) {
-            this.getValue().remove(i);
+        while(i<result.size()) {
+            result.getValue().remove(i);
         }
-
+        return result;
 	}
 
-	public void roundOff() {
-        this.roundOff(this.getDefaultMathContext());
+    @Override
+	public BigNumber roundOff() {
+        return this.roundOff(this.getDefaultMathContext());
 	}
 
-	public void modify(int index, int newDigit) {
+    @Override
+	public BigNumber modify(int index, int newDigit) {
         String methodName = BigNumber.MODIFY;
 		if(index == 0) {
 			this.getValue().remove(0);
-			this.putAtFirst(newDigit);
-			return;
+            return this.putAtFirst(newDigit);
 		}
 		
 		if(newDigit>9 || newDigit<0) {
 			throw new IllegalArgumentException(BigNumber.FROM + methodName + ErrorMessages.NEW_DIGIT_INCOMPATIBLE_MSG.getValue());
 		}
-		this.getValue().add(index, (char)(newDigit + GlobalConstants.ZERO));
-		this.getValue().remove(index+1);
+        BigNumber result = new BigNumber(this);
+		result.getValue().add(index, (char)(newDigit + GlobalConstants.ZERO));
+		result.getValue().remove(index+1);
+        return result;
 	}
 
-	public void modify(int index, char newDigit) {
+    @Override
+	public BigNumber modify(int index, char newDigit) {
         String methodName = BigNumber.MODIFY;
 		if(index == 0) {
 			this.getValue().remove(0);
-			this.putAtFirst(newDigit);
-			return;
+			return this.putAtFirst(newDigit);
 		}
-		
+
+        BigNumber result = new BigNumber(this);
 		if(newDigit == GlobalConstants.DECIMAL_POINT) {
-			if(!this.isFractional()) {
-				this.getValue().add(index, newDigit);
-				this.getValue().remove(index+1);
-			} else if(this.getValue().get(index) == GlobalConstants.DECIMAL_POINT) {
-				return;
+			if(!result.isFractional()) {
+				result.getValue().add(index, newDigit);
+				result.getValue().remove(index+1);
+			} else if(result.getValue().get(index) == GlobalConstants.DECIMAL_POINT) {
+				return result;
 			} else {
 				throw new IllegalArgumentException(BigNumber.FROM + methodName + ErrorMessages.NEW_DIGIT_INCOMPATIBLE_MSG.getValue());
 			}
 		} else if(newDigit>=GlobalConstants.ZERO && newDigit<=GlobalConstants.NINE) {
-			this.modify(index, newDigit-GlobalConstants.ZERO);
+			return result.modify(index, newDigit-GlobalConstants.ZERO);
 		} else {
 			throw new IllegalArgumentException(BigNumber.FROM + methodName + ErrorMessages.NEW_DIGIT_INCOMPATIBLE_MSG.getValue());
 		}
+        return result;
 	}
 
-	public void insert(int index, char digit) {
+    @Override
+	public BigNumber insert(int index, char digit) {
         String methodName = BigNumber.INSERT;
 		if(index == 0) {
-			this.putAtFirst(digit);
-			return;
+			return this.putAtFirst(digit);
 		}
-		
+
+        BigNumber result = new BigNumber(this);
 		if(digit == GlobalConstants.DECIMAL_POINT) {
-			if(!this.isFractional()) {
-				this.getValue().add(index, digit);
-				this.syncFromValue();
-			} else if(this.getValue().get(index) == GlobalConstants.DECIMAL_POINT) {
-				return;
+			if(!result.isFractional()) {
+				result.getValue().add(index, digit);
+				result.syncFromValue();
+			} else if(result.getValue().get(index) == GlobalConstants.DECIMAL_POINT) {
+				return result;
 			} else {
 				throw new IllegalArgumentException(BigNumber.FROM + methodName + ErrorMessages.NEW_DIGIT_INCOMPATIBLE_MSG.getValue());
 			}
 		} else if(digit>=GlobalConstants.ZERO && digit<=GlobalConstants.NINE) {
-			this.insert(index, digit-GlobalConstants.ZERO);
+			return result.insert(index, digit-GlobalConstants.ZERO);
 		} else {
 			throw new IllegalArgumentException(BigNumber.FROM + methodName + ErrorMessages.NEW_DIGIT_INCOMPATIBLE_MSG.getValue());
 		}
+        return result;
 	}
 
-	public void insert(int index, int digit) {
+    @Override
+	public BigNumber insert(int index, int digit) {
         String methodName = BigNumber.INSERT;
 		if(digit>9 || digit<0) {
 			throw new IllegalArgumentException(BigNumber.FROM + methodName + ErrorMessages.NEW_DIGIT_INCOMPATIBLE_MSG.getValue());
 		}
-		this.getValue().add(index, (char)(digit + GlobalConstants.ZERO));
-		this.syncFromValue();
+        BigNumber result = new BigNumber(this);
+		result.getValue().add(index, (char)(digit + GlobalConstants.ZERO));
+		result.syncFromValue();
+        return result;
 	}
 
-	public void putAtFirst(int digit) {
+    @Override
+	public BigNumber putAtFirst(int digit) {
         String methodName = BigNumber.PUT_AT_FIRST;
 		if(digit>9 || digit<0) {
 			throw new IllegalArgumentException(BigNumber.FROM + methodName + ErrorMessages.NEW_DIGIT_INCOMPATIBLE_MSG.getValue());
@@ -666,66 +647,66 @@ public class BigNumber extends BigNumberParent {
 		List<Character> dig = new ArrayList<Character>();
 		dig.add((char) (digit + GlobalConstants.ZERO));
 		dig.addAll(this.getValue());
-		this.setValue(dig);
+		return new BigNumber(dig);
 	}
 
-	public void putAtFirst(char character) {
+    @Override
+	public BigNumber putAtFirst(char character) {
 		List<Character> dig = new ArrayList<Character>();
 		dig.add(character);
 		dig.addAll(this.getValue());
-		this.setValue(dig);
+		return new BigNumber(dig);
 	}
 
-	public void reverse() {
+    @Override
+	public BigNumber reverse() {
 		int size  = this.size();
-		int limit = 0;
-		if(this.isNegative()) {
-			limit = 1;
-		}
-		
+		int limit = this.isNegative()? 1 : 0;
+
+        BigNumber result = new BigNumber(this);
 		for(int count=0; count<=size-limit-1; count++) {
-			if(this.charAt(size-1) == GlobalConstants.DECIMAL_POINT) {
-				this.getValue().add(count+limit, GlobalConstants.DECIMAL_POINT);
-				this.getValue().remove(size);
+			if(result.charAt(size - 1) == GlobalConstants.DECIMAL_POINT) {
+				result.getValue().add(count+limit, GlobalConstants.DECIMAL_POINT);
+				result.getValue().remove(size);
 				continue;
 			}
 
-            this.insert(count+limit, this.charAt(size-1));
-			this.getValue().remove(size);
+            result.insert(count + limit, result.charAt(size - 1));
+			result.getValue().remove(size);
 		}
 		
-		this.syncFromValue();
+		result.syncFromValue();
+        return result;
 	}
 
-	public void consolidate() {
+    @Override
+	public BigNumber consolidate() {
 		// Remember -ve and fractions
+        BigNumber result = new BigNumber(this);
 
-		int startIndex = 0;
-		if(isNegative()) {
-			startIndex = 1;
-		}
+		for(int startIndex = result.isNegative()?1:0;result.charAt(startIndex) == GlobalConstants.ZERO; result.getValue().remove(startIndex));
 
-		for(;this.charAt(startIndex) == GlobalConstants.ZERO; this.getValue().remove(startIndex));
-
-		if(this.isFractional()) {
+		if(result.isFractional()) {
 			// Consolidate from other end as well
-			for(int i=this.size()-1; this.charAt(i) == GlobalConstants.ZERO; i=this.size()-1) {
-				this.getValue().remove(i);
+			for(int i=result.size()-1; result.charAt(i) == GlobalConstants.ZERO; i=result.size()-1) {
+				result.getValue().remove(i);
 			}
 		}
 
-		if(this.charAt(this.size()-1) == GlobalConstants.DECIMAL_POINT) {
-			this.getValue().remove(this.size()-1);
+		if(result.charAt(result.size() - 1) == GlobalConstants.DECIMAL_POINT) {
+			result.getValue().remove(result.size()-1);
 		}
 		
-		if(this.size() == 0) {
-            this.setValue(0);
+		if(result.size() == 0) {
+            result.setValue(0);
 		}
 
-		this.syncFromValue();
+		result.syncFromValue();
+        return result;
 	}
 
-	public void append(BigNumber number) {
+    @Override
+	public BigNumber append(BigNumber number) {
         String methodName = BigNumber.APPEND;
 		if(this.isFractional() && number.isFractional()) {
 			throw new IllegalArgumentException(BigNumber.FROM + methodName + ErrorMessages.TWO_DECIMAL_POINTS_MSG.getValue());
@@ -733,31 +714,38 @@ public class BigNumber extends BigNumberParent {
 		if(number.isNegative()) {
 			throw new IllegalArgumentException(BigNumber.FROM + methodName + ErrorMessages.SECOND_NUMBER_NEGATIVE_MSG.getValue());
 		}
-		this.getValue().addAll(number.getValue());
-		this.syncFromValue();
+
+        BigNumber result = new BigNumber();
+        result.setValue(this.toString() + number.toString());
+        result.syncFromValue();
+        return result;
 	}
 
-	public void append (int number) {
+    @Override
+	public BigNumber append (int number) {
         String methodName = BigNumber.APPEND;
-		if(number < 0) {
+        if(number < 0) {
 			throw new IllegalArgumentException(BigNumber.FROM + methodName + ErrorMessages.INCOMPATIBLE_VALUE_MSG.getValue());
 		}
-		ArrayList<Character> num = new ArrayList<Character>();
-		for(; number>10; number /= 10) {
-			num.add(0, (char)(number%10 + GlobalConstants.ZERO));
-		}
-		this.getValue().addAll(num);
-		this.syncFromValue();
+
+        BigNumber result = new BigNumber();
+		result.setValue(this.toString() + ((Integer) number).toString());
+		result.syncFromValue();
+        return result;
 	}
 
-	public void makeFractional() {
+    @Override
+	public BigNumber makeFractional() {
 		if(this.isFractional()) {
-			return;
+			return this;
 		}
 
-        this.setValue(this.toString() + GlobalConstants.DECIMAL_POINT + GlobalConstants.ZERO_STR + GlobalConstants.ZERO_STR);
+        BigNumber result = new BigNumber(this);
+        result.setValue(result.toString() + GlobalConstants.DECIMAL_POINT + GlobalConstants.ZERO_STR + GlobalConstants.ZERO_STR);
+        return result;
 	}
 
+    @Override
     public BigNumber factorial() {
         if((this.compareTo(new BigNumber()) == 0) || (this.compareTo(UNITY) == 0)) {
             return UNITY;
@@ -767,7 +755,7 @@ public class BigNumber extends BigNumberParent {
         BigNumber i = new BigNumber();
         result.setValue(this);
 
-        for(i.setValue(subtract(this, UNITY)); i.compareTo(UNITY) != 0; i.setValue(subtract(i, UNITY))) {
+        for(i.setValue(BigNumberUtils.subtract(this, BigNumber.UNITY)); i.compareTo(UNITY) != 0; i.setValue(BigNumberUtils.subtract(i, UNITY))) {
             result.multiply(i);
         }
 
@@ -778,30 +766,30 @@ public class BigNumber extends BigNumberParent {
     public String toJSON() {
         StringBuilder bigNum = new StringBuilder(GlobalConstants.LEFT_BRACE);
 
+        bigNum.append(GlobalConstants.COMMA + GlobalConstants.DOUBLE_QUOTE + "isZero" + GlobalConstants.DOUBLE_QUOTE + GlobalConstants.COLON + this.isZero());
         if(this.isZero()) {
-            bigNum.append("\"value\"" + GlobalConstants.COLON + GlobalConstants.DOUBLE_QUOTE + GlobalConstants.ZERO_STR + GlobalConstants.DOUBLE_QUOTE);
-            bigNum.append(GlobalConstants.COMMA + "\"isZero\"" + GlobalConstants.COLON + true);
+            bigNum.append(GlobalConstants.DOUBLE_QUOTE + "value" + GlobalConstants.DOUBLE_QUOTE + GlobalConstants.COLON + GlobalConstants.DOUBLE_QUOTE +
+                    GlobalConstants.ZERO_STR + GlobalConstants.DOUBLE_QUOTE);
+        } else {
+            this.syncFromValue();
+        }
+
+        bigNum.append(GlobalConstants.COMMA + GlobalConstants.DOUBLE_QUOTE + "isFractional" + GlobalConstants.DOUBLE_QUOTE + GlobalConstants.COLON + this.isFractional());
+        if(this.isFractional()) {
+            bigNum.append(GlobalConstants.DOUBLE_QUOTE + "value" + GlobalConstants.DOUBLE_QUOTE + GlobalConstants.COLON + GlobalConstants.DOUBLE_QUOTE +
+                    this.getBigDecimal().toString() + GlobalConstants.DOUBLE_QUOTE);
+            bigNum.append(GlobalConstants.COMMA + GlobalConstants.DOUBLE_QUOTE + "bigDecimal" + GlobalConstants.DOUBLE_QUOTE + GlobalConstants.COLON +
+                    GlobalConstants.DOUBLE_QUOTE + this.getBigDecimal().toString() + GlobalConstants.DOUBLE_QUOTE);
+            bigNum.append(GlobalConstants.COMMA + GlobalConstants.DOUBLE_QUOTE + "locationOfDecimal" + GlobalConstants.DOUBLE_QUOTE + GlobalConstants.COLON +
+                    GlobalConstants.DOUBLE_QUOTE + this.locationOfDecimal() + GlobalConstants.DOUBLE_QUOTE);
         } else {
             bigNum.append(GlobalConstants.DOUBLE_QUOTE + "value" + GlobalConstants.DOUBLE_QUOTE + GlobalConstants.COLON + GlobalConstants.DOUBLE_QUOTE +
-                    StringUtils.combine(this.getValue(), GlobalConstants.BLANK) + GlobalConstants.DOUBLE_QUOTE);
-            bigNum.append(GlobalConstants.COMMA + GlobalConstants.DOUBLE_QUOTE + "isZero" + GlobalConstants.DOUBLE_QUOTE + GlobalConstants.COLON + false);
+                    this.getBigInteger().toString() + GlobalConstants.DOUBLE_QUOTE);
+            bigNum.append(GlobalConstants.COMMA + GlobalConstants.DOUBLE_QUOTE + "bigInteger" + GlobalConstants.DOUBLE_QUOTE + GlobalConstants.COLON +
+                    GlobalConstants.DOUBLE_QUOTE + this.getBigInteger().toString() + GlobalConstants.DOUBLE_QUOTE);
         }
 
-        if(this.isFractional()) {
-            bigNum.append(GlobalConstants.COMMA + GlobalConstants.DOUBLE_QUOTE + "isFractional" + GlobalConstants.DOUBLE_QUOTE + GlobalConstants.COLON + true);
-            bigNum.append(GlobalConstants.COMMA + GlobalConstants.DOUBLE_QUOTE + "bigDecimal" + GlobalConstants.DOUBLE_QUOTE + GlobalConstants.COLON + GlobalConstants.DOUBLE_QUOTE + this.getBigDecimal().toString() + GlobalConstants.DOUBLE_QUOTE);
-            bigNum.append(GlobalConstants.COMMA + GlobalConstants.DOUBLE_QUOTE + "locationOfDecimal" + GlobalConstants.DOUBLE_QUOTE + GlobalConstants.COLON + GlobalConstants.DOUBLE_QUOTE + this.locationOfDecimal() + GlobalConstants.DOUBLE_QUOTE);
-        } else {
-            bigNum.append(GlobalConstants.COMMA + GlobalConstants.DOUBLE_QUOTE + "isFractional" + GlobalConstants.DOUBLE_QUOTE + GlobalConstants.COLON + false);
-            bigNum.append(GlobalConstants.COMMA + GlobalConstants.DOUBLE_QUOTE + "bigInteger" + GlobalConstants.DOUBLE_QUOTE + GlobalConstants.COLON + GlobalConstants.DOUBLE_QUOTE + this.getBigInteger().toString() + GlobalConstants.DOUBLE_QUOTE);
-        }
-
-        if(this.isNegative()) {
-            bigNum.append(GlobalConstants.COMMA + GlobalConstants.DOUBLE_QUOTE + "isNegative" + GlobalConstants.DOUBLE_QUOTE + GlobalConstants.COLON + true);
-        } else {
-            bigNum.append(GlobalConstants.COMMA + GlobalConstants.DOUBLE_QUOTE + "isNegative" + GlobalConstants.DOUBLE_QUOTE + GlobalConstants.COLON + false);
-        }
-
+        bigNum.append(GlobalConstants.COMMA + GlobalConstants.DOUBLE_QUOTE + "isNegative" + GlobalConstants.DOUBLE_QUOTE + GlobalConstants.COLON + this.isNegative());
         bigNum.append(GlobalConstants.RIGHT_BRACE);
 
         return bigNum.toString();
@@ -829,11 +817,8 @@ public class BigNumber extends BigNumberParent {
 		this.setZero(true);
 		this.setLocationOfDecimal(-1);
 		this.setFractional(false);
-		
-		int i=0;
-		if(this.isNegative()) {
-			i=1;
-		}
+
+        int i = (this.isNegative()?1:0);
 
 		for(; i<val.size(); i++){
 			char digit = val.get(i);
@@ -858,10 +843,12 @@ public class BigNumber extends BigNumberParent {
 		}
 	}
 
+    @Override
 	protected void syncFromDecimal() {
 		this.setValue(this.getBigDecimal());
 	}
 
+    @Override
 	protected void syncFromInteger() {
 		this.setValue(this.getBigInteger());
 	}
@@ -875,420 +862,4 @@ public class BigNumber extends BigNumberParent {
 
 	//==================================================================================
 
-
-	/*==================================================================================
-	 *                               GETTERS/SETTERS
-	 *==================================================================================
-	 */
-
-	public boolean isNegative() {
-		return isNegative;
-	}
-
-	private void setNegative(boolean isNegative) {
-		this.isNegative = isNegative;
-	}
-
-	public boolean isFractional() {
-		return isFractional;
-	}
-
-	private void setFractional(boolean isFraction) {
-		this.isFractional = isFraction;
-		if(!isFraction) {
-			this.setLocationOfDecimal(-1);
-		}
-	}
-
-	public int locationOfDecimal() {
-		if(!this.isFractional())
-			return -1;
-		return locationOfDecimal;
-	}
-
-	private void setLocationOfDecimal(Integer locationOfDecimal) {
-		this.locationOfDecimal = locationOfDecimal;
-	}
-
-	protected BigInteger getBigInteger() {
-		if(bigInteger == null) {
-			this.setBigInteger(new BigInteger(GlobalConstants.ZERO_STR));
-		}
-		return bigInteger;
-	}
-
-	protected void setBigInteger(BigInteger bigInteger) {
-		this.bigInteger = bigInteger;
-		this.syncFromInteger();
-	}
-
-	public boolean isZero() {
-		return isZero;
-	}
-
-	private void setZero(boolean isZero) {
-		this.isZero = isZero;
-	}
-
-    /**
-     * It puts the provided number in the BigNumber variable
-     * toString() method on the provided number will be called hence do not use primitive types
-     * @param number
-     * As String, Integer, Float, Double, Long etc.
-     * @author Nishi Inc.
-     * @since August 6, 2013, v0.1.0
-     */
-
-
-    /**
-     * It puts the provided number in the BigNumber variable
-     * @param number
-     * BigNumber number
-     * @author Nishi Inc.
-     * @since v0.1.0
-     */
-
-    /**
-     * It puts the provided number in the BigNumber variable
-     * @param number As String which may contain only numbers 0 to 9, a leading -ve sign '-' and a decimal point
-     * @author Nishi Inc.
-     * @since August 6, 2013, v0.1.0
-     */
-
-    /**
-     * <ul><li>No character accept '0' to '9', '.' and '-' is allowed.</li>
-     * <li>No two '.' are allowed.</li>
-     * <li>Spaces (' ' or " ") in the provided String are removed before setting the value so no problem with spaces.</li>
-     * <li>'-' is allowed only as first character</li></ul>
-     * @param value
-     */
-
-    /**
-     * @return position of decimal point in the fractional number,
-     * -1 if it's not a fractional number
-     * @author Nishi Inc.
-     * @since v0.1.0
-     */
-
-    /**
-     *
-     * @return true if the number is a fraction else false
-     * @author Nishi Inc.
-     * @since v0.1.0
-     */
-
-    /**
-     * @return true if the number is negative else false
-     * @author Nishi Inc.
-     * @since v0.1.0
-     */
-
-    /**
-     * @return true if the number has value = 0 or "0" else false
-     * @author Nishi Inc.
-     * @since v0.1.0
-     */
-
-    	/*==========================================================
-	 * 						Public Static Methods
-	 * =========================================================
-	 */
-
-    /**
-     * Returns remainder
-     * @param numerator
-     * @param denominator
-     * @return A BigNumber type variable containing remainder of arithmetic division of the provided numerator by the provided denominator
-     * @author Nishi Inc.
-     * @since v1.1.0
-     */
-    public static BigNumber modulus(BigNumber numerator, BigNumber denominator) {
-        BigNumber result	=	new BigNumber();
-        result.setValue(numerator.divideAndRemainder(denominator)[1]);
-        result.absolute();
-        return result;
-    }
-
-    /**
-     * Same as modulus()
-     * @param numerator
-     * @param denominator
-     * @return A BigNumber type variable containing remainder of arithmetic division of the provided numerator by the provided denominator
-     * @author Nishi Inc.
-     * @since v1.1.0
-     */
-    public static BigNumber mod(BigNumber numerator, BigNumber denominator) {
-        return modulus(numerator, denominator);
-    }
-
-    /**
-     * Same as add() method
-     * @author Nishi Inc.
-     * @since v1.1.0
-     * @param numbers BigNumber numbers
-     * @return A BigNumber type variable containing result of arithmetic addition of the provided numbers
-     */
-    public static BigNumber sum(BigNumber... numbers) {
-        return BigNumber.add(numbers);
-    }
-
-    /**
-     * Same as subtract()
-     * @author Nishi Inc.
-     * @since v1.1.0
-     * @param firstNumber
-     * @param secondNumber
-     * @return A BigNumber type variable containing firstNumber - secondNumber
-     */
-    public static BigNumber sub(BigNumber firstNumber, BigNumber secondNumber) {
-        return BigNumber.subtract(firstNumber, secondNumber);
-    }
-
-    /**
-     * Same as absolute()
-     * @param number
-     * @return A BigNumber type variable containing absolute value of the given BigNumber number
-     * @author Nishi Inc.
-     * @since v1.1.0
-     */
-    public static BigNumber abs(BigNumber number) {
-        return BigNumber.absolute(number);
-    }
-
-    /**
-     * @param number
-     * @param power
-     * @return A BigNumber containing number^power
-     * @since v1.0.0
-     * @author Nishi Incorporation
-     */
-    public static BigNumber pow(BigNumber number, int power) {
-        BigNumber result = new BigNumber(number);
-        result.pow(power);
-        return result;
-    }
-
-    /**
-     * @author Nishi Incorporation
-     * @since v1.1.0
-     * @param number
-     * @return A BigNumber containing value of factorial(given number)
-     */
-    public static BigNumber factorialOf(BigNumber number) {
-        BigNumber result	= new BigNumber(number);
-        BigNumber i			= new BigNumber();
-
-        for(i.setValue(sub(number, UNITY)); !i.isZero(); i.setValue(sub(i, UNITY))) {
-            result.multiply(i);
-        }
-
-        return result;
-    }
-
-
-
-    //=============================== Utility Methods ==========================================
-
-    /**
-     * Works similar to BigNumber.<i>reverse()</i>
-     * @param number A BigNumber number
-     * @return A BigNumber number with its digits in reverse order
-     * @author Nishi Inc.
-     * @since v1.2.0
-     */
-    public static BigNumber reverse(BigNumber number) {
-        BigNumber result = new BigNumber(number);
-        result.reverse();
-        return result;
-    }
-
-    /**
-     * Works similar to BigNumber.<i>reverse()</i>
-     * @param numbers
-     * @return An array of BigNumber numbers containing BigNumber numbers which have their digits in reverse order
-     * @author Nishi Inc.
-     * @since v1.0.0
-     */
-    public static BigNumber[] reverse(BigNumber... numbers) {
-        int size = numbers.length;
-        BigNumber[] result = new BigNumber[size];
-        for(int i=0; i<size; i++) {
-            result[i] = reverse(numbers[i]);
-        }
-        return result;
-    }
-
-    /**
-     * @param numbers
-     * @return A BigNumber number having secondNumber concatenated to firstNumber
-     * @author Nishi Inc.
-     * @since v1.0.0
-     */
-    public static BigNumber append(BigNumber... numbers) {
-        BigNumber result = new BigNumber(numbers[0]);
-        int length 		 = numbers.length;
-        for(int i=1; i<length; i++) {
-            result.append(numbers[i]);
-        }
-        return result;
-    }
-
-    //==========================================================================================
-
-
-	/*==========================================================
-	 * 						Public Static Methods
-	 * =========================================================
-	 */
-
-    /**
-     * Same as sum()
-     * @param numbers BigNumber numbers
-     * @return A BigNumber type variable containing result of arithmetic addition of the provided numbers
-     */
-    public static BigNumber add(BigNumber... numbers) {
-        int total  = numbers.length;
-
-        BigNumber result = new BigNumber(numbers[0]);
-
-        for(int i=1; i<total; i++) {
-            result = addTwo(result, numbers[i]);
-        }
-        return result;
-    }
-
-    /**
-     * @param firstNumber
-     * @param secondNumber
-     * @return
-     */
-    private static BigNumber addTwo(BigNumber firstNumber, BigNumber secondNumber) {
-        BigNumber result = new BigNumber();
-
-        if(!firstNumber.isFractional() && !secondNumber.isFractional()) {
-            //Both are non-fractional
-            result.setBigInteger(firstNumber.getBigInteger().add(secondNumber.getBigInteger()));
-        } else {
-            firstNumber.makeFractional();
-            secondNumber.makeFractional();
-            result.setBigDecimal(firstNumber.getBigDecimal().add(secondNumber.getBigDecimal()));
-        }
-
-        return result;
-    }
-
-    /**
-     * Same as sub()
-     * @param firstNumber
-     * @param secondNumber
-     * @return A BigNumber type variable containing firstNumber - secondNumber
-     * @author Nishi Inc.
-     * @since v1.0.0
-     */
-    public static BigNumber subtract(BigNumber firstNumber, BigNumber secondNumber) {
-        BigNumber result = new BigNumber();
-
-        if(firstNumber.isFractional() && secondNumber.isFractional()) {
-            //Both are non-fractional
-            result.setBigInteger(firstNumber.getBigInteger().subtract(secondNumber.getBigInteger()));
-        } else {
-            firstNumber.makeFractional();
-            secondNumber.makeFractional();
-            result.setBigDecimal(firstNumber.getBigDecimal().subtract(secondNumber.getBigDecimal()));
-        }
-
-        result.consolidate();
-        return result;
-    }
-
-    /**
-     * @param numbers BigNumber numbers
-     * @return A BigNumber number containing product of the numbers provided
-     * @author Nishi Inc.
-     * @since v1.1.0
-     */
-    public static BigNumber multiply(BigNumber... numbers) {
-        int total  = numbers.length;
-        BigNumber result = new BigNumber(numbers[0]);
-
-        for(int i=1; i<total; i++) {
-            result = BigNumber.multiplyTwo(result, numbers[i]);
-        }
-
-        return result;
-    }
-
-    /**
-     * @author Nishi Inc.
-     * @since v1.1.0
-     * @param firstNumber
-     * @param secondNumber
-     * @return
-     */
-    private static BigNumber multiplyTwo(BigNumber firstNumber, BigNumber secondNumber) {
-        BigNumber result = new BigNumber();
-
-        if(!firstNumber.isFractional() && !secondNumber.isFractional()) {
-            // Both are non-fractional
-            result.setBigInteger(firstNumber.getBigInteger().multiply(secondNumber.getBigInteger()));
-        } else {
-            firstNumber.makeFractional();
-            secondNumber.makeFractional();
-            result.setBigDecimal(firstNumber.getBigDecimal().multiply(secondNumber.getBigDecimal()));
-        }
-
-        result.consolidate();
-        return result;
-    }
-
-    /**
-     * @author Nishi Inc.
-     * @since v1.0.0
-     * @throws ArithmeticException When denominator is zero or when division is giving endless number
-     * @param numerator or dividend
-     * @param denominator or divisor
-     * @return A BigNumber type variable containing result of arithmetic division of the provided numerator by the provided denominator
-     */
-    public static BigNumber divide(BigNumber numerator, BigNumber denominator) throws ArithmeticException {
-        if(denominator.isZero()) {
-            throw new ArithmeticException();
-        }
-
-        BigNumber result	=	new BigNumber();
-        numerator.makeFractional();
-        denominator.makeFractional();
-        try {
-            result.setBigDecimal(numerator.getBigDecimal().divide(denominator.getBigDecimal()));
-        } catch(ArithmeticException e) {
-            numerator.consolidate();
-            denominator.consolidate();
-            if(!numerator.isFractional() && !denominator.isFractional()) {
-                numerator.getBigInteger().divide(denominator.getBigInteger());
-            } else {
-                throw e;
-            }
-        }
-
-        numerator.consolidate();
-        denominator.consolidate();
-        return result;
-    }
-
-    /**
-     * Returns absolute value of the given number
-     * @author Nishi Inc.
-     * @since v1.1.0
-     * @param number
-     * @return A BigNumber type variable containing absolute value of the given BigNumber number
-     */
-    public static BigNumber absolute(BigNumber number) {
-        if(!number.isNegative()) {
-            return number;
-        }
-        BigNumber result = new BigNumber(number);
-        result.getValue().remove(0);
-        result.syncFromValue();
-        return result;
-    }
-	
 }

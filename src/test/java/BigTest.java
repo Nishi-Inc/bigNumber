@@ -12,6 +12,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bigNumber.common.services.BigNumberUtils;
 import org.nishi.helper.GlobalConstants;
 
 import junit.framework.TestCase;
@@ -42,8 +43,9 @@ public class BigTest extends TestCase {
     public void testFactorialOf() {
         BigNumber no = this.getBigPool().getBigNumber();
         no.setValue("1");
-        BigNumber correctResult = new BigNumber("1");
-        BigNumber result = BigNumber.factorialOf(no);
+        BigNumber correctResult = this.getBigPool().getBigNumber();
+        correctResult.setValue("1");
+        BigNumber result = BigNumberUtils.factorialOf(no);
         assertTrue(result.equals(correctResult));
     }
 	
@@ -65,7 +67,7 @@ public class BigTest extends TestCase {
         no.setValue("-34.2896");
         BigNumberMathContext mathContext = new BigNumberMathContext();
         mathContext.setNumberOfDigitsAfterDecimal(3);
-		no.roundOff(mathContext);
+		no = no.roundOff(mathContext);
 		assertTrue(no.toString().contentEquals("-34.290"));
 		this.getBigPool().destroy(no);
 	}
@@ -87,7 +89,7 @@ public class BigTest extends TestCase {
 		BigNumber num = this.getBigPool().getBigNumber();
 		BigNumber result = this.getBigPool().getBigNumber();
         num.setValue("34.1");
-		result = BigNumber.pow(num, 2);
+		result = BigNumberUtils.pow(num, 2);
 		//num.pow(2);
 		assertTrue(result.toString().contentEquals("1162.81"));
 		this.getBigPool().destroy(num,result);
@@ -108,8 +110,8 @@ public class BigTest extends TestCase {
 		BigNumber num2 = this.getBigPool().getBigNumber();
         num1.setValue("1111");
         num2.setValue("-2.0");
-		num1.absolute();
-		num2.absolute();
+		num1 = num1.absolute();
+		num2 = num2.absolute();
 		assertTrue(num1.toString().contentEquals("1111"));
 		assertTrue(num2.toString().contentEquals("2.0"));
 		this.getBigPool().destroy(num1, num2);
@@ -120,7 +122,7 @@ public class BigTest extends TestCase {
 		BigNumber num2 = this.getBigPool().getBigNumber();
         num1.setValue("-34");
         num2.setValue("3");
-		num1.modulus(num2);
+		num1 = num1.modulus(num2);
 		assertTrue(num1.toString().contentEquals("1"));
 		this.getBigPool().destroy(num1, num2);
 	}
@@ -137,7 +139,7 @@ public class BigTest extends TestCase {
         num[3].setValue("3");
         num[4].setValue("3");
         num[2].setValue("3");
-		result = BigNumber.sum(num);
+		result = BigNumberUtils.sum(num);
 		assertTrue(result.toString().contentEquals("8.0123"));
 		this.getBigPool().destroy(num);
 	}
@@ -154,7 +156,7 @@ public class BigTest extends TestCase {
         num[3].setValue("3");
         num[4].setValue("3");
         num[2].setValue("3");
-		result = BigNumber.multiply(num);
+		result = BigNumberUtils.multiply(num);
 		assertTrue(result.toString().contentEquals("-30486.49461"));
 		this.getBigPool().destroy(num);
 	}
@@ -166,7 +168,7 @@ public class BigTest extends TestCase {
 
         num1.setValue("33.1123");
         num2.setValue("4");
-		result = BigNumber.divide(num1, num2);
+		result = BigNumberUtils.divide(num1, num2);
 		assertTrue(result.toString().contentEquals("8.278075"));
 		this.getBigPool().destroy(num1, num2);
 	}
@@ -178,7 +180,7 @@ public class BigTest extends TestCase {
 
         num1.setValue("33.1123");
         num2.setValue("4");
-		result = BigNumber.sub(num1, num2);
+		result = BigNumberUtils.sub(num1, num2);
 		assertTrue(result.toString().contentEquals("29.1123"));
 		this.getBigPool().destroy(num1, num2);
 	}
@@ -206,7 +208,7 @@ public class BigTest extends TestCase {
 		BigNumber num1 = this.getBigPool().getBigNumber();
 
         num1.setValue("33263547245296341");
-        num1.modify(1, '.');
+        num1 = num1.modify(1, '.');
 		assertTrue(num1.toString().contentEquals("3.263547245296341"));
 		this.getBigPool().destroy(num1);
 	}
@@ -216,7 +218,7 @@ public class BigTest extends TestCase {
 		BigNumber num2 = this.getBigPool().getBigNumber();
         num1.setValue("11111111111111111");
         num2.setValue("222222222222.22222");
-		num1.add(num2);
+		num1 = num1.add(num2);
 		assertTrue(num1.toString().contentEquals("11111333333333333.22222"));
 		this.getBigPool().destroy(num1,num2);
 	}
@@ -230,7 +232,7 @@ public class BigTest extends TestCase {
 		} catch (Exception e) {
 			assertTrue(false);
 		}
-		num1.multiply(num2);
+		num1 = num1.multiply(num2);
 		assertTrue(num1.toString().contentEquals("1000000000000000000000000000000000000000000000000"));
 		this.getBigPool().destroy(num1,num2);
 	}
@@ -238,13 +240,9 @@ public class BigTest extends TestCase {
 	public void testDivide() {
 		BigNumber num1 = this.getBigPool().getBigNumber();
 		BigNumber num2 = this.getBigPool().getBigNumber();
-		try {
-			num1.setValue("1000000000000000000000000");
-			num2.setValue("1000000000000000000000000");
-		} catch (Exception e) {
-			assertTrue(false);
-		}
-		num1.divide(num2);
+        num1.setValue("1000000000000000000000000");
+        num2.setValue("1000000000000000000000000");
+		num1 = num1.divide(num2);
 		assertTrue(num1.toString().contentEquals("1"));
 		this.getBigPool().destroy(num1,num2);
 	}
@@ -291,7 +289,7 @@ public class BigTest extends TestCase {
 
         num1.setValue("-102");
         num2.setValue("137");
-        num1.append(num2);
+        num1 = num1.append(num2);
 		assertTrue(num1.toString().contentEquals("-102137"));
 		this.getBigPool().destroy(num1);
 	}
