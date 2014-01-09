@@ -1,6 +1,6 @@
-package org.bigNumber.common.services;
+package org.nishi.bigNumber.common.services;
 
-import org.bigNumber.models.BigNumber;
+import org.nishi.bigNumber.models.BigNumber;
 
 /**
  * @author aloks

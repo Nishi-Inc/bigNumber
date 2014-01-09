@@ -1,7 +1,7 @@
-package org.bigNumber.common.interfaces;
+package org.nishi.bigNumber.common.interfaces;
 
-import org.bigNumber.models.BigNumber;
-import org.bigNumber.models.BigNumberMathContext;
+import org.nishi.bigNumber.models.BigNumber;
+import org.nishi.bigNumber.models.BigNumberMathContext;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

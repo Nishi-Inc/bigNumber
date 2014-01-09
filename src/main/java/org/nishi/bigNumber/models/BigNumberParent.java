@@ -9,15 +9,15 @@
  * =====================================================================
  */
 
-package org.bigNumber.models;
+package org.nishi.bigNumber.models;
+
+import org.nishi.bigNumber.common.interfaces.NonStaticMethods;
+import org.nishi.bigNumber.helper.GlobalConstants;
+import org.nishi.bigNumber.helper.Utils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
-
-import org.bigNumber.common.interfaces.NonStaticMethods;
-import org.nishi.helper.GlobalConstants;
-import org.nishi.helper.StringUtils;
 
 /**
  * Parent class for BigNumber
@@ -110,7 +110,7 @@ public abstract class BigNumberParent implements NonStaticMethods {
 
     @Override
 	public String toString() {
-        return StringUtils.combine(this.getValue(), GlobalConstants.BLANK);
+        return Utils.combine(this.getValue(), GlobalConstants.BLANK);
 	}
 
 

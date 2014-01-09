@@ -9,18 +9,16 @@
  * =====================================================================
  */
 
-package org.bigNumber.models;
+package org.nishi.bigNumber.models;
+
+import org.nishi.bigNumber.common.services.BigNumberUtils;
+import org.nishi.bigNumber.common.services.ErrorMessages;
+import org.nishi.bigNumber.helper.GlobalConstants;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.bigNumber.common.services.BigNumberUtils;
-import org.nishi.helper.GlobalConstants;
-import org.nishi.helper.StringUtils;
-
-import org.bigNumber.common.services.ErrorMessages;
 
 /**
  * This class makes BigNumber type objects
@@ -46,7 +44,6 @@ public class BigNumber extends BigNumberParent {
 
 	/**
 	 * Constructs a BigNumber type number with default value 0
-	 * @author Nishi Inc.
 	 * @since v0.1.0
 	 */
 	public BigNumber(){
@@ -57,7 +54,6 @@ public class BigNumber extends BigNumberParent {
 	/**
 	 * Create a copy from the given BigNumber
 	 * @param number A BigNumber
-	 * @author Nishi Inc.
 	 * @since v0.1.0
 	 */
 	public BigNumber(BigNumber number) {
@@ -65,7 +61,6 @@ public class BigNumber extends BigNumberParent {
 	}
 
 	/**
-	 * @author Nishi Inc.
 	 * @param number
 	 * @since v1.0.0
 	 */
@@ -74,7 +69,6 @@ public class BigNumber extends BigNumberParent {
 	}
 
 	/**
-	 * @author Nishi Inc.
 	 * @param number A BigInteger
 	 * @since v1.0.0
 	 */
@@ -83,7 +77,6 @@ public class BigNumber extends BigNumberParent {
 	}
 
 	/**
-	 * @author Nishi Inc.
 	 * @since v1.0.0
 	 * @param number
 	 */
@@ -92,7 +85,6 @@ public class BigNumber extends BigNumberParent {
 	}
 
 	/**
-	 * @author Nishi Inc.
 	 * @since v1.0.0
 	 * @param number
 	 */
@@ -101,7 +93,6 @@ public class BigNumber extends BigNumberParent {
 	}
 
 	/**
-	 * @author Nishi Inc.
 	 * @since v1.0.0
 	 * @param number
 	 */
@@ -110,7 +101,6 @@ public class BigNumber extends BigNumberParent {
 	}
 
 	/**
-	 * @author Nishi Inc.
 	 * @since v1.0.0
 	 * @param number
 	 */
@@ -119,7 +109,6 @@ public class BigNumber extends BigNumberParent {
 	}
 
 	/**
-	 * @author Nishi Inc.
 	 * @since v1.0.0
 	 * @param number
 	 */
@@ -140,7 +129,6 @@ public class BigNumber extends BigNumberParent {
      * toString() method on the provided number will be called hence do not use primitive types
      * @param number
      * As String, Integer, Float, Double, Long etc.
-     * @author Nishi Inc.
      * @since August 6, 2013, v0.1.0
      */
 	public <E extends Comparable<E>> void setValue(E number) {

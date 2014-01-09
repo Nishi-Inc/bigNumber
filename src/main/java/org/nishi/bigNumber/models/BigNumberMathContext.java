@@ -1,4 +1,4 @@
-package org.bigNumber.models;
+package org.nishi.bigNumber.models;
 
 import java.math.MathContext;
 import java.math.RoundingMode;
