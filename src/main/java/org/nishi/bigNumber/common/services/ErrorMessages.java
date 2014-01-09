@@ -1,6 +1,6 @@
-package org.bigNumber.common.services;
+package org.nishi.bigNumber.common.services;
 
-import org.nishi.helper.GlobalConstants;
+import org.nishi.bigNumber.helper.GlobalConstants;
 
 /**
  * @author Nishi Inc.

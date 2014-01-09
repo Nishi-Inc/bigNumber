@@ -9,9 +9,9 @@
  * =====================================================================
  */
 
-package org.bigNumber.common.interfaces;
+package org.nishi.bigNumber.common.interfaces;
 
-import org.bigNumber.models.BigNumber;
+import org.nishi.bigNumber.models.BigNumber;
 
 /**
  * A factory to generate BigNumber objects

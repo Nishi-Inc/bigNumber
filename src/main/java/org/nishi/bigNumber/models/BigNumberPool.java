@@ -10,15 +10,12 @@
  */
 
 
-package org.bigNumber.models;
+package org.nishi.bigNumber.models;
+
+import org.nishi.bigNumber.common.interfaces.BigNumberFactory;
 
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.TreeMap;
-
-import org.bigNumber.common.interfaces.BigNumberFactory;
-import org.nishi.helper.Validate;
 
 /**
  * A BigNumberPool which keeps BigNumbers and handles allocation

@@ -70,9 +70,9 @@
 
         <!-- For helper methods -->
         <dependency>
-            <groupId>org.nishi</groupId>
-            <artifactId>java-helper</artifactId>
-            <version>0.1.0</version>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.2.1</version>
             <scope>compile</scope>
         </dependency>
 
