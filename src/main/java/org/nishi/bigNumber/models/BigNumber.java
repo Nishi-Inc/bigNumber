@@ -11,6 +11,7 @@
 
 package org.nishi.bigNumber.models;
 
+import lombok.Data;
 import org.nishi.bigNumber.common.services.BigNumberUtils;
 import org.nishi.bigNumber.common.services.ErrorMessages;
 import org.nishi.bigNumber.helper.GlobalConstants;
@@ -25,6 +26,7 @@ import java.util.List;
  * @author <a href="mailto:shuklaalok7@gmail.com">Nishi Inc.</a>
  * @since August 7, 2013, v0.1.0
  */
+@Data
 public class BigNumber extends BigNumberParent {
 
     private static final BigNumber one   = new BigNumber(1);
@@ -543,7 +545,7 @@ public class BigNumber extends BigNumberParent {
 
     @Override
 	public BigNumber roundOff() {
-        return this.roundOff(this.getDefaultMathContext());
+        return this.roundOff(this.getDefaultBigNumberMathContext());
 	}
 
     @Override

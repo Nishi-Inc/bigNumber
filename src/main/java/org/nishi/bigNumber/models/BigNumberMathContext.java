@@ -1,5 +1,7 @@
 package org.nishi.bigNumber.models;
 
+import lombok.Data;
+
 import java.math.MathContext;
 import java.math.RoundingMode;
 
@@ -12,6 +14,7 @@ import java.math.RoundingMode;
  * Time: 3:27 PM
  * @since 2.0.0
  */
+@Data
 public class BigNumberMathContext {
 
     private static final int DEFAULT_NUMBER_OF_DIGITS_AFTER_DECIMAL = 6;
@@ -58,20 +61,20 @@ public class BigNumberMathContext {
         return new MathContext(bigNumberMathContext.getPrecision(), bigNumberMathContext.getRoundingMode());
     }
 
-    public Integer getNumberOfDigitsAfterDecimal() {
-        return numberOfDigitsAfterDecimal;
+    /**
+     * Not available to outside world
+     * @param roundingMode
+     */
+    public void setRoundingMode(RoundingMode roundingMode) {
+        this.roundingMode = roundingMode;
     }
 
-    public void setNumberOfDigitsAfterDecimal(Integer numberOfDigitsAfterDecimal) {
-        this.numberOfDigitsAfterDecimal = numberOfDigitsAfterDecimal;
-    }
-
-    public RoundingMode getRoundingMode() {
-        return roundingMode;
-    }
-
-    public int getPrecision() {
-        return precision;
+    /**
+     * Not available to outside world
+     * @param precision
+     */
+    private void setPrecision(int precision) {
+        this.precision = precision;
     }
 
 }

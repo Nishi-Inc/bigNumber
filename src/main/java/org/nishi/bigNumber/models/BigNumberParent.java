@@ -11,6 +11,7 @@
 
 package org.nishi.bigNumber.models;
 
+import lombok.Data;
 import org.nishi.bigNumber.common.interfaces.NonStaticMethods;
 import org.nishi.bigNumber.helper.GlobalConstants;
 import org.nishi.bigNumber.helper.Utils;
@@ -24,13 +25,14 @@ import java.util.List;
  * @author Nishi Inc.
  * @since v1.1.0
  */
+@Data
 public abstract class BigNumberParent implements NonStaticMethods {
 
 	protected static final long serialVersionUID = 1L;
 
-    protected boolean				isNegative			=	false;
-    protected boolean				isFractional		=	false;
-    protected boolean				isZero				=	false;
+    protected boolean				negative			=	false;
+    protected boolean				fractional		    =	false;
+    protected boolean				zero				=	false;
     protected Integer				locationOfDecimal;
     protected BigInteger            bigInteger;
     protected BigDecimal            bigDecimal;
@@ -42,14 +44,6 @@ public abstract class BigNumberParent implements NonStaticMethods {
             this.setBigDecimal(new BigDecimal(0));
         }
         return bigDecimal;
-    }
-
-    public BigNumberMathContext getDefaultMathContext() {
-        return defaultBigNumberMathContext;
-    }
-
-    public void setDefaultMathContext(BigNumberMathContext defaultMathContext) {
-        this.defaultBigNumberMathContext = defaultMathContext;
     }
 
     protected void setBigDecimal(BigDecimal bigDecimal) {
@@ -121,28 +115,8 @@ public abstract class BigNumberParent implements NonStaticMethods {
 	 *==================================================================================
 	 */
 
-    /**
-     * @return true if the number is negative else false
-     * @since v0.1.0
-     */
-    public boolean isNegative() {
-        return isNegative;
-    }
-
-    protected void setNegative(boolean isNegative) {
-        this.isNegative = isNegative;
-    }
-
-    /**
-     * @return true if the number is a fraction else false
-     * @since v0.1.0
-     */
-    public boolean isFractional() {
-        return isFractional;
-    }
-
     protected void setFractional(boolean isFraction) {
-        this.isFractional = isFraction;
+        this.fractional = isFraction;
         if(!isFraction) {
             this.setLocationOfDecimal(-1);
         }
@@ -159,10 +133,6 @@ public abstract class BigNumberParent implements NonStaticMethods {
         return locationOfDecimal;
     }
 
-    protected void setLocationOfDecimal(Integer locationOfDecimal) {
-        this.locationOfDecimal = locationOfDecimal;
-    }
-
     protected BigInteger getBigInteger() {
         if(bigInteger == null) {
             this.setBigInteger(new BigInteger(GlobalConstants.ZERO_STR));
@@ -173,18 +143,6 @@ public abstract class BigNumberParent implements NonStaticMethods {
     protected void setBigInteger(BigInteger bigInteger) {
         this.bigInteger = bigInteger;
         this.syncFromInteger();
-    }
-
-    /**
-     * @return true if the number has value = 0 or "0" else false
-     * @since v0.1.0
-     */
-    public boolean isZero() {
-        return isZero;
-    }
-
-    protected void setZero(boolean isZero) {
-        this.isZero = isZero;
     }
 
 }
