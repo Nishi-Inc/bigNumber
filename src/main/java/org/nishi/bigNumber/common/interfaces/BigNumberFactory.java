@@ -13,12 +13,14 @@ package org.nishi.bigNumber.common.interfaces;
 
 import org.nishi.bigNumber.models.BigNumber;
 
+import java.io.Serializable;
+
 /**
  * A factory to generate BigNumber objects
  * @author Nishi Inc.
  * @since August 26, 2013
  */
-public interface BigNumberFactory {
+public interface BigNumberFactory extends Serializable {
 	
 	/**
 	 * @author Nishi Inc.

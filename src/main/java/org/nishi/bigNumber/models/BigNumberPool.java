@@ -12,6 +12,7 @@
 
 package org.nishi.bigNumber.models;
 
+import lombok.Data;
 import org.nishi.bigNumber.common.interfaces.BigNumberFactory;
 
 import java.util.Iterator;
@@ -22,6 +23,7 @@ import java.util.TreeMap;
  * @author Nishi Incorporation
  * @since v1.0.0
  */
+@Data
 public class BigNumberPool implements BigNumberFactory {
 
     public static final int	DEFAULT_LOAD_FACTOR =	40;
@@ -201,10 +203,6 @@ public class BigNumberPool implements BigNumberFactory {
 		return loadFactor;
 	}
 
-	private void setLoadFactor(int loadFactor) {
-		this.loadFactor = loadFactor;
-	}
-
 	private int getCapacity() {
 		if(capacity == null) {
 			this.setCapacity(BigNumberPool.DEFAULT_CAPACITY);
@@ -219,19 +217,11 @@ public class BigNumberPool implements BigNumberFactory {
 		return capacity;
 	}
 
-	private void setCapacity(int capacity) {
-		this.capacity = capacity;
-	}
-
 	private Integer getLimit() {
 		if(limit == null) {
 			this.setLimit(this.getCapacity() * (1 + this.getLoadFactor()/100) + 1);
 		}
 		return limit;
-	}
-
-	private void setLimit(Integer limit) {
-		this.limit = limit;
 	}
 	
 	private TreeMap<Integer, BigNumber> getHold() {
@@ -252,11 +242,4 @@ public class BigNumberPool implements BigNumberFactory {
         return this.getCapacity() - (this.getNoOfAllottedBigNumbers() + this.getHold().size()) ;
     }
 
-    private Integer getNoOfAllottedBigNumbers() {
-        return this.noOfAllottedBigNumbers;
-    }
-
-    private void setNoOfAllottedBigNumbers(Integer noOfAllottedBigNumbers) {
-        this.noOfAllottedBigNumbers = noOfAllottedBigNumbers;
-    }
 }

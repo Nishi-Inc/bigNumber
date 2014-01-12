@@ -41,7 +41,7 @@ public final class Utils {
     public static String combine(Collection<? extends CharSequence> strList, String repeatingString) {
         StringBuilder result = new StringBuilder();
         for(CharSequence charSequence : strList) {
-            result.append(charSequence + repeatingString);
+            result.append(charSequence).append(repeatingString);
         }
         return Utils.chop(result.toString(), repeatingString);
     }
@@ -57,7 +57,7 @@ public final class Utils {
     public static <E extends CharSequence> String combine(E[] strArray, String repeatingString) {
         StringBuilder result = new StringBuilder(strArray[0]);
         for(int i=1; i<strArray.length; i++) {
-            result.append(repeatingString + strArray[i]);
+            result.append(repeatingString).append(strArray[i]);
         }
         return result.toString();
     }
@@ -79,7 +79,7 @@ public final class Utils {
         }
         StringBuilder result = new StringBuilder(strArray[0]);
         for(int i=1; i<strArray.length; i++) {
-            result.append(reg + strArray[i]);
+            result.append(reg).append(strArray[i]);
         }
         return result.toString();
     }
