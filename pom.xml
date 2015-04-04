@@ -10,7 +10,7 @@
         <version>7</version>
     </parent>
 
-    <groupId>org.nishi</groupId>
+    <groupId>com.nishionline</groupId>
     <artifactId>bigNumber</artifactId>
     <version>2.0.0</version>
     <description>A bignum java library to unite java.math.BigDecimal and java.math.BigInteger.</description>
@@ -35,6 +35,15 @@
         </developer>
     </developers>
 
+    <properties>
+        <java.version>1.8</java.version>
+
+        <junit.version>4.11</junit.version>
+        <lombok.version>1.12.2</lombok.version>
+        <apache.commons.version>3.2.1</apache.commons.version>
+        <maven.compiler.plugin.version>3.1</maven.compiler.plugin.version>
+    </properties>
+
     <build>
         <directory>bin</directory>
         <outputDirectory>bin/classes</outputDirectory>
@@ -48,10 +57,10 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.1</version>
+                    <version>${maven.compiler.plugin.version}</version>
                     <configuration>
-                        <source>1.7</source>
-                        <target>1.7</target>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
                     </configuration>
                 </plugin>
             </plugins>
@@ -64,7 +73,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -72,14 +81,14 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.2.1</version>
+            <version>${apache.commons.version}</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.12.2</version>
+            <version>${lombok.version}</version>
             <scope>compile</scope>
         </dependency>
 
