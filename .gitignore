@@ -1,8 +1,7 @@
-*.class
 bin/*
 
 # For .idea
-*.name
+*.iml
 .idea/*
 
 # Package Files #
